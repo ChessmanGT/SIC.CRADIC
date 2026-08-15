@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Fichas de Identificación</title>
+    <!-- Librería para exportar a Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            min-height: 100vh;
+        }
+
+        .oculto {
+            display: none !important;
+        }
+
+        /* === PANTALLA DE LOGIN === */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card-login {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .logo-login {
+            width: 140px;
+            height: auto;
+            margin: 0 auto 15px auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .card-login h2 {
+            color: #00529b;
+            margin-bottom: 20px;
+            border: none;
+            font-size: 20px;
+        }
+
+        .input-login {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            background-color: #00529b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .btn-login:hover {
+            background-color: #003d73;
+        }
+
+        .error-msg {
+            color: #d9534f;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        /* === PANTALLA PRINCIPAL (FICHA) === */
+        #app-screen {
+            padding: 20px;
+        }
+
+        .header-app {
+            max-width: 1400px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .header-app h1 {
+            color: #00529b;
+            font-size: 22px;
+        }
+
+        .btn-logout {
+            background-color: #7f8c8d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-logout:hover {
+            background-color: #636e72;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .formulario, .vista-ficha {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .formulario {
+            flex: 1;
+            min-width: 380px;
+        }
+
+        .vista-ficha {
+            flex: 1.3;
+            min-width: 600px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 18px;
+            border-bottom: 2px solid #00529b;
+            padding-bottom: 8px;
+        }
+
+        .grupo-form {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .botones {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.25s;
+        }
+
+        .btn-guardar { background: #27ae60; color: white; }
+        .btn-guardar:hover { background: #219653; }
+
+        .btn-limpiar { background: #e74c3c; color: white; }
+        .btn-limpiar:hover { background: #c0392b; }
+
+        .btn-imprimir { background: #3498db; color: white; }
+        .btn-imprimir:hover { background: #2980b9; }
+
+        .btn-excel { background: #107c41; color: white; }
+        .btn-excel:hover { background: #0c6132; }
+
+        .btn-respaldo { background: #8e44ad; color: white; }
+        .btn-respaldo:hover { background: #70368f; }
+
+        .btn-restaurar { background: #e67e22; color: white; }
+        .btn-restaurar:hover { background: #d35400; }
+
+        /* === ESTILO DE LA FICHA === */
+        .ficha {
+            border: 2px solid #2980b9;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .ficha-cabecera {
+            background: linear-gradient(to right, #00529b, #2980b9);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .ficha-auditoria {
+            background: #fff5f5;
+            color: #c0392b;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .ficha-contenido {
+            padding: 12px;
+        }
+
+        .fila {
+            display: flex;
+            border-bottom: 1px solid #bdd7ee;
+        }
+
+        .celda-etiqueta {
+            background: #eaf2f8;
+            width: 28%;
+            padding: 7px 10px;
+            font-weight: bold;
+            border-right: 1px solid #bdd7ee;
+            font-size: 14px;
+        }
+
+        .celda-dato {
+            width: 72%;
+            padding: 7px 10px;
+            font-size: 14px;
+        }
+
+        .fila-doble {
+            display: flex;
+            width: 100%;
+            border-bottom: 1px solid #bdd7ee;
+        }
+
+        .columna-izq {
+            width: 68%;
+            border-right: 1px solid #bdd7ee;
+        }
+
+        .columna-der {
+            width: 32%;
+            background: #f8fbfe;
+            padding: 8px;
+        }
+
+        .foto-ficha {
+            width: 160px;
+            height: 200px;
+            border: 1px solid #999;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            overflow: hidden;
+        }
+
+        .foto-ficha img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .fila-3col {
+            display: flex;
+            border-bottom: 1px solid #bdd7ee;
+        }
+
+        .fila-3col > div {
+            padding: 6px 8px;
+        }
+
+        .col-1 { width: 25%; background: #eaf2f8; font-weight: bold; border-right: 1px solid #bdd7ee; }
+        .col-2 { width: 45%; border-right: 1px solid #bdd7ee; }
+        .col-3 { width: 30%; background: #f8fbfe; }
+
+        .pie-ficha {
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .fila-pie {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            #login-screen, .header-app, .formulario, .botones { display: none !important; }
+            #app-screen { padding: 0; }
+            .vista-ficha { box-shadow: none; padding: 0; }
+            .ficha { border-color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- === PANTALLA 1: ACCESO AL SISTEMA === -->
+    <div id="login-screen">
+        <div class="card-login">
+            <img src="LOGO-SIC-png.png" alt="Logo SIC" class="logo-login">
+            <h2>Iniciar Sesión</h2>
+            <form id="login-form">
+                <input type="text" id="login-username" class="input-login" placeholder="Usuario (ej. admin)" required>
+                <input type="password" id="login-password" class="input-login" placeholder="Contraseña (ej. 1234)" required>
+                <button type="submit" class="btn-login">Ingresar</button>
+            </form>
+            <p id="error-msg" class="error-msg oculto">Usuario o contraseña incorrectos.</p>
+        </div>
+    </div>
+
+    <!-- === PANTALLA 2: APLICACIÓN DE FICHAS === -->
+    <div id="app-screen" class="oculto">
+        
+        <header class="header-app">
+            <h1>📋 Sistema de Creación de Fichas de Identificación</h1>
+            <div>
+                <span id="contador-fichas" style="margin-right: 15px; font-weight: bold; color: #00529b;">Registros: 0</span>
+                <button class="btn-logout" onclick="cerrarSesion()">🔒 Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="contenedor-principal">
+
+            <!-- === FORMULARIO DE DATOS === -->
+            <div class="formulario">
+                <h2>Datos de la Ficha</h2>
+
+                <div class="grupo-form">
+                    <label>Usuario Activo</label>
+                    <input type="text" id="usuario" readonly style="background-color: #eef2f5;">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Nombres y Apellidos</label>
+                    <input type="text" id="nombres" placeholder="Ej: Jose Angel Aroldo Ramos Aguilar">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Ficha No.</label>
+                    <input type="text" id="fichaNo" placeholder="3411">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Fecha de Nacimiento</label>
+                    <input type="date" id="fechaNac">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Nacionalidad</label>
+                    <input type="text" id="nacionalidad" placeholder="Guatemalteca">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Lugar de Origen</label>
+                    <input type="text" id="origen" placeholder="Guatemala">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Documento de Identidad (DPI)</label>
+                    <input type="text" id="dpi" placeholder="3819054890101">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Otros Documentos</label>
+                    <input type="text" id="otrosDoc" placeholder="No indica">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Nombre del Padre</label>
+                    <input type="text" id="padre" placeholder="Jose Catalino Ramos">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Nombre de la Madre</label>
+                    <input type="text" id="madre" placeholder="Ana Isabel Aguilar Alvarado">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Estado Civil</label>
+                    <input type="text" id="estadoCivil" placeholder="Soltero">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Alias</label>
+                    <input type="text" id="alias" placeholder="Travieso">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Pandilla / Grupo</label>
+                    <input type="text" id="pandilla" placeholder="Barrio 18">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Clica / Subgrupo</label>
+                    <input type="text" id="clica" placeholder="Los Crazy Gansgters">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Rango en la Clica</label>
+                    <input type="text" id="rango" placeholder="Soldado">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Domicilio: Calle y Número</label>
+                    <input type="text" id="direccion" placeholder="51 Calle B 2-70">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Colonia / Zona / Municipio / Depto</label>
+                    <input type="text" id="colonia" placeholder="Villa Lobos II">
+                    <input type="text" id="zona" placeholder="12" style="width:30%; margin-right:3%; display:inline-block;">
+                    <input type="text" id="municipio" placeholder="Villa Nueva" style="width:30%; margin-right:3%; display:inline-block;">
+                    <input type="text" id="depto" placeholder="Guatemala" style="width:30%; display:inline-block;">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Antecedentes</label>
+                    <textarea id="antecedentes" placeholder="Descripción de antecedentes..."></textarea>
+                </div>
+
+                <div class="grupo-form">
+                    <label>Tatuajes</label>
+                    <textarea id="tatuajes" placeholder="Descripción de tatuajes..."></textarea>
+                </div>
+
+                <div class="grupo-form">
+                    <label>Profesión / Oficio</label>
+                    <input type="text" id="profesion" placeholder="Comerciante">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Lugares de Operación</label>
+                    <input type="text" id="lugaresOp" placeholder="Villa Lobos">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Observaciones</label>
+                    <textarea id="observaciones" placeholder="Observaciones generales..."></textarea>
+                </div>
+
+                <div class="grupo-form">
+                    <label>Estado / Situación Actual</label>
+                    <input type="text" id="estadoActual" placeholder="Fugado del Centro de Detención...">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Fecha de Creación</label>
+                    <input type="date" id="fechaCreacion">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Fecha Última Actualización</label>
+                    <input type="date" id="fechaActualiza">
+                </div>
+
+                <div class="grupo-form">
+                    <label>Subir Foto</label>
+                    <input type="file" id="fotoInput" accept="image/*">
+                </div>
+
+                <div class="grupo-form oculto">
+                    <input type="file" id="archivoRespaldo" accept=".json" onchange="restaurarRespaldo(event)">
+                </div>
+
+                <div class="botones">
+                    <button class="btn-guardar" onclick="guardarFichaConsolidada()">💾 Guardar Ficha</button>
+                    <button class="btn-excel" onclick="exportarExcel()">📊 Exportar Excel (Todas)</button>
+                    <button class="btn-respaldo" onclick="crearRespaldo()">📦 Respaldo JSON</button>
+                    <button class="btn-restaurar" onclick="document.getElementById('archivoRespaldo').click()">📂 Restaurar JSON</button>
+                    <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / PDF</button>
+                    <button class="btn-limpiar" onclick="limpiarFormulario()">🗑️ Limpiar</button>
+                </div>
+            </div>
+
+            <!-- === VISTA PREVIA DE LA FICHA === -->
+            <div class="vista-ficha">
+                <h2>Vista Previa de la Ficha</h2>
+
+                <div class="ficha">
+                    <div class="ficha-cabecera">Modificar Perfil</div>
+                    <div class="ficha-auditoria">Auditoría:</div>
+
+                    <div class="ficha-contenido" id="contenidoFicha">
+                        <div class="fila-doble">
+                            <div class="columna-izq">
+                                <div class="fila">
+                                    <div class="celda-etiqueta">NOMBRES Y APELLIDOS</div>
+                                    <div class="celda-dato" id="f-nombres"></div>
+                                </div>
+                            </div>
+                            <div class="columna-der">
+                                <b>Ficha No.</b> <span id="f-fichaNo"></span>
+                                <div class="foto-ficha" id="vistaFoto">📷</div>
+                            </div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">FECHA DE NACIMIENTO</div>
+                            <div class="celda-dato" id="f-fechaNac"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">NACIONALIDAD</div>
+                            <div class="celda-dato" id="f-nacionalidad"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">LUGAR DE ORIGEN</div>
+                            <div class="celda-dato" id="f-origen"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">DOC. DE IDENTIDAD</div>
+                            <div class="celda-dato" id="f-dpi"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">OTROS DOCUMENTOS</div>
+                            <div class="celda-dato" id="f-otrosDoc"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">NOMBRE DEL PADRE</div>
+                            <div class="celda-dato" id="f-padre"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">NOMBRE DE LA MADRE</div>
+                            <div class="celda-dato" id="f-madre"></div>
+                        </div>
+
+                        <div class="fila-3col">
+                            <div class="col-1">ESTADO CIVIL</div>
+                            <div class="col-2" id="f-estadoCivil"></div>
+                            <div class="col-3"><b>ALIAS:</b> <span id="f-alias"></span></div>
+                        </div>
+
+                        <div class="fila-3col">
+                            <div class="col-1">NOMBRE CONV./GRUPO</div>
+                            <div class="col-2" id="f-pandilla"></div>
+                            <div class="col-3"><b>PANDILLA:</b> <span id="f-pandilla2"></span></div>
+                        </div>
+
+                        <div class="fila-3col">
+                            <div class="col-1">LUGAR DE RESIDENCIA</div>
+                            <div class="col-2" id="f-direccion"></div>
+                            <div class="col-3"><b>CLICA:</b> <span id="f-clica"></span></div>
+                        </div>
+
+                        <div class="fila-3col">
+                            <div class="col-1">COLONIA / ZONA</div>
+                            <div class="col-2" id="f-coloniaZona"></div>
+                            <div class="col-3"><b>RANGO:</b> <span id="f-rango"></span></div>
+                        </div>
+
+                        <div class="fila-3col">
+                            <div class="col-1">MUNICIPIO / DEPTO.</div>
+                            <div class="col-2" id="f-muniDepto"></div>
+                            <div class="col-3"><b>TATUAJES:</b> <span id="f-tatuajesResumen"></span></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">ANTECEDENTES</div>
+                            <div class="celda-dato" id="f-antecedentes"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">TATUAJES QUE PRESENTA</div>
+                            <div class="celda-dato" id="f-tatuajes"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">PROFESIÓN U OFICIO</div>
+                            <div class="celda-dato" id="f-profesion"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">LUGARES DE OPERACIÓN</div>
+                            <div class="celda-dato" id="f-lugaresOp"></div>
+                        </div>
+
+                        <div class="fila">
+                            <div class="celda-etiqueta">OBSERVACIONES</div>
+                            <div class="celda-dato" id="f-observaciones"></div>
+                        </div>
+
+                        <div class="fila-3col">
+                            <div class="col-1">STATUS ACTUAL</div>
+                            <div class="col-2" id="f-estadoActual"></div>
+                            <div class="col-3"><b>CASO INTERNO No.</b> <span id="f-casoInterno"></span></div>
+                        </div>
+
+                        <div class="fila-3col">
+                            <div class="col-1">FUENTE</div>
+                            <div class="col-2" id="f-fuente">Sección de Análisis</div>
+                            <div class="col-3"><b>PROPÓSITO:</b> Identificación</div>
+                        </div>
+
+                        <div class="fila-3col">
+                            <div class="col-1">FECHA CREACIÓN</div>
+                            <div class="col-2" id="f-fechaCreacion"></div>
+                            <div class="col-3"><b>FECHA ÚLTIMA ACT.:</b> <span id="f-fechaActualiza"></span></div>
+                        </div>
+
+                    </div>
+
+                    <div class="pie-ficha">
+                        <div class="fila-pie">
+                            <div>CODIGO DE PRODUCTO: <span id="f-codigo">SAEMP-0000</span></div>
+                            <div>CLASIFICACIÓN: CONFIDENCIAL</div>
+                            <div>USUARIO: <span id="f-usuario"></span></div>
+                            <div>FECHA Y HORA: <span id="f-fechahora"></span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+// === LÓGICA DE AUTENTICACIÓN ===
+const USER_VALIDO = "admin";
+const PASS_VALIDO = "1234";
+
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const userIn = document.getElementById('login-username').value;
+    const passIn = document.getElementById('login-password').value;
+    const errorMsg = document.getElementById('error-msg');
+
+    if (userIn === USER_VALIDO && passIn === PASS_VALIDO) {
+        document.getElementById('login-screen').classList.add('oculto');
+        document.getElementById('app-screen').classList.remove('oculto');
+        document.getElementById('usuario').value = userIn;
+        errorMsg.classList.add('oculto');
+        
+        actualizarContador();
+        actualizarFicha();
+    } else {
+        errorMsg.classList.remove('oculto');
+    }
+});
+
+function cerrarSesion() {
+    document.getElementById('app-screen').classList.add('oculto');
+    document.getElementById('login-screen').classList.remove('oculto');
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+}
+
+// === MANEJO DE HISTORIAL Y ALMACENAMIENTO ===
+function obtenerHistorial() {
+    const historial = localStorage.getItem('historialFichas');
+    return historial ? JSON.parse(historial) : [];
+}
+
+function actualizarContador() {
+    const historial = obtenerHistorial();
+    document.getElementById('contador-fichas').textContent = `Registros: ${historial.length}`;
+}
+
+function guardarFichaConsolidada() {
+    const datosNuevos = obtenerDatos();
+    
+    if (!datosNuevos.fichaNo && !datosNuevos.nombres) {
+        alert('⚠️ Ingresa al menos el número de ficha o los nombres antes de guardar.');
+        return;
+    }
+
+    const historial = obtenerHistorial();
+    historial.push(datosNuevos);
+    localStorage.setItem('historialFichas', JSON.stringify(historial));
+    
+    actualizarContador();
+    alert(`✅ Ficha No. ${datosNuevos.fichaNo || 'nueva'} guardada exitosamente. Total en sistema: ${historial.length}`);
+}
+
+// === LÓGICA DE FICHAS DE IDENTIFICACIÓN ===
+let fotoBase64 = "";
+
+document.getElementById('fotoInput').addEventListener('change', function(e) {
+    const archivo = e.target.files[0];
+    if (archivo) {
+        const lector = new FileReader();
+        lector.onload = function(e) {
+            fotoBase64 = e.target.result;
+            document.getElementById('vistaFoto').innerHTML = `<img src="${fotoBase64}" alt="Foto">`;
+        };
+        lector.readAsDataURL(archivo);
+    }
+});
+
+function obtenerDatos() {
+    const c = id => document.getElementById(id)?.value || '';
+    return {
+        nombres: c('nombres'),
+        fichaNo: c('fichaNo'),
+        fechaNac: c('fechaNac'),
+        nacionalidad: c('nacionalidad'),
+        origen: c('origen'),
+        dpi: c('dpi'),
+        otrosDoc: c('otrosDoc'),
+        padre: c('padre'),
+        madre: c('madre'),
+        estadoCivil: c('estadoCivil'),
+        alias: c('alias'),
+        pandilla: c('pandilla'),
+        clica: c('clica'),
+        rango: c('rango'),
+        direccion: c('direccion'),
+        colonia: c('colonia'),
+        zona: c('zona'),
+        municipio: c('municipio'),
+        depto: c('depto'),
+        antecedentes: c('antecedentes'),
+        tatuajes: c('tatuajes'),
+        profesion: c('profesion'),
+        lugaresOp: c('lugaresOp'),
+        observaciones: c('observaciones'),
+        estadoActual: c('estadoActual'),
+        fechaCreacion: c('fechaCreacion'),
+        fechaActualiza: c('fechaActualiza'),
+        usuario: c('usuario'),
+        foto: fotoBase64
+    };
+}
+
+function actualizarFicha() {
+    const datos = obtenerDatos();
+
+    document.getElementById('f-nombres').textContent = datos.nombres;
+    document.getElementById('f-fichaNo').textContent = datos.fichaNo;
+    document.getElementById('f-fechaNac').textContent = datos.fechaNac;
+    document.getElementById('f-nacionalidad').textContent = datos.nacionalidad;
+    document.getElementById('f-origen').textContent = datos.origen;
+    document.getElementById('f-dpi').textContent = datos.dpi;
+    document.getElementById('f-otrosDoc').textContent = datos.otrosDoc;
+    document.getElementById('f-padre').textContent = datos.padre;
+    document.getElementById('f-madre').textContent = datos.madre;
+    document.getElementById('f-estadoCivil').textContent = datos.estadoCivil;
+    document.getElementById('f-alias').textContent = datos.alias;
+    document.getElementById('f-pandilla').textContent = datos.pandilla;
+    document.getElementById('f-pandilla2').textContent = datos.pandilla;
+    document.getElementById('f-clica').textContent = datos.clica;
+    document.getElementById('f-rango').textContent = datos.rango;
+    document.getElementById('f-direccion').textContent = datos.direccion;
+    document.getElementById('f-coloniaZona').textContent = `${datos.colonia} ${datos.zona ? '/ Zona ' + datos.zona : ''}`;
+    document.getElementById('f-muniDepto').textContent = `${datos.municipio}${datos.depto ? ', ' + datos.depto : ''}`;
+    document.getElementById('f-antecedentes').textContent = datos.antecedentes;
+    document.getElementById('f-tatuajes').textContent = datos.tatuajes;
+    
+    document.getElementById('f-tatuajesResumen').textContent = datos.tatuajes 
+        ? (datos.tatuajes.length > 40 ? datos.tatuajes.substring(0,40) + '...' : datos.tatuajes)
+        : 'Sin registro';
+
+    document.getElementById('f-profesion').textContent = datos.profesion;
+    document.getElementById('f-lugaresOp').textContent = datos.lugaresOp;
+    document.getElementById('f-observaciones').textContent = datos.observaciones;
+    document.getElementById('f-estadoActual').textContent = datos.estadoActual;
+    document.getElementById('f-fechaCreacion').textContent = datos.fechaCreacion;
+    document.getElementById('f-fechaActualiza').textContent = datos.fechaActualiza;
+    document.getElementById('f-codigo').textContent = 'SAEMP-' + (datos.fichaNo || '0000');
+    document.getElementById('f-usuario').textContent = datos.usuario;
+
+    if (datos.foto) {
+        document.getElementById('vistaFoto').innerHTML = `<img src="${datos.foto}" alt="Foto">`;
+    }
+
+    const ahora = new Date();
+    document.getElementById('f-fechahora').textContent = 
+        ahora.toLocaleDateString('es-GT') + ' ' + ahora.toLocaleTimeString('es-GT');
+}
+
+function limpiarFormulario() {
+    const userActual = document.getElementById('usuario').value;
+    document.querySelectorAll('.formulario input, .formulario textarea').forEach(el => el.value = '');
+    document.getElementById('usuario').value = userActual;
+    document.getElementById('vistaFoto').innerHTML = '📷';
+    fotoBase64 = "";
+    actualizarFicha();
+}
+
+function exportarExcel() {
+    const historial = obtenerHistorial();
+    
+    if (historial.length === 0) {
+        alert('⚠️ No hay fichas guardadas. Guarda al menos una ficha antes de exportar.');
+        return;
+    }
+
+    // Remueve las imágenes base64 para evitar celdas pesadas o corruptas en Excel
+    const datosExcel = historial.map(ficha => {
+        const copia = { ...ficha };
+        delete copia.foto;
+        return copia;
+    });
+
+    const hoja = XLSX.utils.json_to_sheet(datosExcel);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Fichas_Registradas");
+    XLSX.writeFile(libro, `Base_Datos_Fichas_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+function crearRespaldo() {
+    const historial = obtenerHistorial();
+    
+    if (historial.length === 0) {
+        alert('⚠️ No hay fichas registradas para realizar un respaldo.');
+        return;
+    }
+
+    const fecha = new Date().toISOString().slice(0,10);
+    const nombreArchivo = `Respaldo_Fichas_Total_${fecha}.json`;
+
+    const blob = new Blob([JSON.stringify(historial, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = nombreArchivo;
+    enlace.click();
+    URL.revokeObjectURL(url);
+}
+
+function restaurarRespaldo(evento) {
+    const archivo = evento.target.files[0];
+    if (!archivo) return;
+
+    const lector = new FileReader();
+    lector.onload = function(e) {
+        try {
+            const datosImportados = JSON.parse(e.target.result);
+            
+            // Permite importar tanto una lista de fichas como una ficha individual
+            let historial = obtenerHistorial();
+            if (Array.isArray(datosImportados)) {
+                historial = historial.concat(datosImportados);
+            } else {
+                historial.push(datosImportados);
+            }
+
+            localStorage.setItem('historialFichas', JSON.stringify(historial));
+            actualizarContador();
+            alert('✅ Respaldo restaurado e integrado correctamente');
+        } catch (err) {
+            alert('❌ El archivo no tiene un formato JSON válido');
+        }
+    };
+    lector.readAsText(archivo);
+}
+
+document.querySelector('.formulario').addEventListener('input', actualizarFicha);
+</script>
+</body>
+</html>
