@@ -248,6 +248,9 @@
         .btn-guardar { background: #27ae60; color: white; }
         .btn-guardar:hover { background: #219653; }
 
+        .btn-editar { background: #f39c12; color: white; }
+        .btn-editar:hover { background: #d68910; }
+
         .btn-limpiar { background: #e74c3c; color: white; }
         .btn-limpiar:hover { background: #c0392b; }
 
@@ -275,7 +278,6 @@
         .item-persona {
             padding: 12px 15px;
             border-bottom: 1px solid #eee;
-            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -393,10 +395,12 @@
             display: flex;
             gap: 15px;
             margin-bottom: 15px;
+            justify-content: center;
         }
 
         .box-foto {
             flex: 1;
+            max-width: 200px;
             border: 1px dashed #00529b;
             padding: 10px;
             text-align: center;
@@ -412,13 +416,16 @@
         }
 
         .box-foto div {
-            height: 140px;
+            height: 170px; /* Tamaño ajustado para uniformidad */
+            width: 140px;  /* Ancho estandarizado de la foto */
+            margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #eee;
             border-radius: 4px;
             overflow: hidden;
+            border: 1px solid #999;
         }
 
         .box-foto img {
@@ -543,8 +550,9 @@
             <!-- ================= MÓDULO 1: CREAR / EDITAR PERSONAS (-SIC-) ================= -->
             <div id="modulo-crear" style="display: flex; gap: 25px; width: 100%;">
                 <div class="card-modulo formulario">
-                    <h2>Captura de Datos -SIC-</h2>
+                    <h2 id="titulo-form-persona">Captura de Datos -SIC-</h2>
                     <input type="hidden" id="usuario">
+                    <input type="hidden" id="key_persona_editar">
 
                     <!-- 1. TIPO DE IDENTIFICACIÓN -->
                     <div class="seccion-form-titulo">1. Tipo de Identificación</div>
@@ -816,7 +824,7 @@
                     <div class="grupo-form"><label>Fuentes Cerradas (Sistemas de Info)</label><textarea id="fue_cerradas"></textarea></div>
 
                     <div class="botones">
-                        <button class="btn-guardar" onclick="guardarFichaConsolidada()">💾 Guardar Ficha -SIC-</button>
+                        <button class="btn-guardar" id="btn-guardar-persona" onclick="guardarFichaConsolidada()">💾 Guardar / Actualizar -SIC-</button>
                         <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar a Excel</button>
                         <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / PDF</button>
                         <button class="btn-limpiar" onclick="limpiarFormulario()">🗑️ Limpiar</button>
@@ -931,7 +939,8 @@
             <!-- ================= MÓDULO 3: CREAR / EDITAR VEHÍCULO ================= -->
             <div id="modulo-crear-vehiculo" class="oculto" style="display: flex; gap: 25px; width: 100%;">
                 <div class="card-modulo formulario">
-                    <h2>Captura de Datos del Vehículo</h2>
+                    <h2 id="titulo-form-vehiculo">Captura de Datos del Vehículo</h2>
+                    <input type="hidden" id="key_vehiculo_editar">
 
                     <!-- DATOS VEHÍCULO -->
                     <div class="seccion-form-titulo">1. Datos del Vehículo</div>
@@ -965,7 +974,7 @@
                     <div class="grupo-form"><label>Foto del Propietario</label><input type="file" id="fotoPropietarioInput" accept="image/*"></div>
 
                     <div class="botones">
-                        <button class="btn-guardar" onclick="guardarVehiculo()">💾 Guardar Ficha</button>
+                        <button class="btn-guardar" id="btn-guardar-vehiculo" onclick="guardarVehiculo()">💾 Guardar / Actualizar Ficha</button>
                         <button onclick="exportarVehiculosExcel()" class="btn-excel">📊 Exportar Excel</button>
                         <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ficha</button>
                         <button class="btn-limpiar" onclick="limpiarFormularioVehiculo()">🗑️ Limpiar</button>
@@ -1193,7 +1202,9 @@ db.ref('fichasSIC').on('value', snapshot => {
     historialPersonasGlobal = [];
     if (snapshot.exists()) {
         snapshot.forEach(child => {
-            historialPersonasGlobal.push(child.val());
+            let p = child.val();
+            p._key = child.key;
+            historialPersonasGlobal.push(p);
         });
     }
     actualizarContadores();
@@ -1203,7 +1214,9 @@ db.ref('fichasVehiculos').on('value', snapshot => {
     historialVehiculosGlobal = [];
     if (snapshot.exists()) {
         snapshot.forEach(child => {
-            historialVehiculosGlobal.push(child.val());
+            let v = child.val();
+            v._key = child.key;
+            historialVehiculosGlobal.push(v);
         });
     }
     actualizarContadores();
@@ -1502,9 +1515,169 @@ function guardarFichaConsolidada() {
         return;
     }
     
-    db.ref('fichasSIC').push(d)
-        .then(() => alert(`✅ Ficha -SIC- guardada con éxito.`))
-        .catch(err => alert("❌ Error en guardado: " + err.message));
+    const key = document.getElementById('key_persona_editar').value;
+
+    if (key) {
+        // ACTUALIZACIÓN
+        db.ref('fichasSIC/' + key).update(d)
+            .then(() => {
+                alert(`✅ Ficha -SIC- actualizada con éxito.`);
+                limpiarFormulario();
+                cambiarModulo('fichas');
+            })
+            .catch(err => alert("❌ Error en actualización: " + err.message));
+    } else {
+        // CREACIÓN NUEVA
+        db.ref('fichasSIC').push(d)
+            .then(() => alert(`✅ Ficha -SIC- guardada con éxito.`))
+            .catch(err => alert("❌ Error en guardado: " + err.message));
+    }
+}
+
+function CargarPersonaParaEditar(ficha) {
+    document.getElementById('key_persona_editar').value = ficha._key || '';
+    
+    const setV = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+
+    setV('id_direccion', ficha.id_direccion);
+    setV('id_fecha', ficha.id_fecha);
+    setV('id_hora', ficha.id_hora);
+    setV('id_coordenadas', ficha.id_coordenadas);
+    setV('id_operativo', ficha.id_operativo);
+
+    setV('g_pnombre', ficha.g_pnombre);
+    setV('g_snombre', ficha.g_snombre);
+    setV('g_onombres', ficha.g_onombres);
+    setV('g_papellido', ficha.g_papellido);
+    setV('g_sapellido', ficha.g_sapellido);
+    setV('g_oapellidos', ficha.g_oapellidos);
+    setV('g_fnac', ficha.g_fnac);
+    setV('g_dpi', ficha.g_dpi);
+    setV('g_lnac', ficha.g_lnac);
+    setV('g_apodo', ficha.g_apodo);
+    setV('g_sexo', ficha.g_sexo);
+    setV('g_lgtbiq', ficha.g_lgtbiq);
+    setV('g_ecivil', ficha.g_ecivil);
+    setV('g_nit', ficha.g_nit);
+    setV('g_igss', ficha.g_igss);
+    setV('g_pueblo', ficha.g_pueblo);
+    setV('g_etnia', ficha.g_etnia);
+    setV('g_nacionalidad', ficha.g_nacionalidad);
+    setV('g_idioma', ficha.g_idioma);
+    setV('g_situacion', ficha.g_situacion);
+    setV('g_tiplicencia', ficha.g_tiplicencia);
+    setV('g_estlicencia', ficha.g_estlicencia);
+
+    setV('tel_linea', ficha.tel_linea);
+    setV('tel_imei', ficha.tel_imei);
+    setV('tel_compania', ficha.tel_compania);
+
+    setV('dir_exacta', ficha.dir_exacta);
+    setV('dir_pais', ficha.dir_pais);
+    setV('dir_depto', ficha.dir_depto);
+    setV('dir_muni', ficha.dir_muni);
+    setV('dir_sector', ficha.dir_sector);
+    setV('dir_zona', ficha.dir_zona);
+    setV('dir_calle', ficha.dir_calle);
+    setV('dir_numcasa', ficha.dir_numcasa);
+    setV('dir_contador', ficha.dir_contador);
+
+    setV('fam_nombre', ficha.fam_nombre);
+    setV('fam_parentesco', ficha.fam_parentesco);
+    setV('fam_dpi', ficha.fam_dpi);
+
+    setV('fis_estatura', ficha.fis_estatura);
+    setV('fis_complexion', ficha.fis_complexion);
+    setV('fis_piel', ficha.fis_piel);
+    setV('fis_colcabello', ficha.fis_colcabello);
+    setV('fis_estcabello', ficha.fis_estcabello);
+    setV('fis_ojos', ficha.fis_ojos);
+    setV('fis_orejas', ficha.fis_orejas);
+    setV('fis_labios', ficha.fis_labios);
+    setV('fis_nariz', ficha.fis_nariz);
+    setV('fis_cicatrices', ficha.fis_cicatrices);
+    setV('fis_discapacidad', ficha.fis_discapacidad);
+    setV('fis_capacidades', ficha.fis_capacidades);
+    setV('fis_otros', ficha.fis_otros);
+
+    setV('red_url', ficha.red_url);
+    setV('red_alias', ficha.red_alias);
+    setV('red_tipo', ficha.red_tipo);
+    setV('red_fconsulta', ficha.red_fconsulta);
+    setV('red_actividad', ficha.red_actividad);
+
+    setV('aca_nivel', ficha.aca_nivel);
+    setV('aca_carrera', ficha.aca_carrera);
+    setV('aca_profesion', ficha.aca_profesion);
+    setV('aca_estudia', ficha.aca_estudia);
+    setV('aca_colegiado', ficha.aca_colegiado);
+    setV('aca_estcolegiado', ficha.aca_estcolegiado);
+
+    setV('lab_empresa', ficha.lab_empresa);
+    setV('lab_direccion', ficha.lab_direccion);
+    setV('lab_finicio', ficha.lab_finicio);
+    setV('lab_ffin', ficha.lab_ffin);
+    setV('lab_jefe', ficha.lab_jefe);
+    setV('lab_telefono', ficha.lab_telefono);
+
+    setV('pat_tipo', ficha.pat_tipo);
+    setV('pat_caract', ficha.pat_caract);
+    setV('pat_vehiculo', ficha.pat_vehiculo);
+
+    setV('arm_tipo', ficha.arm_tipo);
+    setV('arm_registro', ficha.arm_registro);
+    setV('arm_licencia', ficha.arm_licencia);
+    setV('arm_tenencia', ficha.arm_tenencia);
+    setV('arm_estatus', ficha.arm_estatus);
+
+    setV('crim_org', ficha.crim_org);
+    setV('crim_act', ficha.crim_act);
+    setV('crim_clica', ficha.crim_clica);
+    setV('crim_rango', ficha.crim_rango);
+    setV('crim_lugar', ficha.crim_lugar);
+    setV('crim_estatus', ficha.crim_estatus);
+    setV('crim_penales', ficha.crim_penales);
+    setV('crim_policiales', ficha.crim_policiales);
+    setV('crim_aprehension', ficha.crim_aprehension);
+    setV('crim_causa', ficha.crim_causa);
+    setV('crim_colaboradores', ficha.crim_colaboradores);
+
+    setV('pen_centro', ficha.pen_centro);
+    setV('pen_delito', ficha.pen_delito);
+    setV('pen_fingreso', ficha.pen_fingreso);
+    setV('pen_fsalida', ficha.pen_fsalida);
+    setV('pen_expediente', ficha.pen_expediente);
+    setV('pen_oj', ficha.pen_oj);
+
+    setV('mig_motivo', ficha.mig_motivo);
+    setV('mig_fecha', ficha.mig_fecha);
+    setV('mig_destino', ficha.mig_destino);
+    setV('mig_procedencia', ficha.mig_procedencia);
+    setV('mig_transporte', ficha.mig_transporte);
+    setV('mig_arraigo', ficha.mig_arraigo);
+
+    setV('foto_tatuajes', ficha.foto_tatuajes);
+    setV('foto_grafitis', ficha.foto_grafitis);
+
+    setV('fin_banco', ficha.fin_banco);
+    setV('fin_cuenta', ficha.fin_cuenta);
+    setV('fin_monto', ficha.fin_monto);
+    setV('fin_actividad', ficha.fin_actividad);
+    setV('fin_obs', ficha.fin_obs);
+
+    setV('fue_abiertas', ficha.fue_abiertas);
+    setV('fue_cerradas', ficha.fue_cerradas);
+
+    fotoBase64 = ficha.foto || "";
+    if (fotoBase64) {
+        document.getElementById('vistaFoto').innerHTML = `<img src="${fotoBase64}">`;
+    } else {
+        document.getElementById('vistaFoto').innerHTML = '📷';
+    }
+
+    document.getElementById('titulo-form-persona').textContent = '✏️ Editando Ficha Persona -SIC-';
+    actualizarFicha();
+    cambiarModulo('crear');
 }
 
 function buscarPersona() {
@@ -1527,14 +1700,19 @@ function buscarPersona() {
     filtrados.forEach(ficha => {
         const div = document.createElement('div');
         div.className = 'item-persona';
+        
+        const puedeEditar = usuarioSesionActual && (usuarioSesionActual.rol === 'Administrador General' || usuarioSesionActual.rol === 'Operador');
+
         div.innerHTML = `
             <div>
                 <strong>${ficha.g_pnombre || ''} ${ficha.g_papellido || ''}</strong> 
                 <span style="color:#666; font-size:13px;">(DPI: ${ficha.g_dpi || 'S/DPI'}) - Apodo: ${ficha.g_apodo || 'N/A'}</span>
             </div>
-            <button style="padding:4px 10px; font-size:12px; background:#00529b; color:white; border:none; border-radius:3px;">Ver Ficha</button>
+            <div>
+                <button onclick='mostrarFichaConsultada(${JSON.stringify(ficha).replace(/'/g, "&apos;")})' style="padding:4px 10px; font-size:12px; background:#00529b; color:white; border:none; border-radius:3px; cursor:pointer; margin-right:5px;">Ver Ficha</button>
+                ${puedeEditar ? `<button class="btn-editar" onclick='CargarPersonaParaEditar(${JSON.stringify(ficha).replace(/'/g, "&apos;")})' style="padding:4px 10px; font-size:12px; border:none; border-radius:3px; cursor:pointer;">✏️ Editar</button>` : ''}
+            </div>
         `;
-        div.onclick = () => mostrarFichaConsultada(ficha);
         contenedorLista.appendChild(div);
     });
 }
@@ -1571,6 +1749,8 @@ function limpiarFormulario() {
     const userActual = document.getElementById('usuario').value;
     document.querySelectorAll('#modulo-crear .formulario input, #modulo-crear .formulario textarea, #modulo-crear .formulario select').forEach(el => el.value = '');
     document.getElementById('usuario').value = userActual;
+    document.getElementById('key_persona_editar').value = '';
+    document.getElementById('titulo-form-persona').textContent = 'Captura de Datos -SIC-';
     document.getElementById('vistaFoto').innerHTML = '📷';
     fotoBase64 = "";
     actualizarFicha();
@@ -1585,7 +1765,7 @@ function exportarAExcel() {
 
     const wb = XLSX.utils.book_new();
     const personasLimpias = personas.map(p => {
-        const { foto, ...resto } = p;
+        const { foto, _key, ...resto } = p;
         return resto;
     });
     const wsPersonas = XLSX.utils.json_to_sheet(personasLimpias);
@@ -1654,13 +1834,70 @@ function guardarVehiculo() {
         return;
     }
 
-    db.ref('fichasVehiculos').push(datos)
-        .then(() => alert(`✅ Ficha Vehicular guardada con éxito.`))
-        .catch(err => alert("❌ Error en guardado: " + err.message));
+    const key = document.getElementById('key_vehiculo_editar').value;
+
+    if (key) {
+        // ACTUALIZACIÓN
+        db.ref('fichasVehiculos/' + key).update(datos)
+            .then(() => {
+                alert(`✅ Ficha Vehicular actualizada con éxito.`);
+                limpiarFormularioVehiculo();
+                cambiarModulo('fichas-vehiculos');
+            })
+            .catch(err => alert("❌ Error en actualización: " + err.message));
+    } else {
+        // CREACIÓN NUEVA
+        db.ref('fichasVehiculos').push(datos)
+            .then(() => alert(`✅ Ficha Vehicular guardada con éxito.`))
+            .catch(err => alert("❌ Error en guardado: " + err.message));
+    }
+}
+
+function cargarVehiculoParaEditar(v) {
+    document.getElementById('key_vehiculo_editar').value = v._key || '';
+
+    const setV = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+
+    setV('v_placa', v.v_placa);
+    setV('v_tipo', v.v_tipo);
+    setV('v_marca', v.v_marca);
+    setV('v_linea', v.v_linea);
+    setV('v_modelo', v.v_modelo);
+    setV('v_color', v.v_color);
+    setV('v_vin', v.v_vin);
+    setV('v_chasis', v.v_chasis);
+    setV('v_motor', v.v_motor);
+    setV('v_serie', v.v_serie);
+    setV('v_cc', v.v_cc);
+    setV('v_estado', v.v_estado);
+    setV('v_codigo', v.v_codigo);
+    setV('v_aimpuesto', v.v_aimpuesto);
+
+    setV('p_nombre', v.p_nombre);
+    setV('p_dpi', v.p_dpi);
+    setV('p_nit', v.p_nit);
+    setV('p_edad', v.p_edad);
+    setV('p_fnac', v.p_fnac);
+    setV('p_lnac', v.p_lnac);
+    setV('p_direccion', v.p_direccion);
+    setV('p_padres', v.p_padres);
+    setV('p_obs', v.p_obs);
+
+    fotoVehiculoBase64 = v.fotoVehiculo || "";
+    fotoPropietarioBase64 = v.fotoPropietario || "";
+
+    document.getElementById('vistaFotoVehiculo').innerHTML = fotoVehiculoBase64 ? `<img src="${fotoVehiculoBase64}">` : '🚗';
+    document.getElementById('vistaFotoPropietario').innerHTML = fotoPropietarioBase64 ? `<img src="${fotoPropietarioBase64}">` : '👤';
+
+    document.getElementById('titulo-form-vehiculo').textContent = '✏️ Editando Ficha de Vehículo';
+    actualizarFichaVehiculo();
+    cambiarModulo('crear-vehiculo');
 }
 
 function limpiarFormularioVehiculo() {
     document.querySelectorAll('#modulo-crear-vehiculo .formulario input, #modulo-crear-vehiculo .formulario textarea').forEach(el => el.value = '');
+    document.getElementById('key_vehiculo_editar').value = '';
+    document.getElementById('titulo-form-vehiculo').textContent = 'Captura de Datos del Vehículo';
     document.getElementById('vistaFotoVehiculo').innerHTML = '🚗';
     document.getElementById('vistaFotoPropietario').innerHTML = '👤';
     fotoVehiculoBase64 = "";
@@ -1687,14 +1924,19 @@ function buscarVehiculo() {
     filtrados.forEach(v => {
         const div = document.createElement('div');
         div.className = 'item-persona';
+
+        const puedeEditar = usuarioSesionActual && (usuarioSesionActual.rol === 'Administrador General' || usuarioSesionActual.rol === 'Operador');
+
         div.innerHTML = `
             <div>
                 <strong>Placa: ${v.v_placa || 'N/A'}</strong> - ${v.v_marca || ''} ${v.v_linea || ''} (${v.v_modelo || ''})
                 <br><span style="color:#666; font-size:12px;">Propietario: ${v.p_nombre || 'N/A'} (DPI: ${v.p_dpi || 'S/DPI'})</span>
             </div>
-            <button style="padding:4px 10px; font-size:12px; background:#00529b; color:white; border:none; border-radius:3px;">Ver Ficha</button>
+            <div>
+                <button onclick='mostrarVehiculoConsultado(${JSON.stringify(v).replace(/'/g, "&apos;")})' style="padding:4px 10px; font-size:12px; background:#00529b; color:white; border:none; border-radius:3px; cursor:pointer; margin-right:5px;">Ver Ficha</button>
+                ${puedeEditar ? `<button class="btn-editar" onclick='cargarVehiculoParaEditar(${JSON.stringify(v).replace(/'/g, "&apos;")})' style="padding:4px 10px; font-size:12px; border:none; border-radius:3px; cursor:pointer;">✏️ Editar</button>` : ''}
+            </div>
         `;
-        div.onclick = () => mostrarVehiculoConsultado(v);
         contenedorLista.appendChild(div);
     });
 }
@@ -1745,7 +1987,7 @@ function exportarVehiculosExcel() {
     }
     const wb = XLSX.utils.book_new();
     const limpios = historialVehiculosGlobal.map(v => {
-        const { fotoVehiculo, fotoPropietario, ...resto } = v;
+        const { fotoVehiculo, fotoPropietario, _key, ...resto } = v;
         return resto;
     });
     const ws = XLSX.utils.json_to_sheet(limpios);
