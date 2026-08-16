@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema SIPER - Identificación de Personas</title>
+    <title>Sistema -SIC- - Identificación de Personas</title>
     <!-- Librería SheetJS para exportar a Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -168,14 +168,14 @@
 
         .formulario {
             flex: 1;
-            min-width: 380px;
+            min-width: 320px;
             max-height: 85vh;
             overflow-y: auto;
         }
 
         .vista-ficha {
             flex: 1.3;
-            min-width: 600px;
+            min-width: 320px;
             max-height: 85vh;
             overflow-y: auto;
         }
@@ -482,6 +482,15 @@
             gap: 25px;
         }
 
+        @media (max-width: 900px) {
+            #modulo-crear, #modulo-crear-vehiculo {
+                flex-direction: column;
+            }
+            .grid-usuarios {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media print {
             body { background: white; padding: 0; }
             #login-screen, .header-app, .nav-bar, .formulario, .botones, .panel-busqueda, .lista-personas, .lista-vehiculos { display: none !important; }
@@ -496,7 +505,7 @@
     <!-- LOGIN -->
     <div id="login-screen">
         <div class="card-login">
-            <h2>Iniciar Sesión - SIPER</h2>
+            <h2>Iniciar Sesión - -SIC-</h2>
             <form id="login-form">
                 <input type="text" id="login-username" class="input-login" placeholder="Usuario" required>
                 <input type="password" id="login-password" class="input-login" placeholder="Contraseña" required>
@@ -510,7 +519,7 @@
     <div id="app-screen" class="oculto">
         
         <header class="header-app">
-            <h1>📋 Sistema SIPER (Identificación de Personas)</h1>
+            <h1>📋 Sistema -SIC- (Identificación de Personas)</h1>
             <div>
                 <span id="info-user-rol" style="margin-right: 15px; font-weight: bold; color: #555;"></span>
                 <span id="contador-fichas" style="margin-right: 15px; font-weight: bold; color: #00529b;">Fichas: 0</span>
@@ -531,10 +540,10 @@
 
         <div class="contenedor-principal">
 
-            <!-- ================= MÓDULO 1: CREAR / EDITAR PERSONAS (SIPER) ================= -->
+            <!-- ================= MÓDULO 1: CREAR / EDITAR PERSONAS (-SIC-) ================= -->
             <div id="modulo-crear" style="display: flex; gap: 25px; width: 100%;">
                 <div class="card-modulo formulario">
-                    <h2>Captura de Datos SIPER</h2>
+                    <h2>Captura de Datos -SIC-</h2>
                     <input type="hidden" id="usuario">
 
                     <!-- 1. TIPO DE IDENTIFICACIÓN -->
@@ -807,7 +816,7 @@
                     <div class="grupo-form"><label>Fuentes Cerradas (Sistemas de Info)</label><textarea id="fue_cerradas"></textarea></div>
 
                     <div class="botones">
-                        <button class="btn-guardar" onclick="guardarFichaConsolidada()">💾 Guardar Ficha SIPER</button>
+                        <button class="btn-guardar" onclick="guardarFichaConsolidada()">💾 Guardar Ficha -SIC-</button>
                         <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar a Excel</button>
                         <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / PDF</button>
                         <button class="btn-limpiar" onclick="limpiarFormulario()">🗑️ Limpiar</button>
@@ -816,10 +825,10 @@
 
                 <!-- VISTA PREVIA PERSONA -->
                 <div class="card-modulo vista-ficha">
-                    <h2>Vista Previa Ficha SIPER</h2>
+                    <h2>Vista Previa Ficha -SIC-</h2>
                     <div class="ficha">
-                        <div class="ficha-cabecera">Ficha de Identificación Personas (SIPER)</div>
-                        <div class="ficha-auditoria">REGISTRO S.I.P.E.R. CONFIDENCIAL</div>
+                        <div class="ficha-cabecera">Ficha de Identificación Personas (-SIC-)</div>
+                        <div class="ficha-auditoria">REGISTRO C.R.A.D.I.C CONFIDENCIAL</div>
                         <div class="ficha-contenido">
                             <div class="foto-ficha" id="vistaFoto">📷</div>
                             <br>
@@ -889,7 +898,7 @@
                         </div>
                         <div class="pie-ficha">
                             <div class="fila-pie">
-                                <div>SISTEMA: SIPER v1.1</div>
+                                <div>SISTEMA: SIC v1.1</div>
                                 <div>CLASIFICACIÓN: CONFIDENCIAL</div>
                                 <div>REGISTRADO POR: <span id="v-usuario"></span></div>
                             </div>
@@ -900,7 +909,7 @@
 
             <!-- ================= MÓDULO 2: BÚSQUEDA FICHAS PERSONAS ================= -->
             <div id="modulo-fichas" class="card-modulo oculto">
-                <h2>🔍 Consulta de Fichas SIPER</h2>
+                <h2>🔍 Consulta de Fichas -SIC-</h2>
                 <div class="panel-busqueda">
                     <input type="text" id="input-buscar-persona" placeholder="Escribe Nombre, DPI o Apodo..." oninput="buscarPersona()">
                     <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar Todos a Excel</button>
@@ -909,11 +918,11 @@
 
                 <div id="contenedor-ficha-consultada" class="oculto">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3>Ficha SIPER del Individuo</h3>
+                        <h3>Ficha -SIC- del Individuo</h3>
                         <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ficha</button>
                     </div>
                     <div class="ficha">
-                        <div class="ficha-cabecera">Detalle General SIPER</div>
+                        <div class="ficha-cabecera">Detalle General -SIC-</div>
                         <div class="ficha-contenido" id="detalle-persona-consultada"></div>
                     </div>
                 </div>
@@ -1123,9 +1132,9 @@
 
             <!-- ================= MÓDULO 7: SECCIÓN ================= -->
             <div id="modulo-seccion" class="card-modulo oculto">
-                <h2>🏢 Información del Sistema SIPER</h2>
+                <h2>🏢 Información del Sistema -SIC-</h2>
                 <div style="line-height: 1.8;">
-                    <p><b>Sistema:</b> SIPER v1.1 - Sistema de Identificación de Personas</p>
+                    <p><b>Sistema:</b> -SIC- v1.1 - Sistema de Identificación de Personas</p>
                     <p><b>Sección:</b> Información Criminal y Análisis Estratégico</p>
                     <p><b>Propósito Institucional:</b> Registro estructurado bajo 17 áreas clave de captura de información personal, familiar, criminal y de antecedentes.</p>
                     <p><b>Clasificación de Documentos:</b> RESERVADO / CONFIDENCIAL</p>
@@ -1180,7 +1189,7 @@ db.ref('usuariosSistema').on('value', snapshot => {
     renderizarTablaUsuarios();
 });
 
-db.ref('fichasSiper').on('value', snapshot => {
+db.ref('fichasSIC').on('value', snapshot => {
     historialPersonasGlobal = [];
     if (snapshot.exists()) {
         snapshot.forEach(child => {
@@ -1368,10 +1377,10 @@ function eliminarUsuario(key) {
 
 function actualizarContadores() {
     const hFichas = obtenerHistorial();
-    document.getElementById('contador-fichas').textContent = `Fichas SIPER: ${hFichas.length} | Vehículos: ${historialVehiculosGlobal.length}`;
+    document.getElementById('contador-fichas').textContent = `Fichas -SIC-: ${hFichas.length} | Vehículos: ${historialVehiculosGlobal.length}`;
 }
 
-// LOGICA DE DATOS Y CAPTURA SIPER
+// LOGICA DE DATOS Y CAPTURA -SIC-
 let fotoBase64 = "";
 document.getElementById('fotoInput').addEventListener('change', function(e) {
     const archivo = e.target.files[0];
@@ -1493,8 +1502,8 @@ function guardarFichaConsolidada() {
         return;
     }
     
-    db.ref('fichasSiper').push(d)
-        .then(() => alert(`✅ Ficha SIPER guardada con éxito.`))
+    db.ref('fichasSIC').push(d)
+        .then(() => alert(`✅ Ficha -SIC- guardada con éxito.`))
         .catch(err => alert("❌ Error en guardado: " + err.message));
 }
 
@@ -1580,10 +1589,10 @@ function exportarAExcel() {
         return resto;
     });
     const wsPersonas = XLSX.utils.json_to_sheet(personasLimpias);
-    XLSX.utils.book_append_sheet(wb, wsPersonas, "Fichas SIPER");
+    XLSX.utils.book_append_sheet(wb, wsPersonas, "Fichas SIC");
 
     const fechaHora = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(wb, `Reporte_SIPER_${fechaHora}.xlsx`);
+    XLSX.writeFile(wb, `Reporte_SIC_${fechaHora}.xlsx`);
 }
 
 // LÓGICA MÓDULO VEHÍCULOS
