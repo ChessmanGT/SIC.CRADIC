@@ -120,6 +120,7 @@
             padding: 8px 15px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
         }
 
         .nav-btn {
@@ -431,7 +432,7 @@
         <div class="card-login">
             <h2>Iniciar Sesión</h2>
             <form id="login-form">
-                <input type="text" id="login-username" class="input-login" placeholder="Usuario (ej. admin, analista)" required>
+                <input type="text" id="login-username" class="input-login" placeholder="Usuario (ej. admin, sac, jefes)" required>
                 <input type="password" id="login-password" class="input-login" placeholder="Contraseña (ej. 1234)" required>
                 <button type="submit" class="btn-login">Ingresar</button>
             </form>
@@ -455,6 +456,7 @@
         <nav class="nav-bar">
             <button class="nav-btn activo" id="btn-tab-crear" onclick="cambiarModulo('crear')">➕ Crear / Editar Ficha</button>
             <button class="nav-btn" id="btn-tab-fichas" onclick="cambiarModulo('fichas')">🔍 FICHAS</button>
+            <button class="nav-btn" id="btn-tab-telefonos" onclick="cambiarModulo('telefonos')">📞 NÚMEROS TELEFÓNICOS</button>
             <button class="nav-btn" id="btn-tab-usuarios" onclick="cambiarModulo('usuarios')">👤 USUARIO</button>
             <button class="nav-btn" id="btn-tab-seccion" onclick="cambiarModulo('seccion')">🏢 SECCIÓN</button>
         </nav>
@@ -905,7 +907,21 @@
                 </div>
             </div>
 
-            <!-- ================= MÓDULO 3: USUARIOS ================= -->
+            <!-- ================= MÓDULO 3: NÚMEROS TELEFÓNICOS ================= -->
+            <div id="modulo-telefonos" class="card-modulo oculto" style="width: 100%;">
+                <h2>📞 Directorio y Números Telefónicos</h2>
+                <div style="width: 100%; height: 80vh; min-height: 600px; margin-top: 15px;">
+                    <iframe 
+                        src="https://lookerstudio.google.com/embed/reporting/bec9346a-e4c9-4250-aec0-2d804c0499c5" 
+                        frameborder="0" 
+                        style="border:0; width:100%; height:100%; border-radius: 8px;" 
+                        allowfullscreen 
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- ================= MÓDULO 4: USUARIOS ================= -->
             <div id="modulo-usuarios" class="card-modulo oculto">
                 <h2>👤 Gestión e Identificación de Usuarios</h2>
                 
@@ -957,7 +973,7 @@
                 </div>
             </div>
 
-            <!-- ================= MÓDULO 4: SECCIÓN ================= -->
+            <!-- ================= MÓDULO 5: SECCIÓN ================= -->
             <div id="modulo-seccion" class="card-modulo oculto">
                 <h2>🏢 Datos de la Sección</h2>
                 <div style="line-height: 1.8;">
@@ -972,11 +988,11 @@
     </div>
 
 <script>
-// === USUARIOS POR DEFECTO CON ROLES SEPARADOS ===
+// === USUARIOS POR DEFECTO ACTUALIZADOS ===
 const USUARIOS_DEFECTO = [
     { nombre: "Administrador Sistema", usuario: "admin", pass: "1234", rol: "Administrador General", estado: "Activo" },
-    { nombre: "Osman Jimenez", usuario: "Ojimenez", pass: "4567", rol: "Operador", estado: "Activo" },
-    { nombre: "Beverly Estrada", usuario: "Bcifuentes", pass: "1234", rol: "Operador", estado: "Activo" }
+    { nombre: "SAC", usuario: "sac", pass: "1234", rol: "Operador", estado: "Activo" },
+    { nombre: "JEFES", usuario: "jefes", pass: "1234", rol: "Analista", estado: "Activo" }
 ];
 
 function obtenerUsuarios() {
@@ -1020,21 +1036,35 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
 function aplicarPermisosRol() {
     const btnCrear = document.getElementById('btn-tab-crear');
     const btnFichas = document.getElementById('btn-tab-fichas');
+    const btnTelefonos = document.getElementById('btn-tab-telefonos');
     const btnUsuarios = document.getElementById('btn-tab-usuarios');
     const btnSeccion = document.getElementById('btn-tab-seccion');
 
     if (usuarioSesionActual.rol === "Analista") {
-        // Al Analista SOLO darle acceso al menú FICHAS
+        // ANALISTAS: Acceso únicamente a Fichas, Números Telefónicos y Sección
         btnCrear.style.display = 'none';
         btnUsuarios.style.display = 'none';
-        btnSeccion.style.display = 'none';
+        
         btnFichas.style.display = 'inline-block';
+        btnTelefonos.style.display = 'inline-block';
+        btnSeccion.style.display = 'inline-block';
         
         cambiarModulo('fichas');
-    } else {
-        // Administrador General y Operador ven los demás accesos
+    } else if (usuarioSesionActual.rol === "Operador") {
+        // OPERADORES: Acceso a todo MENOS a la gestión de Usuarios
+        btnUsuarios.style.display = 'none';
+        
         btnCrear.style.display = 'inline-block';
         btnFichas.style.display = 'inline-block';
+        btnTelefonos.style.display = 'inline-block';
+        btnSeccion.style.display = 'inline-block';
+
+        cambiarModulo('crear');
+    } else {
+        // ADMINISTRADOR GENERAL: Acceso total a todos los módulos
+        btnCrear.style.display = 'inline-block';
+        btnFichas.style.display = 'inline-block';
+        btnTelefonos.style.display = 'inline-block';
         btnUsuarios.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
 
@@ -1050,16 +1080,24 @@ function cerrarSesion() {
     document.getElementById('login-password').value = '';
 }
 
-// === NAVEGACIÓN ===
+// === NAVEGACIÓN DE MÓDULOS CON CONTROL DE ACCESO ===
 function cambiarModulo(modulo) {
-    // Bloquear acceso por script al usuario analista si intenta forzar la navegación
-    if (usuarioSesionActual && usuarioSesionActual.rol === "Analista" && modulo !== 'fichas') {
-        alert("⚠️ Acceso denegado: El rol Analista solo tiene acceso a la consulta de Fichas.");
+    if (!usuarioSesionActual) return;
+
+    // Validación de permisos por Rol
+    if (usuarioSesionActual.rol === "Analista" && (modulo === 'crear' || modulo === 'usuarios')) {
+        alert("⚠️ Acceso denegado: Tu rol solo tiene acceso a Fichas, Telefónicos y Sección.");
+        return;
+    }
+
+    if (usuarioSesionActual.rol === "Operador" && modulo === 'usuarios') {
+        alert("⚠️ Acceso denegado: Los Operadores no tienen permiso para gestionar usuarios.");
         return;
     }
 
     document.getElementById('modulo-crear').classList.add('oculto');
     document.getElementById('modulo-fichas').classList.add('oculto');
+    document.getElementById('modulo-telefonos').classList.add('oculto');
     document.getElementById('modulo-usuarios').classList.add('oculto');
     document.getElementById('modulo-seccion').classList.add('oculto');
 
