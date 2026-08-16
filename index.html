@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<!-- Librería para exportar a Excel (SheetJS) -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Fichas de Identificación - SIC</title>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <!-- Librería SheetJS para exportar a Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -513,7 +512,7 @@
 
                     <div class="botones">
                         <button class="btn-guardar" onclick="guardarFichaConsolidada()">💾 Guardar Ficha</button>
-			<button onclick="exportarAExcel()" class="btn-excel">Exportar a Excel</button>
+                        <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar a Excel</button>
                         <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / PDF</button>
                         <button class="btn-limpiar" onclick="limpiarFormulario()">🗑️ Limpiar</button>
                     </div>
@@ -572,6 +571,7 @@
                 <h2>🔍 Consulta de Fichas de Personas</h2>
                 <div class="panel-busqueda">
                     <input type="text" id="input-buscar-persona" placeholder="Escribe el nombre, DPI o No. de Ficha..." oninput="buscarPersona()">
+                    <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar Todos a Excel</button>
                 </div>
                 <div class="lista-personas" id="lista-resultados"></div>
 
@@ -661,7 +661,7 @@
 
                     <div class="botones">
                         <button class="btn-guardar" onclick="guardarFichaVehiculo()">💾 Guardar Ficha Vehículo</button>
-			<button onclick="exportarAExcel()" class="btn-excel">Exportar a Excel</button>
+                        <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar a Excel</button>
                         <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / PDF</button>
                         <button class="btn-limpiar" onclick="limpiarFormVehiculo()">🗑️ Limpiar</button>
                     </div>
@@ -719,6 +719,7 @@
                 
                 <div class="panel-busqueda">
                     <input type="text" id="input-buscar-vehiculo" placeholder="Buscar por Placa, VIN, Propietario o DPI..." oninput="buscarVehiculo()">
+                    <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar Todos a Excel</button>
                 </div>
 
                 <div class="lista-personas" id="lista-vehiculos-resultados"></div>
@@ -877,7 +878,6 @@ db.ref('usuariosSistema').on('value', snapshot => {
             usuariosGlobal.push(user);
         });
     } else {
-        // Cargar usuarios por defecto si no existe la rama
         USUARIOS_DEFECTO.forEach(u => db.ref('usuariosSistema').push(u));
     }
     renderizarTablaUsuarios();
@@ -1414,6 +1414,42 @@ function limpiarFormVehiculo() {
     document.getElementById('vh-vistaFotoVehiculo').innerHTML = '🚗 FOTOGRAFÍA DE REFERENCIA';
     document.getElementById('vh-vistaFotoProp').innerHTML = '👤';
     actualizarVistaPreviaVehiculo();
+}
+
+// EXPORTAR A EXCEL (DESCARGA DE TODOS LOS DATOS)
+function exportarAExcel() {
+    const personas = obtenerHistorial();
+    const vehiculos = obtenerHistorialVehiculos();
+
+    if (personas.length === 0 && vehiculos.length === 0) {
+        alert("⚠️ No hay datos almacenados en la base de datos para exportar.");
+        return;
+    }
+
+    const wb = XLSX.utils.book_new();
+
+    // Hoja de Personas
+    if (personas.length > 0) {
+        const personasLimpias = personas.map(p => {
+            const { foto, ...resto } = p;
+            return resto;
+        });
+        const wsPersonas = XLSX.utils.json_to_sheet(personasLimpias);
+        XLSX.utils.book_append_sheet(wb, wsPersonas, "Personas");
+    }
+
+    // Hoja de Vehículos
+    if (vehiculos.length > 0) {
+        const vehiculosLimpios = vehiculos.map(v => {
+            const { fotoVehiculo, fotoProp, ...resto } = v;
+            return resto;
+        });
+        const wsVehiculos = XLSX.utils.json_to_sheet(vehiculosLimpios);
+        XLSX.utils.book_append_sheet(wb, wsVehiculos, "Vehículos");
+    }
+
+    const fechaHora = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `Reporte_General_SIC_${fechaHora}.xlsx`);
 }
 
 // EVENTOS DE ENTRADA
