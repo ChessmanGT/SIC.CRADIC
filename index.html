@@ -41,14 +41,6 @@
             text-align: center;
         }
 
-        .logo-login {
-            width: 140px;
-            height: auto;
-            margin: 0 auto 15px auto;
-            display: block;
-            object-fit: contain;
-        }
-
         .card-login h2 {
             color: #00529b;
             margin-bottom: 20px;
@@ -839,7 +831,27 @@
         </div>
     </div>
 
+<!-- SDKs de Firebase Compatibles para la Web -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
 <script>
+// CONFIGURACIÓN DE FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyA91yhu79xiXTCzUGYmDXvWz-OIKjZyXPc",
+  authDomain: "cradic-sgic.firebaseapp.com",
+  databaseURL: "https://cradic-sgic-default-rtdb.firebaseio.com",
+  projectId: "cradic-sgic",
+  storageBucket: "cradic-sgic.firebasestorage.app",
+  messagingSenderId: "256777046814",
+  appId: "1:256777046814:web:af8ec5666a0b6e25bf570f",
+  measurementId: "G-SHG13XJX45"
+};
+
+// INICIALIZACIÓN
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 // USUARIOS INICIALES
 const USUARIOS_DEFECTO = [
     { nombre: "Administrador Sistema", usuario: "admin", pass: "1234", rol: "Administrador General", estado: "Activo" },
@@ -847,13 +859,48 @@ const USUARIOS_DEFECTO = [
     { nombre: "JEFES", usuario: "jefes", pass: "1234", rol: "Analista", estado: "Activo" }
 ];
 
-function obtenerUsuarios() {
-    const list = localStorage.getItem('usuariosSistema');
-    if (!list) {
-        localStorage.setItem('usuariosSistema', JSON.stringify(USUARIOS_DEFECTO));
-        return USUARIOS_DEFECTO;
+let usuariosGlobal = [];
+let historialPersonasGlobal = [];
+let historialVehiculosGlobal = [];
+
+// ESCUCHADORES DE FIREBASE EN TIEMPO REAL
+db.ref('usuariosSistema').on('value', snapshot => {
+    usuariosGlobal = [];
+    if (snapshot.exists()) {
+        snapshot.forEach(child => {
+            let user = child.val();
+            user._key = child.key;
+            usuariosGlobal.push(user);
+        });
+    } else {
+        // Cargar usuarios por defecto si no existe la rama
+        USUARIOS_DEFECTO.forEach(u => db.ref('usuariosSistema').push(u));
     }
-    return JSON.parse(list);
+    renderizarTablaUsuarios();
+});
+
+db.ref('fichasPersonas').on('value', snapshot => {
+    historialPersonasGlobal = [];
+    if (snapshot.exists()) {
+        snapshot.forEach(child => {
+            historialPersonasGlobal.push(child.val());
+        });
+    }
+    actualizarContadores();
+});
+
+db.ref('fichasVehiculos').on('value', snapshot => {
+    historialVehiculosGlobal = [];
+    if (snapshot.exists()) {
+        snapshot.forEach(child => {
+            historialVehiculosGlobal.push(child.val());
+        });
+    }
+    actualizarContadores();
+});
+
+function obtenerUsuarios() {
+    return usuariosGlobal;
 }
 
 let usuarioSesionActual = null;
@@ -977,7 +1024,7 @@ function cambiarModulo(modulo) {
     if (modulo === 'usuarios') renderizarTablaUsuarios();
 }
 
-// USUARIOS
+// USUARIOS EN FIREBASE
 document.getElementById('form-nuevo-usuario').addEventListener('submit', function(e) {
     e.preventDefault();
     if (usuarioSesionActual.rol !== "Administrador General") return;
@@ -993,21 +1040,25 @@ document.getElementById('form-nuevo-usuario').addEventListener('submit', functio
         return;
     }
 
-    usuarios.push({ nombre, usuario: user, pass, rol, estado: "Activo" });
-    localStorage.setItem('usuariosSistema', JSON.stringify(usuarios));
-    alert(`✅ Usuario "${user}" registrado.`);
-    document.getElementById('form-nuevo-usuario').reset();
-    renderizarTablaUsuarios();
+    db.ref('usuariosSistema').push({ nombre, usuario: user, pass, rol, estado: "Activo" })
+        .then(() => {
+            alert(`✅ Usuario "${user}" registrado en la nube.`);
+            document.getElementById('form-nuevo-usuario').reset();
+        })
+        .catch(err => alert("❌ Error al registrar usuario: " + err.message));
 });
 
 function renderizarTablaUsuarios() {
     const usuarios = obtenerUsuarios();
     const tbody = document.getElementById('tabla-usuarios-body');
+    if (!tbody) return;
+    
     tbody.innerHTML = '';
     const esAdmin = usuarioSesionActual && usuarioSesionActual.rol === "Administrador General";
-    document.getElementById('seccion-crear-usuario').style.display = esAdmin ? 'block' : 'none';
+    const seccionUser = document.getElementById('seccion-crear-usuario');
+    if (seccionUser) seccionUser.style.display = esAdmin ? 'block' : 'none';
 
-    usuarios.forEach((u, idx) => {
+    usuarios.forEach((u) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${u.nombre}</td>
@@ -1016,7 +1067,7 @@ function renderizarTablaUsuarios() {
             <td><span style="color:${u.estado === 'Activo' ? 'green' : 'red'}; font-weight:bold;">${u.estado}</span></td>
             <td>
                 ${esAdmin && u.usuario !== 'admin' ? `
-                    <button onclick="eliminarUsuario(${idx})" style="background:#e74c3c; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Eliminar</button>
+                    <button onclick="eliminarUsuario('${u._key}')" style="background:#e74c3c; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer;">Eliminar</button>
                 ` : '<span style="color:#aaa; font-size:12px;">Sin acciones</span>'}
             </td>
         `;
@@ -1024,24 +1075,19 @@ function renderizarTablaUsuarios() {
     });
 }
 
-function eliminarUsuario(index) {
+function eliminarUsuario(key) {
     if (confirm("¿Estás seguro de eliminar este usuario?")) {
-        let usuarios = obtenerUsuarios();
-        usuarios.splice(index, 1);
-        localStorage.setItem('usuariosSistema', JSON.stringify(usuarios));
-        renderizarTablaUsuarios();
+        db.ref('usuariosSistema/' + key).remove();
     }
 }
 
 // HISTORIAL Y CONTADORES
 function obtenerHistorial() {
-    const historial = localStorage.getItem('historialFichas');
-    return historial ? JSON.parse(historial) : [];
+    return historialPersonasGlobal;
 }
 
 function obtenerHistorialVehiculos() {
-    const historial = localStorage.getItem('historialVehiculos');
-    return historial ? JSON.parse(historial) : [];
+    return historialVehiculosGlobal;
 }
 
 function actualizarContadores() {
@@ -1121,11 +1167,12 @@ function guardarFichaConsolidada() {
         alert('⚠️ Ingresa al menos el número de ficha o el nombre.');
         return;
     }
-    const historial = obtenerHistorial();
-    historial.push(datosNuevos);
-    localStorage.setItem('historialFichas', JSON.stringify(historial));
-    actualizarContadores();
-    alert(`✅ Ficha guardada exitosamente.`);
+    
+    db.ref('fichasPersonas').push(datosNuevos)
+        .then(() => {
+            alert(`✅ Ficha guardada exitosamente en la nube.`);
+        })
+        .catch(err => alert("❌ Error al guardar en Firebase: " + err.message));
 }
 
 function buscarPersona() {
@@ -1282,11 +1329,12 @@ function guardarFichaVehiculo() {
         alert('⚠️ Ingresa al menos la placa o el propietario.');
         return;
     }
-    const historial = obtenerHistorialVehiculos();
-    historial.push(datos);
-    localStorage.setItem('historialVehiculos', JSON.stringify(historial));
-    actualizarContadores();
-    alert('✅ Ficha de vehículo guardada correctamente.');
+    
+    db.ref('fichasVehiculos').push(datos)
+        .then(() => {
+            alert('✅ Ficha de vehículo guardada correctamente en la nube.');
+        })
+        .catch(err => alert("❌ Error al guardar en Firebase: " + err.message));
 }
 
 function buscarVehiculo() {
