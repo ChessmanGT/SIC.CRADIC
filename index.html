@@ -275,7 +275,7 @@
             margin-bottom: 20px;
         }
 
-        .item-persona {
+        .item-persona, .item-vehiculo {
             padding: 12px 15px;
             border-bottom: 1px solid #eee;
             display: flex;
@@ -283,7 +283,7 @@
             align-items: center;
         }
 
-        .item-persona:hover {
+        .item-persona:hover, .item-vehiculo:hover {
             background-color: #eaf2f8;
         }
 
@@ -448,34 +448,6 @@
             font-weight: bold;
             color: #00529b;
             margin-bottom: 5px;
-        }
-
-        /* BÚSQUEDA Y LISTAS */
-        .panel-busqueda {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .lista-vehiculos {
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .item-vehiculo {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .item-vehiculo:hover {
-            background-color: #eaf2f8;
         }
 
         @media print {
@@ -1049,6 +1021,13 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="pie-ficha">
+                            <div class="fila-pie">
+                                <div>SISTEMA: SIC v1.1</div>
+                                <div>CLASIFICACIÓN: CONFIDENCIAL</div>
+                                <div>REGISTRADO POR: <span id="lbl_v_usuario"></span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1387,6 +1366,11 @@ document.getElementById('fotoInput').addEventListener('change', function(e) {
     }
 });
 
+// Eventos de dinamismo para Ficha Personas
+document.querySelectorAll('#modulo-crear input, #modulo-crear textarea, #modulo-crear select').forEach(input => {
+    input.addEventListener('input', actualizarFicha);
+});
+
 function obtenerDatosFormulario() {
     const v = id => document.getElementById(id)?.value || '';
     return {
@@ -1498,7 +1482,6 @@ function guardarFichaConsolidada() {
     const key = document.getElementById('key_persona_editar').value;
 
     if (key) {
-        // ACTUALIZACIÓN
         db.ref('fichasSIC/' + key).update(d)
             .then(() => {
                 alert(`✅ Ficha -SIC- actualizada con éxito.`);
@@ -1507,7 +1490,6 @@ function guardarFichaConsolidada() {
             })
             .catch(err => alert("❌ Error en actualización: " + err.message));
     } else {
-        // CREACIÓN NUEVA
         db.ref('fichasSIC').push(d)
             .then(() => alert(`✅ Ficha -SIC- guardada con éxito.`))
             .catch(err => alert("❌ Error en guardado: " + err.message));
@@ -1783,6 +1765,11 @@ document.getElementById('fotoPropietarioInput').addEventListener('change', funct
     }
 });
 
+// Listener dinamico para actualizar la Vista Previa del Vehículo
+document.querySelectorAll('#modulo-crear-vehiculo input, #modulo-crear-vehiculo textarea').forEach(input => {
+    input.addEventListener('input', actualizarFichaVehiculo);
+});
+
 function actualizarFichaVehiculo() {
     const v = id => document.getElementById(id)?.value || '';
     const campos = ['v_placa', 'v_tipo', 'v_marca', 'v_linea', 'v_modelo', 'v_color', 'v_vin', 'v_chasis', 'v_motor', 'v_serie', 'v_cc', 'v_estado', 'v_codigo', 'v_aimpuesto', 'p_nombre', 'p_dpi', 'p_nit', 'p_edad', 'p_fnac', 'p_lnac', 'p_direccion', 'p_padres', 'p_obs'];
@@ -1791,6 +1778,9 @@ function actualizarFichaVehiculo() {
         const elLbl = document.getElementById(`lbl_${campo}`);
         if (elLbl) elLbl.textContent = v(campo) || 'N/A';
     });
+
+    const lblUser = document.getElementById('lbl_v_usuario');
+    if (lblUser) lblUser.textContent = document.getElementById('usuario').value || '';
 }
 
 function guardarVehiculo() {
@@ -1817,7 +1807,6 @@ function guardarVehiculo() {
     const key = document.getElementById('key_vehiculo_editar').value;
 
     if (key) {
-        // ACTUALIZACIÓN
         db.ref('fichasVehiculos/' + key).update(datos)
             .then(() => {
                 alert(`✅ Ficha Vehicular actualizada con éxito.`);
@@ -1826,7 +1815,6 @@ function guardarVehiculo() {
             })
             .catch(err => alert("❌ Error en actualización: " + err.message));
     } else {
-        // CREACIÓN NUEVA
         db.ref('fichasVehiculos').push(datos)
             .then(() => alert(`✅ Ficha Vehicular guardada con éxito.`))
             .catch(err => alert("❌ Error en guardado: " + err.message));
@@ -1903,7 +1891,7 @@ function buscarVehiculo() {
 
     filtrados.forEach(v => {
         const div = document.createElement('div');
-        div.className = 'item-persona';
+        div.className = 'item-vehiculo';
 
         const puedeEditar = usuarioSesionActual && (usuarioSesionActual.rol === 'Administrador General' || usuarioSesionActual.rol === 'Operador');
 
@@ -1944,6 +1932,7 @@ function mostrarVehiculoConsultado(v) {
                     <tr><td class="label-celda">VIN:</td><td class="dato-celda">${v.v_vin || ''}</td><td class="label-celda">CHÁSIS:</td><td class="dato-celda">${v.v_chasis || ''}</td></tr>
                     <tr><td class="label-celda">MOTOR:</td><td class="dato-celda">${v.v_motor || ''}</td><td class="label-celda">SERIE:</td><td class="dato-celda">${v.v_serie || ''}</td></tr>
                     <tr><td class="label-celda">CC:</td><td class="dato-celda">${v.v_cc || ''}</td><td class="label-celda">ESTADO:</td><td class="dato-celda">${v.v_estado || ''}</td></tr>
+                    <tr><td class="label-celda">CÓDIGO:</td><td class="dato-celda">${v.v_codigo || ''}</td><td class="label-celda">AÑO IMPUESTO:</td><td class="dato-celda">${v.v_aimpuesto || ''}</td></tr>
                 </tbody>
             </table>
             <table class="tabla-vehiculo">
@@ -1951,10 +1940,20 @@ function mostrarVehiculoConsultado(v) {
                 <tbody>
                     <tr><td class="label-celda">PROPIETARIO:</td><td colspan="3" class="dato-celda">${v.p_nombre || ''}</td></tr>
                     <tr><td class="label-celda">DPI:</td><td class="dato-celda">${v.p_dpi || ''}</td><td class="label-celda">NIT:</td><td class="dato-celda">${v.p_nit || ''}</td></tr>
+                    <tr><td class="label-celda">EDAD:</td><td class="dato-celda">${v.p_edad || ''}</td><td class="label-celda">F. NACIMIENTO:</td><td class="dato-celda">${v.p_fnac || ''}</td></tr>
+                    <tr><td class="label-celda">LUGAR NAC.:</td><td colspan="3" class="dato-celda">${v.p_lnac || ''}</td></tr>
                     <tr><td class="label-celda">DIRECCIÓN:</td><td colspan="3" class="dato-celda">${v.p_direccion || ''}</td></tr>
+                    <tr><td class="label-celda">PADRES:</td><td colspan="3" class="dato-celda">${v.p_padres || ''}</td></tr>
                     <tr><td class="label-celda">OBSERVACIONES:</td><td colspan="3" class="dato-celda">${v.p_obs || ''}</td></tr>
                 </tbody>
             </table>
+            <div class="pie-ficha">
+                <div class="fila-pie">
+                    <div>SISTEMA: SIC v1.1</div>
+                    <div>CLASIFICACIÓN: CONFIDENCIAL</div>
+                    <div>REGISTRADO POR: ${v.usuario || 'N/A'}</div>
+                </div>
+            </div>
         </div>
     `;
     document.getElementById('contenedor-vehiculo-consultado').classList.remove('oculto');
@@ -1962,21 +1961,21 @@ function mostrarVehiculoConsultado(v) {
 
 function exportarVehiculosExcel() {
     if (historialVehiculosGlobal.length === 0) {
-        alert("⚠️ No hay vehículos registrados para exportar.");
+        alert("⚠️ No hay vehículos para exportar.");
         return;
     }
+
     const wb = XLSX.utils.book_new();
-    const limpios = historialVehiculosGlobal.map(v => {
+    const vehiculosLimpios = historialVehiculosGlobal.map(v => {
         const { fotoVehiculo, fotoPropietario, _key, ...resto } = v;
         return resto;
     });
-    const ws = XLSX.utils.json_to_sheet(limpios);
-    XLSX.utils.book_append_sheet(wb, ws, "Vehiculos");
-    XLSX.writeFile(wb, `Reporte_Vehiculos_${new Date().toISOString().slice(0, 10)}.xlsx`);
-}
+    const wsVehiculos = XLSX.utils.json_to_sheet(vehiculosLimpios);
+    XLSX.utils.book_append_sheet(wb, wsVehiculos, "Fichas Vehículos");
 
-document.querySelector('#modulo-crear .formulario').addEventListener('input', actualizarFicha);
-document.querySelector('#modulo-crear-vehiculo .formulario').addEventListener('input', actualizarFichaVehiculo);
+    const fechaHora = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `Reporte_Vehiculos_${fechaHora}.xlsx`);
+}
 </script>
 </body>
 </html>
