@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+	<!-- Librería para exportar a Excel (SheetJS) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema SIPER - Identificación de Personas</title>
-    <!-- Librería SheetJS para exportar a Excel -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <title>Sistema de Fichas de Identificación - SIC</title>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -169,15 +170,11 @@
         .formulario {
             flex: 1;
             min-width: 380px;
-            max-height: 85vh;
-            overflow-y: auto;
         }
 
         .vista-ficha {
             flex: 1.3;
             min-width: 600px;
-            max-height: 85vh;
-            overflow-y: auto;
         }
 
         h2 {
@@ -185,17 +182,6 @@
             margin-bottom: 18px;
             border-bottom: 2px solid #00529b;
             padding-bottom: 8px;
-        }
-
-        .seccion-form-titulo {
-            background: #00529b;
-            color: white;
-            padding: 6px 10px;
-            font-size: 13px;
-            font-weight: bold;
-            margin: 18px 0 10px 0;
-            border-radius: 4px;
-            text-transform: uppercase;
         }
 
         .grupo-form {
@@ -207,7 +193,7 @@
             font-weight: bold;
             color: #34495e;
             margin-bottom: 4px;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         input, textarea, select {
@@ -215,12 +201,12 @@
             padding: 8px 10px;
             border: 1px solid #bdc3c7;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         textarea {
             resize: vertical;
-            min-height: 50px;
+            min-height: 60px;
         }
 
         .botones {
@@ -228,11 +214,6 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            position: sticky;
-            bottom: 0;
-            background: white;
-            padding-top: 10px;
-            border-top: 1px solid #ddd;
         }
 
         button {
@@ -298,7 +279,7 @@
             color: white;
             padding: 8px;
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
         }
 
@@ -307,10 +288,9 @@
             color: white;
             text-align: center;
             font-weight: bold;
-            padding: 5px;
+            padding: 6px;
             text-transform: uppercase;
-            font-size: 12px;
-            margin-top: 10px;
+            font-size: 14px;
         }
 
         .ficha-auditoria {
@@ -320,7 +300,6 @@
             text-align: center;
             padding: 5px;
             border-bottom: 1px solid #ddd;
-            font-size: 12px;
         }
 
         .ficha-contenido {
@@ -334,44 +313,85 @@
 
         .celda-etiqueta {
             background: #eaf2f8;
-            width: 32%;
-            padding: 5px 8px;
+            width: 28%;
+            padding: 7px 10px;
             font-weight: bold;
             border-right: 1px solid #bdd7ee;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .celda-dato {
+            width: 72%;
+            padding: 7px 10px;
+            font-size: 14px;
+        }
+
+        .fila-doble {
+            display: flex;
+            width: 100%;
+            border-bottom: 1px solid #bdd7ee;
+        }
+
+        .columna-izq {
             width: 68%;
-            padding: 5px 8px;
-            font-size: 12px;
-            word-break: break-word;
+            border-right: 1px solid #bdd7ee;
+        }
+
+        .columna-der {
+            width: 32%;
+            background: #f8fbfe;
+            padding: 8px;
         }
 
         .foto-ficha {
-            width: 140px;
-            height: 170px;
+            width: 160px;
+            height: 200px;
             border: 1px solid #999;
             background: #eee;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto;
+            margin: 0 auto 8px;
             overflow: hidden;
         }
 
-        .foto-ficha img {
+        .foto-vehiculo-contenedor {
+            width: 100%;
+            height: 220px;
+            border: 1px solid #999;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .foto-vehiculo-contenedor img, .foto-ficha img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
+        .fila-3col {
+            display: flex;
+            border-bottom: 1px solid #bdd7ee;
+        }
+
+        .fila-3col > div {
+            padding: 6px 8px;
+        }
+
+        .col-1 { width: 25%; background: #eaf2f8; font-weight: bold; border-right: 1px solid #bdd7ee; }
+        .col-2 { width: 45%; border-right: 1px solid #bdd7ee; }
+        .col-3 { width: 30%; background: #f8fbfe; }
 
         .pie-ficha {
             margin-top: 10px;
             border: 1px solid #ccc;
             background: #f9f9f9;
             padding: 8px;
-            font-size: 11px;
+            font-size: 13px;
         }
 
         .fila-pie {
@@ -409,7 +429,7 @@
             body { background: white; padding: 0; }
             #login-screen, .header-app, .nav-bar, .formulario, .botones, .panel-busqueda, .lista-personas { display: none !important; }
             #app-screen { padding: 0; }
-            .vista-ficha { box-shadow: none; padding: 0; width: 100%; max-height: none; }
+            .vista-ficha { box-shadow: none; padding: 0; width: 100%; }
             .ficha { border-color: #000; }
         }
     </style>
@@ -419,7 +439,7 @@
     <!-- LOGIN -->
     <div id="login-screen">
         <div class="card-login">
-            <h2>Iniciar Sesión - SIPER</h2>
+            <h2>Iniciar Sesión</h2>
             <form id="login-form">
                 <input type="text" id="login-username" class="input-login" placeholder="Usuario" required>
                 <input type="password" id="login-password" class="input-login" placeholder="Contraseña" required>
@@ -433,10 +453,10 @@
     <div id="app-screen" class="oculto">
         
         <header class="header-app">
-            <h1>📋 Sistema SIPER (Identificación de Personas)</h1>
+            <h1>📋 Sistema de Información Criminal (SIC)</h1>
             <div>
                 <span id="info-user-rol" style="margin-right: 15px; font-weight: bold; color: #555;"></span>
-                <span id="contador-fichas" style="margin-right: 15px; font-weight: bold; color: #00529b;">Fichas: 0</span>
+                <span id="contador-fichas" style="margin-right: 15px; font-weight: bold; color: #00529b;">Fichas: 0 | Vehículos: 0</span>
                 <button class="btn-logout" onclick="cerrarSesion()">🔒 Cerrar Sesión</button>
             </div>
         </header>
@@ -445,374 +465,102 @@
         <nav class="nav-bar">
             <button class="nav-btn activo" id="btn-tab-crear" onclick="cambiarModulo('crear')">➕ Crear / Editar Ficha</button>
             <button class="nav-btn" id="btn-tab-fichas" onclick="cambiarModulo('fichas')">🔍 FICHAS PERSONAS</button>
+            <button class="nav-btn" id="btn-tab-crear-vehiculo" onclick="cambiarModulo('crear-vehiculo')">➕ Crear / Editar Ficha Vehículo</button>
+            <button class="nav-btn" id="btn-tab-vehiculos" onclick="cambiarModulo('vehiculos')">🚗 FICHAS VEHÍCULOS</button>
             <button class="nav-btn" id="btn-tab-telefonos" onclick="cambiarModulo('telefonos')">📞 NÚMEROS TELEFÓNICOS</button>
-            <button class="nav-btn" id="btn-tab-usuarios" onclick="cambiarModulo('usuarios')">👤 USUARIOS</button>
+            <button class="nav-btn" id="btn-tab-usuarios" onclick="cambiarModulo('usuarios')">👤 USUARIO</button>
             <button class="nav-btn" id="btn-tab-seccion" onclick="cambiarModulo('seccion')">🏢 SECCIÓN</button>
         </nav>
 
         <div class="contenedor-principal">
 
-            <!-- ================= MÓDULO 1: CREAR / EDITAR PERSONAS (SIPER) ================= -->
+            <!-- ================= MÓDULO 1: CREAR / EDITAR PERSONAS ================= -->
             <div id="modulo-crear" style="display: flex; gap: 25px; width: 100%;">
                 <div class="card-modulo formulario">
-                    <h2>Captura de Datos SIPER</h2>
-                    <input type="hidden" id="usuario">
-
-                    <!-- 1. TIPO DE IDENTIFICACIÓN -->
-                    <div class="seccion-form-titulo">1. Tipo de Identificación</div>
-                    <div class="grupo-form"><label>Dirección</label><input type="text" id="id_direccion"></div>
-                    <div class="grupo-form"><label>Fecha</label><input type="date" id="id_fecha"></div>
-                    <div class="grupo-form"><label>Hora</label><input type="time" id="id_hora"></div>
-                    <div class="grupo-form"><label>Coordenadas Geográficas (Link)</label><input type="text" id="id_coordenadas"></div>
+                    <h2>Formulario de Ficha de Persona</h2>
+                    <div class="grupo-form"><label>Usuario Activo</label><input type="text" id="usuario" readonly style="background-color: #eef2f5;"></div>
+                    <div class="grupo-form"><label>Nombres y Apellidos</label><input type="text" id="nombres"></div>
+                    <div class="grupo-form"><label>Ficha No.</label><input type="text" id="fichaNo"></div>
+                    <div class="grupo-form"><label>Fecha de Nacimiento</label><input type="date" id="fechaNac"></div>
+                    <div class="grupo-form"><label>Nacionalidad</label><input type="text" id="nacionalidad"></div>
+                    <div class="grupo-form"><label>Lugar de Origen</label><input type="text" id="origen"></div>
+                    <div class="grupo-form"><label>Documento de Identidad (DPI)</label><input type="text" id="dpi"></div>
+                    <div class="grupo-form"><label>Otros Documentos</label><input type="text" id="otrosDoc"></div>
+                    <div class="grupo-form"><label>Nombre del Padre</label><input type="text" id="padre"></div>
+                    <div class="grupo-form"><label>Nombre de la Madre</label><input type="text" id="madre"></div>
+                    <div class="grupo-form"><label>Estado Civil</label><input type="text" id="estadoCivil"></div>
+                    <div class="grupo-form"><label>Alias</label><input type="text" id="alias"></div>
+                    <div class="grupo-form"><label>Pandilla / Grupo</label><input type="text" id="pandilla"></div>
+                    <div class="grupo-form"><label>Clica / Subgrupo</label><input type="text" id="clica"></div>
+                    <div class="grupo-form"><label>Rango en la Clica</label><input type="text" id="rango"></div>
+                    <div class="grupo-form"><label>Domicilio: Calle y Número</label><input type="text" id="direccion"></div>
                     <div class="grupo-form">
-                        <label>Tipo de Operativo</label>
-                        <select id="id_operativo">
-                            <option value="">Seleccione...</option>
-                            <option value="Allanamiento">Allanamiento</option>
-                            <option value="Entrada al centro carcelario">Entrada al centro carcelario</option>
-                            <option value="Requisa">Requisa</option>
-                            <option value="Puesto de control vehicular">Puesto de control vehicular</option>
-                            <option value="Desalojo">Desalojo</option>
-                            <option value="Multisectorial">Multisectorial</option>
-                        </select>
+                        <label>Colonia / Zona / Municipio / Depto</label>
+                        <input type="text" id="colonia" placeholder="Colonia">
+                        <input type="text" id="zona" placeholder="Zona" style="width:30%; margin-right:3%; display:inline-block;">
+                        <input type="text" id="municipio" placeholder="Municipio" style="width:30%; margin-right:3%; display:inline-block;">
+                        <input type="text" id="depto" placeholder="Depto" style="width:30%; display:inline-block;">
                     </div>
-
-                    <!-- 2. DATOS GENERALES -->
-                    <div class="seccion-form-titulo">2. Datos Generales</div>
-                    <div class="grupo-form"><label>Primer Nombre</label><input type="text" id="g_pnombre"></div>
-                    <div class="grupo-form"><label>Segundo Nombre</label><input type="text" id="g_snombre"></div>
-                    <div class="grupo-form"><label>Otros Nombres</label><input type="text" id="g_onombres"></div>
-                    <div class="grupo-form"><label>Primer Apellido</label><input type="text" id="g_papellido"></div>
-                    <div class="grupo-form"><label>Segundo Apellido</label><input type="text" id="g_sapellido"></div>
-                    <div class="grupo-form"><label>Otros Apellidos</label><input type="text" id="g_oapellidos"></div>
-                    <div class="grupo-form"><label>Fecha de Nacimiento</label><input type="date" id="g_fnac"></div>
-                    <div class="grupo-form"><label>DPI / Doc. Identidad</label><input type="text" id="g_dpi"></div>
-                    <div class="grupo-form"><label>Lugar de Nacimiento</label><input type="text" id="g_lnac"></div>
-                    <div class="grupo-form"><label>Apodo / Sobrenombre</label><input type="text" id="g_apodo"></div>
-                    <div class="grupo-form">
-                        <label>Sexo</label>
-                        <select id="g_sexo">
-                            <option value="">Seleccione...</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form">
-                        <label>Comunidad LGTBIQ+</label>
-                        <select id="g_lgtbiq">
-                            <option value="No">No</option>
-                            <option value="Si">Si</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form">
-                        <label>Estado Civil</label>
-                        <select id="g_ecivil">
-                            <option value="">Seleccione...</option>
-                            <option value="Soltero">Soltero</option>
-                            <option value="Casado">Casado</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form"><label>NIT</label><input type="text" id="g_nit"></div>
-                    <div class="grupo-form"><label>IGSS</label><input type="text" id="g_igss"></div>
-                    <div class="grupo-form"><label>Pueblo (24 de Guatemala)</label><input type="text" id="g_pueblo"></div>
-                    <div class="grupo-form"><label>Etnia (4)</label><input type="text" id="g_etnia"></div>
-                    <div class="grupo-form"><label>Nacionalidad</label><input type="text" id="g_nacionalidad"></div>
-                    <div class="grupo-form"><label>Idioma que Habla</label><input type="text" id="g_idioma"></div>
-                    <div class="grupo-form">
-                        <label>Situación Actual</label>
-                        <select id="g_situacion">
-                            <option value="Vivo">Vivo</option>
-                            <option value="Muerto">Muerto</option>
-                            <option value="Desaparecido">Desaparecido</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form"><label>Tipo Licencia Conducir</label><input type="text" id="g_tiplicencia"></div>
-                    <div class="grupo-form">
-                        <label>Estatus Licencia</label>
-                        <select id="g_estlicencia">
-                            <option value="Vigente">Vigente</option>
-                            <option value="No vigente">No vigente</option>
-                        </select>
-                    </div>
-
-                    <!-- 3. TELÉFONO - CELULAR -->
-                    <div class="seccion-form-titulo">3. Teléfono - Celular</div>
-                    <div class="grupo-form"><label>Número de Línea</label><input type="text" id="tel_linea"></div>
-                    <div class="grupo-form"><label>Número IMEI</label><input type="text" id="tel_imei"></div>
-                    <div class="grupo-form"><label>Compañía Telefónica</label><input type="text" id="tel_compania"></div>
-
-                    <!-- 4. DIRECCIÓN DOMICILIAR -->
-                    <div class="seccion-form-titulo">4. Dirección Domiciliar</div>
-                    <div class="grupo-form"><label>Dirección Exacta</label><textarea id="dir_exacta"></textarea></div>
-                    <div class="grupo-form"><label>País</label><input type="text" id="dir_pais" value="Guatemala"></div>
-                    <div class="grupo-form"><label>Departamento</label><input type="text" id="dir_depto"></div>
-                    <div class="grupo-form"><label>Municipio</label><input type="text" id="dir_muni"></div>
-                    <div class="grupo-form"><label>Aldea/Cantón/Colonia/Barrio</label><input type="text" id="dir_sector"></div>
-                    <div class="grupo-form"><label>Zona</label><input type="text" id="dir_zona"></div>
-                    <div class="grupo-form"><label>Calzada/Boulevard/Ave/Calle</label><input type="text" id="dir_calle"></div>
-                    <div class="grupo-form"><label>Numeral de Casa</label><input type="text" id="dir_numcasa"></div>
-                    <div class="grupo-form"><label>Número de Contador</label><input type="text" id="dir_contador"></div>
-
-                    <!-- 5. INFORMACIÓN FAMILIAR -->
-                    <div class="seccion-form-titulo">5. Información Familiar</div>
-                    <div class="grupo-form"><label>Nombre Familiar</label><input type="text" id="fam_nombre"></div>
-                    <div class="grupo-form"><label>Parentesco</label><input type="text" id="fam_parentesco"></div>
-                    <div class="grupo-form"><label>DPI Familiar</label><input type="text" id="fam_dpi"></div>
-
-                    <!-- 6. CARACTERÍSTICAS FÍSICAS -->
-                    <div class="seccion-form-titulo">6. Características Físicas</div>
-                    <div class="grupo-form"><label>Estatura</label><input type="text" id="fis_estatura"></div>
-                    <div class="grupo-form"><label>Complexión</label><input type="text" id="fis_complexion"></div>
-                    <div class="grupo-form"><label>Color de Piel</label><input type="text" id="fis_piel"></div>
-                    <div class="grupo-form"><label>Color de Cabello</label><input type="text" id="fis_colcabello"></div>
-                    <div class="grupo-form"><label>Estilo de Cabello</label><input type="text" id="fis_estcabello"></div>
-                    <div class="grupo-form"><label>Color de Ojos</label><input type="text" id="fis_ojos"></div>
-                    <div class="grupo-form"><label>Tipo de Orejas</label><input type="text" id="fis_orejas"></div>
-                    <div class="grupo-form"><label>Tipo de Labios</label><input type="text" id="fis_labios"></div>
-                    <div class="grupo-form"><label>Tipo de Nariz</label><input type="text" id="fis_nariz"></div>
-                    <div class="grupo-form"><label>Cicatrices</label><textarea id="fis_cicatrices"></textarea></div>
-                    <div class="grupo-form"><label>Discapacidad Física</label><input type="text" id="fis_discapacidad"></div>
-                    <div class="grupo-form"><label>Capacidades Especiales</label><input type="text" id="fis_capacidades"></div>
-                    <div class="grupo-form"><label>Otros Datos (Barba, Piercing, AFIS)</label><textarea id="fis_otros"></textarea></div>
-
-                    <!-- 7. REDES SOCIALES -->
-                    <div class="seccion-form-titulo">7. Redes Sociales</div>
-                    <div class="grupo-form"><label>ID / URL</label><input type="text" id="red_url"></div>
-                    <div class="grupo-form"><label>Alias en Red Social</label><input type="text" id="red_alias"></div>
-                    <div class="grupo-form">
-                        <label>Tipo de Red Social</label>
-                        <select id="red_tipo">
-                            <option value="">Seleccione...</option>
-                            <option value="Facebook">Facebook</option>
-                            <option value="Twitter / X">Twitter / X</option>
-                            <option value="TikTok">TikTok</option>
-                            <option value="Instagram">Instagram</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form"><label>Fecha Consulta</label><input type="date" id="red_fconsulta"></div>
-                    <div class="grupo-form">
-                        <label>Actividad del Perfil</label>
-                        <select id="red_actividad">
-                            <option value="Perfil personal">Perfil personal</option>
-                            <option value="Influencer">Influencer</option>
-                            <option value="Ventas en línea">Ventas en línea</option>
-                        </select>
-                    </div>
-
-                    <!-- 8. ANTECEDENTES ACADÉMICOS -->
-                    <div class="seccion-form-titulo">8. Antecedentes Académicos</div>
-                    <div class="grupo-form"><label>Nivel Académico</label><input type="text" id="aca_nivel"></div>
-                    <div class="grupo-form"><label>Nombre Carrera / Grado</label><input type="text" id="aca_carrera"></div>
-                    <div class="grupo-form"><label>Profesión u Oficio</label><input type="text" id="aca_profesion"></div>
-                    <div class="grupo-form">
-                        <label>¿Estudia actualmente?</label>
-                        <select id="aca_estudia">
-                            <option value="No">No</option>
-                            <option value="Si">Si</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form"><label>No. Colegiado</label><input type="text" id="aca_colegiado"></div>
-                    <div class="grupo-form">
-                        <label>Estado Colegiado</label>
-                        <select id="aca_estcolegiado">
-                            <option value="Inactivo">Inactivo</option>
-                            <option value="Activo">Activo</option>
-                        </select>
-                    </div>
-
-                    <!-- 9. HISTORIAL LABORAL -->
-                    <div class="seccion-form-titulo">9. Historial Laboral</div>
-                    <div class="grupo-form"><label>Nombre Empresa</label><input type="text" id="lab_empresa"></div>
-                    <div class="grupo-form"><label>Dirección Trabajo</label><input type="text" id="lab_direccion"></div>
-                    <div class="grupo-form"><label>Fecha Inicio</label><input type="date" id="lab_finicio"></div>
-                    <div class="grupo-form"><label>Fecha Fin</label><input type="date" id="lab_ffin"></div>
-                    <div class="grupo-form"><label>Jefe Inmediato</label><input type="text" id="lab_jefe"></div>
-                    <div class="grupo-form"><label>Teléfono Empresa</label><input type="text" id="lab_telefono"></div>
-
-                    <!-- 10. PATRIMONIO -->
-                    <div class="seccion-form-titulo">10. Patrimonio</div>
-                    <div class="grupo-form"><label>Tipo Patrimonio (Mueble/Inmueble)</label><input type="text" id="pat_tipo"></div>
-                    <div class="grupo-form"><label>Características (Edificio, Casa, etc.)</label><textarea id="pat_caract"></textarea></div>
-                    <div class="grupo-form"><label>Vehículo Placa / Datos</label><input type="text" id="pat_vehiculo"></div>
-
-                    <!-- 11. ARMA DE FUEGO -->
-                    <div class="seccion-form-titulo">11. Arma de Fuego</div>
-                    <div class="grupo-form"><label>Tipo de Arma</label><input type="text" id="arm_tipo"></div>
-                    <div class="grupo-form"><label>No. Registro Arma</label><input type="text" id="arm_registro"></div>
-                    <div class="grupo-form">
-                        <label>Licencia Arma</label>
-                        <select id="arm_licencia"><option value="No">No</option><option value="Si">Si</option></select>
-                    </div>
-                    <div class="grupo-form">
-                        <label>Tenencia Arma</label>
-                        <select id="arm_tenencia"><option value="No">No</option><option value="Si">Si</option></select>
-                    </div>
-                    <div class="grupo-form">
-                        <label>Estatus Arma</label>
-                        <select id="arm_estatus">
-                            <option value="Solvente">Solvente</option>
-                            <option value="Extraviado">Extraviado</option>
-                            <option value="Reporte de robo">Reporte de robo</option>
-                        </select>
-                    </div>
-
-                    <!-- 12. INFORMACIÓN CRIMINAL -->
-                    <div class="seccion-form-titulo">12. Información Criminal</div>
-                    <div class="grupo-form"><label>Organización Criminal</label><input type="text" id="crim_org"></div>
-                    <div class="grupo-form"><label>Actividad Criminal</label><input type="text" id="crim_act"></div>
-                    <div class="grupo-form"><label>Clica / Subgrupo</label><input type="text" id="crim_clica"></div>
-                    <div class="grupo-form"><label>Rango en Clica</label><input type="text" id="crim_rango"></div>
-                    <div class="grupo-form"><label>Lugar Operatividad</label><input type="text" id="crim_lugar"></div>
-                    <div class="grupo-form">
-                        <label>Estatus en Organización</label>
-                        <select id="crim_estatus">
-                            <option value="Activo">Activo</option>
-                            <option value="Ladeado">Ladeado</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form"><label>Antecedentes Penales</label><input type="text" id="crim_penales" placeholder="Solvente / No solvente"></div>
-                    <div class="grupo-form"><label>Antecedentes Policiales</label><input type="text" id="crim_policiales" placeholder="Solvente / No solvente"></div>
-                    <div class="grupo-form">
-                        <label>Orden de Aprehensión</label>
-                        <select id="crim_aprehension">
-                            <option value="Solvente">Solvente</option>
-                            <option value="Prófugo">Prófugo</option>
-                            <option value="Detenido">Detenido</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form"><label>Número Causa</label><input type="text" id="crim_causa"></div>
-                    <div class="grupo-form"><label>Colaboradores (DPI, Nombre, Actividad)</label><textarea id="crim_colaboradores"></textarea></div>
-
-                    <!-- 13. HISTORIAL PENITENCIARIO -->
-                    <div class="seccion-form-titulo">13. Historial Penitenciario</div>
-                    <div class="grupo-form"><label>Centro de Reclusión</label><input type="text" id="pen_centro"></div>
-                    <div class="grupo-form"><label>Delito</label><input type="text" id="pen_delito"></div>
-                    <div class="grupo-form"><label>Fecha Ingreso</label><input type="date" id="pen_fingreso"></div>
-                    <div class="grupo-form"><label>Fecha Salida</label><input type="date" id="pen_fsalida"></div>
-                    <div class="grupo-form"><label>No. Expediente Vinculado</label><input type="text" id="pen_expediente"></div>
-                    <div class="grupo-form"><label>Control Detenidos (OJ)</label><input type="text" id="pen_oj"></div>
-
-                    <!-- 14. FLUJO MIGRATORIO -->
-                    <div class="seccion-form-titulo">14. Flujo Migratorio</div>
-                    <div class="grupo-form"><label>Motivo (Entrada/Salida - Aduana/Aeropuerto)</label><input type="text" id="mig_motivo"></div>
-                    <div class="grupo-form"><label>Fecha Flujo</label><input type="date" id="mig_fecha"></div>
-                    <div class="grupo-form"><label>País Destino</label><input type="text" id="mig_destino"></div>
-                    <div class="grupo-form"><label>País Procedencia</label><input type="text" id="mig_procedencia"></div>
-                    <div class="grupo-form">
-                        <label>Medio Transporte</label>
-                        <select id="mig_transporte">
-                            <option value="Terrestre">Terrestre</option>
-                            <option value="Aéreo">Aéreo</option>
-                            <option value="Marítimo">Marítimo</option>
-                        </select>
-                    </div>
-                    <div class="grupo-form"><label>Arraigo</label><input type="text" id="mig_arraigo"></div>
-
-                    <!-- 15. HISTORIAL FOTOGRÁFICO -->
-                    <div class="seccion-form-titulo">15. Historial Fotográfico</div>
-                    <div class="grupo-form"><label>Subir Fotografía Persona</label><input type="file" id="fotoInput" accept="image/*"></div>
-                    <div class="grupo-form"><label>Tatuajes (Tipo, Ubicación, Desc.)</label><textarea id="foto_tatuajes"></textarea></div>
-                    <div class="grupo-form"><label>Grafitis / Vehículos Desc.</label><textarea id="foto_grafitis"></textarea></div>
-
-                    <!-- 16. DATOS FINANCIEROS -->
-                    <div class="seccion-form-titulo">16. Datos Financieros</div>
-                    <div class="grupo-form"><label>Entidad Bancaria</label><input type="text" id="fin_banco"></div>
-                    <div class="grupo-form"><label>Tipo y No. de Cuenta</label><input type="text" id="fin_cuenta"></div>
-                    <div class="grupo-form"><label>Tipo Transacción / Monto</label><input type="text" id="fin_monto"></div>
-                    <div class="grupo-form"><label>Actividad Comercial Principal</label><input type="text" id="fin_actividad"></div>
-                    <div class="grupo-form"><label>Observaciones Financieras</label><textarea id="fin_obs"></textarea></div>
-
-                    <!-- 17. FUENTES CONSULTADAS -->
-                    <div class="seccion-form-titulo">17. Fuentes Consultadas</div>
-                    <div class="grupo-form"><label>Fuentes Abiertas (Redes, Periodistas)</label><textarea id="fue_abiertas"></textarea></div>
-                    <div class="grupo-form"><label>Fuentes Cerradas (Sistemas de Info)</label><textarea id="fue_cerradas"></textarea></div>
+                    <div class="grupo-form"><label>Antecedentes</label><textarea id="antecedentes"></textarea></div>
+                    <div class="grupo-form"><label>Tatuajes</label><textarea id="tatuajes"></textarea></div>
+                    <div class="grupo-form"><label>Profesión / Oficio</label><input type="text" id="profesion"></div>
+                    <div class="grupo-form"><label>Lugares de Operación</label><input type="text" id="lugaresOp"></div>
+                    <div class="grupo-form"><label>Observaciones</label><textarea id="observaciones"></textarea></div>
+                    <div class="grupo-form"><label>Estado / Situación Actual</label><input type="text" id="estadoActual"></div>
+                    <div class="grupo-form"><label>Fecha de Creación</label><input type="date" id="fechaCreacion"></div>
+                    <div class="grupo-form"><label>Fecha Última Actualización</label><input type="date" id="fechaActualiza"></div>
+                    <div class="grupo-form"><label>Subir Foto Persona</label><input type="file" id="fotoInput" accept="image/*"></div>
 
                     <div class="botones">
-                        <button class="btn-guardar" onclick="guardarFichaConsolidada()">💾 Guardar Ficha SIPER</button>
-                        <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar a Excel</button>
+                        <button class="btn-guardar" onclick="guardarFichaConsolidada()">💾 Guardar Ficha</button>
+                        <button onclick="exportarPersonasAExcel()" class="btn-excel">Exportar a Excel</button>
                         <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / PDF</button>
                         <button class="btn-limpiar" onclick="limpiarFormulario()">🗑️ Limpiar</button>
                     </div>
                 </div>
 
-                <!-- VISTA PREVIA PERSONA -->
                 <div class="card-modulo vista-ficha">
-                    <h2>Vista Previa Ficha SIPER</h2>
+                    <h2>Vista Previa Ficha Persona</h2>
                     <div class="ficha">
-                        <div class="ficha-cabecera">Ficha de Identificación Personas (SIPER)</div>
-                        <div class="ficha-auditoria">REGISTRO S.I.P.E.R. CONFIDENCIAL</div>
+                        <div class="ficha-cabecera">Perfil de Persona</div>
+                        <div class="ficha-auditoria">Auditoría: Registro del Sistema</div>
                         <div class="ficha-contenido">
-                            <div class="foto-ficha" id="vistaFoto">📷</div>
-                            <br>
-                            <div class="ficha-seccion-titulo">1. Tipo de Identificación</div>
-                            <div class="fila"><div class="celda-etiqueta">Operativo / Tipo:</div><div class="celda-dato" id="v-id_operativo"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Dirección / Fecha / Hora:</div><div class="celda-dato" id="v-id_fecha_hora"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Coordenadas:</div><div class="celda-dato" id="v-id_coordenadas"></div></div>
-
-                            <div class="ficha-seccion-titulo">2. Datos Generales</div>
-                            <div class="fila"><div class="celda-etiqueta">Nombre Completo:</div><div class="celda-dato" id="v-g_nombre_completo"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">DPI:</div><div class="celda-dato" id="v-g_dpi"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Apodo / Sobrenombre:</div><div class="celda-dato" id="v-g_apodo"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Fecha / Lugar Nac.:</div><div class="celda-dato" id="v-g_nac"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Sexo / LGTBIQ+:</div><div class="celda-dato" id="v-g_sexo"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Estado Civil / NIT / IGSS:</div><div class="celda-dato" id="v-g_civil_nit"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Pueblo / Etnia / Idioma:</div><div class="celda-dato" id="v-g_etnia_idioma"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Nacionalidad / Situación:</div><div class="celda-dato" id="v-g_nac_sit"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Licencia Conducir:</div><div class="celda-dato" id="v-g_licencia"></div></div>
-
-                            <div class="ficha-seccion-titulo">3. Teléfono - Celular</div>
-                            <div class="fila"><div class="celda-etiqueta">Línea / IMEI / Compañía:</div><div class="celda-dato" id="v-tel_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">4. Dirección Domiciliar</div>
-                            <div class="fila"><div class="celda-etiqueta">Dirección Exacta:</div><div class="celda-dato" id="v-dir_exacta"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Ubicación:</div><div class="celda-dato" id="v-dir_ubicacion"></div></div>
-
-                            <div class="ficha-seccion-titulo">5. Información Familiar</div>
-                            <div class="fila"><div class="celda-etiqueta">Familiar / Parentesco / DPI:</div><div class="celda-dato" id="v-fam_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">6. Características Físicas</div>
-                            <div class="fila"><div class="celda-etiqueta">Rasgos Principales:</div><div class="celda-dato" id="v-fis_rasgos"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Cicatrices / Discapacidad:</div><div class="celda-dato" id="v-fis_otros"></div></div>
-
-                            <div class="ficha-seccion-titulo">7. Redes Sociales</div>
-                            <div class="fila"><div class="celda-etiqueta">Red / Alias / URL:</div><div class="celda-dato" id="v-red_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">8. Antecedentes Académicos</div>
-                            <div class="fila"><div class="celda-etiqueta">Nivel / Carrera / Profesión:</div><div class="celda-dato" id="v-aca_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">9. Historial Laboral</div>
-                            <div class="fila"><div class="celda-etiqueta">Empresa / Período / Contacto:</div><div class="celda-dato" id="v-lab_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">10. Patrimonio</div>
-                            <div class="fila"><div class="celda-etiqueta">Bienes / Vehículos:</div><div class="celda-dato" id="v-pat_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">11. Arma de Fuego</div>
-                            <div class="fila"><div class="celda-etiqueta">Tipo / Registro / Estatus:</div><div class="celda-dato" id="v-arm_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">12. Información Criminal</div>
-                            <div class="fila"><div class="celda-etiqueta">Org / Clica / Rango / Estatus:</div><div class="celda-dato" id="v-crim_org"></div></div>
-                            <div class="fila"><div class="celda-etiqueta">Antecedentes / Aprehensión:</div><div class="celda-dato" id="v-crim_antecedentes"></div></div>
-
-                            <div class="ficha-seccion-titulo">13. Historial Penitenciario</div>
-                            <div class="fila"><div class="celda-etiqueta">Centro / Delito / Período:</div><div class="celda-dato" id="v-pen_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">14. Flujo Migratorio</div>
-                            <div class="fila"><div class="celda-etiqueta">Motivo / Fecha / Países / Transporte:</div><div class="celda-dato" id="v-mig_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">15. Historial Fotográfico & Tatuajes</div>
-                            <div class="fila"><div class="celda-etiqueta">Tatuajes / Grafitis:</div><div class="celda-dato" id="v-foto_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">16. Datos Financieros</div>
-                            <div class="fila"><div class="celda-etiqueta">Banco / Cuenta / Actividad:</div><div class="celda-dato" id="v-fin_info"></div></div>
-
-                            <div class="ficha-seccion-titulo">17. Fuentes Consultadas</div>
-                            <div class="fila"><div class="celda-etiqueta">Fuentes Abiertas / Cerradas:</div><div class="celda-dato" id="v-fue_info"></div></div>
+                            <div class="fila-doble">
+                                <div class="columna-izq">
+                                    <div class="fila"><div class="celda-etiqueta">NOMBRES Y APELLIDOS</div><div class="celda-dato" id="f-nombres"></div></div>
+                                </div>
+                                <div class="columna-der">
+                                    <b>Ficha No.</b> <span id="f-fichaNo"></span>
+                                    <div class="foto-ficha" id="vistaFoto">📷</div>
+                                </div>
+                            </div>
+                            <div class="fila"><div class="celda-etiqueta">FECHA DE NACIMIENTO</div><div class="celda-dato" id="f-fechaNac"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NACIONALIDAD</div><div class="celda-dato" id="f-nacionalidad"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">LUGAR DE ORIGEN</div><div class="celda-dato" id="f-origen"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">DOC. DE IDENTIDAD</div><div class="celda-dato" id="f-dpi"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">OTROS DOCUMENTOS</div><div class="celda-dato" id="f-otrosDoc"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NOMBRE DEL PADRE</div><div class="celda-dato" id="f-padre"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NOMBRE DE LA MADRE</div><div class="celda-dato" id="f-madre"></div></div>
+                            <div class="fila-3col"><div class="col-1">ESTADO CIVIL</div><div class="col-2" id="f-estadoCivil"></div><div class="col-3"><b>ALIAS:</b> <span id="f-alias"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">NOMBRE CONV./GRUPO</div><div class="col-2" id="f-pandilla"></div><div class="col-3"><b>PANDILLA:</b> <span id="f-pandilla2"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">LUGAR DE RESIDENCIA</div><div class="col-2" id="f-direccion"></div><div class="col-3"><b>CLICA:</b> <span id="f-clica"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">COLONIA / ZONA</div><div class="col-2" id="f-coloniaZona"></div><div class="col-3"><b>RANGO:</b> <span id="f-rango"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">MUNICIPIO / DEPTO.</div><div class="col-2" id="f-muniDepto"></div><div class="col-3"><b>TATUAJES:</b> <span id="f-tatuajesResumen"></span></div></div>
+                            <div class="fila"><div class="celda-etiqueta">ANTECEDENTES</div><div class="celda-dato" id="f-antecedentes"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">TATUAJES QUE PRESENTA</div><div class="celda-dato" id="f-tatuajes"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">PROFESIÓN U OFICIO</div><div class="celda-dato" id="f-profesion"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">LUGARES DE OPERACIÓN</div><div class="celda-dato" id="f-lugaresOp"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">OBSERVACIONES</div><div class="celda-dato" id="f-observaciones"></div></div>
+                            <div class="fila-3col"><div class="col-1">STATUS ACTUAL</div><div class="col-2" id="f-estadoActual"></div><div class="col-3"><b>CASO INTERNO No.</b> <span id="f-casoInterno"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">FUENTE</div><div class="col-2">Sección de Análisis</div><div class="col-3"><b>PROPÓSITO:</b> Identificación</div></div>
+                            <div class="fila-3col"><div class="col-1">FECHA CREACIÓN</div><div class="col-2" id="f-fechaCreacion"></div><div class="col-3"><b>FECHA ÚLTIMA ACT.:</b> <span id="f-fechaActualiza"></span></div></div>
                         </div>
                         <div class="pie-ficha">
                             <div class="fila-pie">
-                                <div>SISTEMA: SIPER v1.1</div>
+                                <div>CODIGO DE PRODUCTO: <span id="f-codigo">SAEMP-0000</span></div>
                                 <div>CLASIFICACIÓN: CONFIDENCIAL</div>
-                                <div>REGISTRADO POR: <span id="v-usuario"></span></div>
+                                <div>USUARIO: <span id="f-usuario"></span></div>
+                                <div>FECHA Y HORA: <span id="f-fechahora"></span></div>
                             </div>
                         </div>
                     </div>
@@ -821,26 +569,211 @@
 
             <!-- ================= MÓDULO 2: BÚSQUEDA FICHAS PERSONAS ================= -->
             <div id="modulo-fichas" class="card-modulo oculto">
-                <h2>🔍 Consulta de Fichas SIPER</h2>
+                <h2>🔍 Consulta de Fichas de Personas</h2>
                 <div class="panel-busqueda">
-                    <input type="text" id="input-buscar-persona" placeholder="Escribe Nombre, DPI o Apodo..." oninput="buscarPersona()">
-                    <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar Todos a Excel</button>
+                    <input type="text" id="input-buscar-persona" placeholder="Escribe el nombre, DPI o No. de Ficha..." oninput="buscarPersona()">
                 </div>
                 <div class="lista-personas" id="lista-resultados"></div>
 
                 <div id="contenedor-ficha-consultada" class="oculto">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3>Ficha SIPER del Individuo</h3>
+                        <h3>Ficha del Individuo</h3>
                         <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ficha</button>
                     </div>
                     <div class="ficha">
-                        <div class="ficha-cabecera">Detalle General SIPER</div>
-                        <div class="ficha-contenido" id="detalle-persona-consultada"></div>
+                        <div class="ficha-cabecera">Perfil de Identificación</div>
+                        <div class="ficha-auditoria">Auditoría: Registro del Sistema</div>
+                        <div class="ficha-contenido">
+                            <div class="fila-doble">
+                                <div class="columna-izq">
+                                    <div class="fila"><div class="celda-etiqueta">NOMBRES Y APELLIDOS</div><div class="celda-dato" id="v-nombres"></div></div>
+                                </div>
+                                <div class="columna-der">
+                                    <b>Ficha No.</b> <span id="v-fichaNo"></span>
+                                    <div class="foto-ficha" id="v-vistaFoto">📷</div>
+                                </div>
+                            </div>
+                            <div class="fila"><div class="celda-etiqueta">FECHA DE NACIMIENTO</div><div class="celda-dato" id="v-fechaNac"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NACIONALIDAD</div><div class="celda-dato" id="v-nacionalidad"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">LUGAR DE ORIGEN</div><div class="celda-dato" id="v-origen"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">DOC. DE IDENTIDAD</div><div class="celda-dato" id="v-dpi"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">OTROS DOCUMENTOS</div><div class="celda-dato" id="v-otrosDoc"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NOMBRE DEL PADRE</div><div class="celda-dato" id="v-padre"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NOMBRE DE LA MADRE</div><div class="celda-dato" id="v-madre"></div></div>
+                            <div class="fila-3col"><div class="col-1">ESTADO CIVIL</div><div class="col-2" id="v-estadoCivil"></div><div class="col-3"><b>ALIAS:</b> <span id="v-alias"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">NOMBRE CONV./GRUPO</div><div class="col-2" id="v-pandilla"></div><div class="col-3"><b>PANDILLA:</b> <span id="v-pandilla2"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">LUGAR DE RESIDENCIA</div><div class="col-2" id="v-direccion"></div><div class="col-3"><b>CLICA:</b> <span id="v-clica"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">COLONIA / ZONA</div><div class="col-2" id="v-coloniaZona"></div><div class="col-3"><b>RANGO:</b> <span id="v-rango"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">MUNICIPIO / DEPTO.</div><div class="col-2" id="v-muniDepto"></div><div class="col-3"><b>TATUAJES:</b> <span id="v-tatuajesResumen"></span></div></div>
+                            <div class="fila"><div class="celda-etiqueta">ANTECEDENTES</div><div class="celda-dato" id="v-antecedentes"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">TATUAJES QUE PRESENTA</div><div class="celda-dato" id="v-tatuajes"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">PROFESIÓN U OFICIO</div><div class="celda-dato" id="v-profesion"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">LUGARES DE OPERACIÓN</div><div class="celda-dato" id="v-lugaresOp"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">OBSERVACIONES</div><div class="celda-dato" id="v-observaciones"></div></div>
+                            <div class="fila-3col"><div class="col-1">STATUS ACTUAL</div><div class="col-2" id="v-estadoActual"></div><div class="col-3"><b>CASO INTERNO No.</b> <span id="v-casoInterno"></span></div></div>
+                            <div class="fila-3col"><div class="col-1">FECHA CREACIÓN</div><div class="col-2" id="v-fechaCreacion"></div><div class="col-3"><b>FECHA ÚLTIMA ACT.:</b> <span id="v-fechaActualiza"></span></div></div>
+                        </div>
+                        <div class="pie-ficha">
+                            <div class="fila-pie">
+                                <div>CODIGO DE PRODUCTO: <span id="v-codigo">SAEMP-0000</span></div>
+                                <div>CLASIFICACIÓN: CONFIDENCIAL</div>
+                                <div>REGISTRADO POR: <span id="v-usuario"></span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= MÓDULO 3: TELEFONOS ================= -->
+            <!-- ================= MÓDULO 3: CREAR / EDITAR VEHÍCULOS ================= -->
+            <div id="modulo-crear-vehiculo" class="oculto" style="display: flex; gap: 25px; width: 100%;">
+                <div class="card-modulo formulario">
+                    <h2>Formulario de Ficha de Vehículo</h2>
+                    
+                    <h3 style="color:#00529b; margin-bottom: 12px; font-size:16px;">Datos del Vehículo</h3>
+                    <div class="grupo-form"><label>Placa</label><input type="text" id="v-placa" placeholder="P-055JRY"></div>
+                    <div class="grupo-form"><label>Tipo</label><input type="text" id="v-tipo" placeholder="Carro"></div>
+                    <div class="grupo-form"><label>Marca</label><input type="text" id="v-marca" placeholder="Honda"></div>
+                    <div class="grupo-form"><label>Línea</label><input type="text" id="v-linea" placeholder="FIT"></div>
+                    <div class="grupo-form"><label>Modelo (Año)</label><input type="text" id="v-modelo" placeholder="2009"></div>
+                    <div class="grupo-form"><label>Color</label><input type="text" id="v-color" placeholder="Negro Policromado"></div>
+                    <div class="grupo-form"><label>No. de VIN</label><input type="text" id="v-vin" placeholder="Jhmge87239s004467"></div>
+                    <div class="grupo-form"><label>No. de Chásis</label><input type="text" id="v-chasis" placeholder="Jhmge87239s004467"></div>
+                    <div class="grupo-form"><label>No. de Motor</label><input type="text" id="v-motor" placeholder="L15o71106160"></div>
+                    <div class="grupo-form"><label>No. de Serie</label><input type="text" id="v-serie" placeholder="Jhmge87239s004467"></div>
+                    <div class="grupo-form"><label>Cilindrada (CC)</label><input type="text" id="v-cc" placeholder="1500"></div>
+                    <div class="grupo-form"><label>Estado Vehículo</label><input type="text" id="v-estado" placeholder="Activo"></div>
+                    <div class="grupo-form"><label>Código Registro</label><input type="text" id="v-codigoReg" placeholder="2019-279155-1"></div>
+                    <div class="grupo-form"><label>Año Impuesto</label><input type="text" id="v-impuesto" placeholder="2022"></div>
+
+                    <h3 style="color:#00529b; margin: 15px 0 10px; font-size:16px;">Datos del Propietario</h3>
+                    <div class="grupo-form"><label>Nombre del Propietario</label><input type="text" id="v-propietario" placeholder="Douglas Amilcar Duran Figueroa"></div>
+                    <div class="grupo-form"><label>DPI Propietario</label><input type="text" id="v-dpiProp" placeholder="2714092820101"></div>
+                    <div class="grupo-form"><label>NIT Propietario</label><input type="text" id="v-nitProp" placeholder="85363995"></div>
+                    <div class="grupo-form"><label>Edad</label><input type="text" id="v-edadProp" placeholder="27 años"></div>
+                    <div class="grupo-form"><label>Fecha de Nacimiento</label><input type="text" id="v-fnacProp" placeholder="19-05-1995"></div>
+                    <div class="grupo-form"><label>Lugar de Nacimiento</label><input type="text" id="v-lnacProp" placeholder="Villa Nueva, Guatemala"></div>
+                    <div class="grupo-form"><label>Dirección Propietario</label><input type="text" id="v-dirProp" placeholder="Kilometro 14 Carretera Al Pacifico..."></div>
+                    <div class="grupo-form"><label>Padres Propietario</label><input type="text" id="v-padresProp" placeholder="Amilcar Florentin..."></div>
+                    <div class="grupo-form"><label>Observaciones Solvencia / Estado</label><textarea id="v-obsProp" placeholder="Se encuentra solvente."></textarea></div>
+
+                    <div class="grupo-form"><label>Fotografía del Vehículo</label><input type="file" id="v-fotoVehiculoInput" accept="image/*"></div>
+                    <div class="grupo-form"><label>Fotografía del Propietario</label><input type="file" id="v-fotoPropInput" accept="image/*"></div>
+
+                    <div class="botones">
+                        <button class="btn-guardar" onclick="guardarFichaVehiculo()">💾 Guardar Ficha Vehículo</button>
+                        <button onclick="exportarVehiculosAExcel()" class="btn-excel">Exportar a Excel</button>
+                        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / PDF</button>
+                        <button class="btn-limpiar" onclick="limpiarFormVehiculo()">🗑️ Limpiar</button>
+                    </div>
+                </div>
+
+                <div class="card-modulo vista-ficha">
+                    <h2>Vista Previa Ficha Vehículo</h2>
+                    <div class="ficha">
+                        <div class="ficha-cabecera" id="vh-header-placa">Ficha de Vehículo</div>
+                        <div class="ficha-contenido">
+                            <div class="foto-vehiculo-contenedor" id="vh-vistaFotoVehiculo">🚗 FOTOGRAFÍA DE REFERENCIA</div>
+
+                            <div class="ficha-seccion-titulo">DATOS DEL VEHÍCULO</div>
+                            <div class="fila"><div class="celda-etiqueta">PLACA:</div><div class="celda-dato" id="vh-placa"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">TIPO:</div><div class="celda-dato" id="vh-tipo"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">MARCA:</div><div class="celda-dato" id="vh-marca"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">LÍNEA:</div><div class="celda-dato" id="vh-linea"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">MODELO:</div><div class="celda-dato" id="vh-modelo"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">COLOR:</div><div class="celda-dato" id="vh-color"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NO. DE VIN:</div><div class="celda-dato" id="vh-vin"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NO. DE CHÁSIS:</div><div class="celda-dato" id="vh-chasis"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NO. DE MOTOR:</div><div class="celda-dato" id="vh-motor"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NO. DE SERIE:</div><div class="celda-dato" id="vh-serie"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">CC:</div><div class="celda-dato" id="vh-cc"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">ESTADO:</div><div class="celda-dato" id="vh-estado"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">CÓDIGO:</div><div class="celda-dato" id="vh-codigo"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">AÑO IMPUESTO:</div><div class="celda-dato" id="vh-impuesto"></div></div>
+
+                            <div class="ficha-seccion-titulo" style="margin-top: 10px;">DATOS DEL PROPIETARIO</div>
+                            <div class="fila-doble">
+                                <div class="columna-izq">
+                                    <div class="fila"><div class="celda-etiqueta">PROPIETARIO:</div><div class="celda-dato" id="vh-propietario"></div></div>
+                                    <div class="fila"><div class="celda-etiqueta">DPI:</div><div class="celda-dato" id="vh-dpiProp"></div></div>
+                                    <div class="fila"><div class="celda-etiqueta">NIT:</div><div class="celda-dato" id="vh-nitProp"></div></div>
+                                    <div class="fila"><div class="celda-etiqueta">EDAD:</div><div class="celda-dato" id="vh-edadProp"></div></div>
+                                    <div class="fila"><div class="celda-etiqueta">F. NACIMIENTO:</div><div class="celda-dato" id="vh-fnacProp"></div></div>
+                                </div>
+                                <div class="columna-der" style="text-align: center;">
+                                    <div style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">FOTOGRAFIA PROPIETARIO</div>
+                                    <div class="foto-ficha" id="vh-vistaFotoProp" style="width: 120px; height: 150px;">👤</div>
+                                </div>
+                            </div>
+                            <div class="fila"><div class="celda-etiqueta">LUGAR DE NACIMIENTO:</div><div class="celda-dato" id="vh-lnacProp"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">DIRECCIÓN:</div><div class="celda-dato" id="vh-dirProp"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">PADRES:</div><div class="celda-dato" id="vh-padresProp"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">OBSERVACIONES:</div><div class="celda-dato" id="vh-obsProp"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= MÓDULO 4: BÚSQUEDA FICHAS VEHÍCULOS ================= -->
+            <div id="modulo-vehiculos" class="card-modulo oculto">
+                <h2>🚗 Consulta de Fichas de Vehículos</h2>
+                
+                <div class="panel-busqueda">
+                    <input type="text" id="input-buscar-vehiculo" placeholder="Buscar por Placa, VIN, Propietario o DPI..." oninput="buscarVehiculo()">
+                </div>
+
+                <div class="lista-personas" id="lista-vehiculos-resultados"></div>
+
+                <div id="contenedor-vehiculo-consultado" class="oculto">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3>Ficha del Vehículo Registrado</h3>
+                        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ficha</button>
+                    </div>
+
+                    <div class="ficha">
+                        <div class="ficha-cabecera" id="vc-header-placa">Ficha de Vehículo</div>
+                        <div class="ficha-contenido">
+                            <div class="foto-vehiculo-contenedor" id="vc-vistaFotoVehiculo">🚗 FOTOGRAFÍA DE REFERENCIA</div>
+
+                            <div class="ficha-seccion-titulo">DATOS DEL VEHÍCULO</div>
+                            <div class="fila"><div class="celda-etiqueta">PLACA:</div><div class="celda-dato" id="vc-placa"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">TIPO:</div><div class="celda-dato" id="vc-tipo"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">MARCA:</div><div class="celda-dato" id="vc-marca"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">LÍNEA:</div><div class="celda-dato" id="vc-linea"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">MODELO:</div><div class="celda-dato" id="vc-modelo"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">COLOR:</div><div class="celda-dato" id="vc-color"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NO. DE VIN:</div><div class="celda-dato" id="vc-vin"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NO. DE CHÁSIS:</div><div class="celda-dato" id="vc-chasis"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NO. DE MOTOR:</div><div class="celda-dato" id="vc-motor"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">NO. DE SERIE:</div><div class="celda-dato" id="vc-serie"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">CC:</div><div class="celda-dato" id="vc-cc"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">ESTADO:</div><div class="celda-dato" id="vc-estado"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">CÓDIGO:</div><div class="celda-dato" id="vc-codigo"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">AÑO IMPUESTO:</div><div class="celda-dato" id="vc-impuesto"></div></div>
+
+                            <div class="ficha-seccion-titulo" style="margin-top: 10px;">DATOS DEL PROPIETARIO</div>
+                            <div class="fila-doble">
+                                <div class="columna-izq">
+                                    <div class="fila"><div class="celda-etiqueta">PROPIETARIO:</div><div class="celda-dato" id="vc-propietario"></div></div>
+                                    <div class="fila"><div class="celda-etiqueta">DPI:</div><div class="celda-dato" id="vc-dpiProp"></div></div>
+                                    <div class="fila"><div class="celda-etiqueta">NIT:</div><div class="celda-dato" id="vc-nitProp"></div></div>
+                                    <div class="fila"><div class="celda-etiqueta">EDAD:</div><div class="celda-dato" id="vc-edadProp"></div></div>
+                                    <div class="fila"><div class="celda-etiqueta">F. NACIMIENTO:</div><div class="celda-dato" id="vc-fnacProp"></div></div>
+                                </div>
+                                <div class="columna-der" style="text-align: center;">
+                                    <div style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">FOTOGRAFIA PROPIETARIO</div>
+                                    <div class="foto-ficha" id="vc-vistaFotoProp" style="width: 120px; height: 150px;">👤</div>
+                                </div>
+                            </div>
+                            <div class="fila"><div class="celda-etiqueta">LUGAR DE NACIMIENTO:</div><div class="celda-dato" id="vc-lnacProp"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">DIRECCIÓN:</div><div class="celda-dato" id="vc-dirProp"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">PADRES:</div><div class="celda-dato" id="vc-padresProp"></div></div>
+                            <div class="fila"><div class="celda-etiqueta">OBSERVACIONES:</div><div class="celda-dato" id="vc-obsProp"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= MÓDULO 5: TELEFONOS ================= -->
             <div id="modulo-telefonos" class="card-modulo oculto" style="width: 100%;">
                 <h2>📞 Directorio y Números Telefónicos</h2>
                 <div style="width: 100%; height: 80vh; min-height: 600px; margin-top: 15px;">
@@ -854,15 +787,15 @@
                 </div>
             </div>
 
-            <!-- ================= MÓDULO 4: USUARIOS ================= -->
+            <!-- ================= MÓDULO 6: USUARIOS ================= -->
             <div id="modulo-usuarios" class="card-modulo oculto">
-                <h2>👤 Gestión de Usuarios</h2>
+                <h2>👤 Gestión e Identificación de Usuarios</h2>
                 <div class="grid-usuarios">
                     <div style="background: #f8fbfe; padding: 15px; border-radius: 6px; border: 1px solid #bdd7ee;" id="seccion-crear-usuario">
                         <h3 style="margin-bottom: 12px; color: #00529b;">➕ Registrar Usuario</h3>
                         <form id="form-nuevo-usuario">
                             <div class="grupo-form"><label>Nombre Completo</label><input type="text" id="nuevo-nombre" required></div>
-                            <div class="grupo-form"><label>Usuario Login</label><input type="text" id="nuevo-user" required></div>
+                            <div class="grupo-form"><label>Usuario / Alias Login</label><input type="text" id="nuevo-user" required></div>
                             <div class="grupo-form"><label>Contraseña</label><input type="password" id="nuevo-pass" required></div>
                             <div class="grupo-form">
                                 <label>Rol / Permisos</label>
@@ -877,7 +810,7 @@
                     </div>
 
                     <div>
-                        <h3 style="margin-bottom: 12px; color: #00529b;">Lista de Usuarios</h3>
+                        <h3 style="margin-bottom: 12px; color: #00529b;">Lista de Usuarios Registrados</h3>
                         <table class="tabla-datos">
                             <thead>
                                 <tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
@@ -888,13 +821,13 @@
                 </div>
             </div>
 
-            <!-- ================= MÓDULO 5: SECCIÓN ================= -->
+            <!-- ================= MÓDULO 7: SECCIÓN ================= -->
             <div id="modulo-seccion" class="card-modulo oculto">
-                <h2>🏢 Información del Sistema SIPER</h2>
+                <h2>🏢 Datos de la Sección</h2>
                 <div style="line-height: 1.8;">
-                    <p><b>Sistema:</b> SIPER v1.1 - Sistema de Identificación de Personas</p>
-                    <p><b>Sección:</b> Información Criminal y Análisis Estratégico</p>
-                    <p><b>Propósito Institucional:</b> Registro estructurado bajo 17 áreas clave de captura de información personal, familiar, criminal y de antecedentes.</p>
+                    <p><b>Unidad:</b> Sección de Información Criminal (-SIC-)</p>
+                    <p><b>División:</b> CRADIC - ST - SGIC</p>
+                    <p><b>Propósito Institucional:</b> Registro, sistematización e identificación de antecedentes e historial criminal.</p>
                     <p><b>Clasificación de Documentos:</b> RESERVADO / CONFIDENCIAL</p>
                 </div>
             </div>
@@ -919,10 +852,11 @@ const firebaseConfig = {
   measurementId: "G-SHG13XJX45"
 };
 
-// INICIALIZACIÓN DE FIREBASE
+// INICIALIZACIÓN
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// USUARIOS INICIALES
 const USUARIOS_DEFECTO = [
     { nombre: "Administrador Sistema", usuario: "admin", pass: "1234", rol: "Administrador General", estado: "Activo" },
     { nombre: "SAC", usuario: "sac", pass: "1234", rol: "Operador", estado: "Activo" },
@@ -931,7 +865,9 @@ const USUARIOS_DEFECTO = [
 
 let usuariosGlobal = [];
 let historialPersonasGlobal = [];
+let historialVehiculosGlobal = [];
 
+// ESCUCHADORES DE FIREBASE EN TIEMPO REAL
 db.ref('usuariosSistema').on('value', snapshot => {
     usuariosGlobal = [];
     if (snapshot.exists()) {
@@ -946,7 +882,7 @@ db.ref('usuariosSistema').on('value', snapshot => {
     renderizarTablaUsuarios();
 });
 
-db.ref('fichasSiper').on('value', snapshot => {
+db.ref('fichasPersonas').on('value', snapshot => {
     historialPersonasGlobal = [];
     if (snapshot.exists()) {
         snapshot.forEach(child => {
@@ -956,8 +892,19 @@ db.ref('fichasSiper').on('value', snapshot => {
     actualizarContadores();
 });
 
-function obtenerUsuarios() { return usuariosGlobal; }
-function obtenerHistorial() { return historialPersonasGlobal; }
+db.ref('fichasVehiculos').on('value', snapshot => {
+    historialVehiculosGlobal = [];
+    if (snapshot.exists()) {
+        snapshot.forEach(child => {
+            historialVehiculosGlobal.push(child.val());
+        });
+    }
+    actualizarContadores();
+});
+
+function obtenerUsuarios() {
+    return usuariosGlobal;
+}
 
 let usuarioSesionActual = null;
 
@@ -991,30 +938,43 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
 function aplicarPermisosRol() {
     const btnCrear = document.getElementById('btn-tab-crear');
     const btnFichas = document.getElementById('btn-tab-fichas');
+    const btnCrearVehiculo = document.getElementById('btn-tab-crear-vehiculo');
+    const btnVehiculos = document.getElementById('btn-tab-vehiculos');
     const btnTelefonos = document.getElementById('btn-tab-telefonos');
     const btnUsuarios = document.getElementById('btn-tab-usuarios');
     const btnSeccion = document.getElementById('btn-tab-seccion');
 
     if (usuarioSesionActual.rol === "Analista") {
         btnCrear.style.display = 'none';
+        btnCrearVehiculo.style.display = 'none';
         btnUsuarios.style.display = 'none';
+        
         btnFichas.style.display = 'inline-block';
+        btnVehiculos.style.display = 'inline-block';
         btnTelefonos.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
+        
         cambiarModulo('fichas');
     } else if (usuarioSesionActual.rol === "Operador") {
         btnUsuarios.style.display = 'none';
+        
         btnCrear.style.display = 'inline-block';
         btnFichas.style.display = 'inline-block';
+        btnCrearVehiculo.style.display = 'inline-block';
+        btnVehiculos.style.display = 'inline-block';
         btnTelefonos.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
+
         cambiarModulo('crear');
     } else {
         btnCrear.style.display = 'inline-block';
         btnFichas.style.display = 'inline-block';
+        btnCrearVehiculo.style.display = 'inline-block';
+        btnVehiculos.style.display = 'inline-block';
         btnTelefonos.style.display = 'inline-block';
         btnUsuarios.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
+
         cambiarModulo('crear');
     }
 }
@@ -1027,10 +987,21 @@ function cerrarSesion() {
     document.getElementById('login-password').value = '';
 }
 
+// CAMBIO DE MÓDULOS
 function cambiarModulo(modulo) {
     if (!usuarioSesionActual) return;
 
-    const modulos = ['crear', 'fichas', 'telefonos', 'usuarios', 'seccion'];
+    if (usuarioSesionActual.rol === "Analista" && (modulo === 'crear' || modulo === 'crear-vehiculo' || modulo === 'usuarios')) {
+        alert("⚠️ Acceso denegado: Tu rol no tiene permiso para crear registros.");
+        return;
+    }
+
+    if (usuarioSesionActual.rol === "Operador" && modulo === 'usuarios') {
+        alert("⚠️ Acceso denegado: Los Operadores no tienen permiso para gestionar usuarios.");
+        return;
+    }
+
+    const modulos = ['crear', 'fichas', 'crear-vehiculo', 'vehiculos', 'telefonos', 'usuarios', 'seccion'];
     modulos.forEach(m => {
         const el = document.getElementById(`modulo-${m}`);
         if (el) el.classList.add('oculto');
@@ -1040,7 +1011,7 @@ function cambiarModulo(modulo) {
 
     const seleccionado = document.getElementById(`modulo-${modulo}`);
     if (seleccionado) {
-        if (modulo === 'crear') {
+        if (modulo === 'crear' || modulo === 'crear-vehiculo') {
             seleccionado.style.display = 'flex';
         } else {
             seleccionado.style.display = 'block';
@@ -1052,10 +1023,11 @@ function cambiarModulo(modulo) {
     if (btnNav) btnNav.classList.add('activo');
 
     if (modulo === 'fichas') buscarPersona();
+    if (modulo === 'vehiculos') buscarVehiculo();
     if (modulo === 'usuarios') renderizarTablaUsuarios();
 }
 
-// USUARIOS
+// USUARIOS EN FIREBASE
 document.getElementById('form-nuevo-usuario').addEventListener('submit', function(e) {
     e.preventDefault();
     if (usuarioSesionActual.rol !== "Administrador General") return;
@@ -1073,10 +1045,10 @@ document.getElementById('form-nuevo-usuario').addEventListener('submit', functio
 
     db.ref('usuariosSistema').push({ nombre, usuario: user, pass, rol, estado: "Activo" })
         .then(() => {
-            alert(`✅ Usuario "${user}" registrado.`);
+            alert(`✅ Usuario "${user}" registrado en la nube.`);
             document.getElementById('form-nuevo-usuario').reset();
         })
-        .catch(err => alert("❌ Error: " + err.message));
+        .catch(err => alert("❌ Error al registrar usuario: " + err.message));
 });
 
 function renderizarTablaUsuarios() {
@@ -1112,12 +1084,22 @@ function eliminarUsuario(key) {
     }
 }
 
-function actualizarContadores() {
-    const hFichas = obtenerHistorial();
-    document.getElementById('contador-fichas').textContent = `Fichas SIPER: ${hFichas.length}`;
+// HISTORIAL Y CONTADORES
+function obtenerHistorial() {
+    return historialPersonasGlobal;
 }
 
-// LOGICA DE DATOS Y CAPTURA SIPER
+function obtenerHistorialVehiculos() {
+    return historialVehiculosGlobal;
+}
+
+function actualizarContadores() {
+    const hFichas = obtenerHistorial();
+    const hVehiculos = obtenerHistorialVehiculos();
+    document.getElementById('contador-fichas').textContent = `Fichas: ${hFichas.length} | Vehículos: ${hVehiculos.length}`;
+}
+
+// LOGICA PERSONAS
 let fotoBase64 = "";
 document.getElementById('fotoInput').addEventListener('change', function(e) {
     const archivo = e.target.files[0];
@@ -1131,134 +1113,69 @@ document.getElementById('fotoInput').addEventListener('change', function(e) {
     }
 });
 
-function obtenerDatosFormulario() {
-    const v = id => document.getElementById(id)?.value || '';
+function obtenerDatos() {
+    const c = id => document.getElementById(id)?.value || '';
     return {
-        // 1. Tipo ID
-        id_direccion: v('id_direccion'), id_fecha: v('id_fecha'), id_hora: v('id_hora'),
-        id_coordenadas: v('id_coordenadas'), id_operativo: v('id_operativo'),
-        // 2. Datos Gral
-        g_pnombre: v('g_pnombre'), g_snombre: v('g_snombre'), g_onombres: v('g_onombres'),
-        g_papellido: v('g_papellido'), g_sapellido: v('g_sapellido'), g_oapellidos: v('g_oapellidos'),
-        g_fnac: v('g_fnac'), g_dpi: v('g_dpi'), g_lnac: v('g_lnac'), g_apodo: v('g_apodo'),
-        g_sexo: v('g_sexo'), g_lgtbiq: v('g_lgtbiq'), g_ecivil: v('g_ecivil'), g_nit: v('g_nit'),
-        g_igss: v('g_igss'), g_pueblo: v('g_pueblo'), g_etnia: v('g_etnia'), g_nacionalidad: v('g_nacionalidad'),
-        g_idioma: v('g_idioma'), g_situacion: v('g_situacion'), g_tiplicencia: v('g_tiplicencia'), g_estlicencia: v('g_estlicencia'),
-        // 3. Tel
-        tel_linea: v('tel_linea'), tel_imei: v('tel_imei'), tel_compania: v('tel_compania'),
-        // 4. Dir
-        dir_exacta: v('dir_exacta'), dir_pais: v('dir_pais'), dir_depto: v('dir_depto'),
-        dir_muni: v('dir_muni'), dir_sector: v('dir_sector'), dir_zona: v('dir_zona'),
-        dir_calle: v('dir_calle'), dir_numcasa: v('dir_numcasa'), dir_contador: v('dir_contador'),
-        // 5. Fam
-        fam_nombre: v('fam_nombre'), fam_parentesco: v('fam_parentesco'), fam_dpi: v('fam_dpi'),
-        // 6. Fis
-        fis_estatura: v('fis_estatura'), fis_complexion: v('fis_complexion'), fis_piel: v('fis_piel'),
-        fis_colcabello: v('fis_colcabello'), fis_estcabello: v('fis_estcabello'), fis_ojos: v('fis_ojos'),
-        fis_orejas: v('fis_orejas'), fis_labios: v('fis_labios'), fis_nariz: v('fis_nariz'),
-        fis_cicatrices: v('fis_cicatrices'), fis_discapacidad: v('fis_discapacidad'),
-        fis_capacidades: v('fis_capacidades'), fis_otros: v('fis_otros'),
-        // 7. Redes
-        red_url: v('red_url'), red_alias: v('red_alias'), red_tipo: v('red_tipo'),
-        red_fconsulta: v('red_fconsulta'), red_actividad: v('red_actividad'),
-        // 8. Aca
-        aca_nivel: v('aca_nivel'), aca_carrera: v('aca_carrera'), aca_profesion: v('aca_profesion'),
-        aca_estudia: v('aca_estudia'), aca_colegiado: v('aca_colegiado'), aca_estcolegiado: v('aca_estcolegiado'),
-        // 9. Lab
-        lab_empresa: v('lab_empresa'), lab_direccion: v('lab_direccion'), lab_finicio: v('lab_finicio'),
-        lab_ffin: v('lab_ffin'), lab_jefe: v('lab_jefe'), lab_telefono: v('lab_telefono'),
-        // 10. Pat
-        pat_tipo: v('pat_tipo'), pat_caract: v('pat_caract'), pat_vehiculo: v('pat_vehiculo'),
-        // 11. Arm
-        arm_tipo: v('arm_tipo'), arm_registro: v('arm_registro'), arm_licencia: v('arm_licencia'),
-        arm_tenencia: v('arm_tenencia'), arm_estatus: v('arm_estatus'),
-        // 12. Crim
-        crim_org: v('crim_org'), crim_act: v('crim_act'), crim_clica: v('crim_clica'),
-        crim_rango: v('crim_rango'), crim_lugar: v('crim_lugar'), crim_estatus: v('crim_estatus'),
-        crim_penales: v('crim_penales'), crim_policiales: v('crim_policiales'),
-        crim_aprehension: v('crim_aprehension'), crim_causa: v('crim_causa'), crim_colaboradores: v('crim_colaboradores'),
-        // 13. Pen
-        pen_centro: v('pen_centro'), pen_delito: v('pen_delito'), pen_fingreso: v('pen_fingreso'),
-        pen_fsalida: v('pen_fsalida'), pen_expediente: v('pen_expediente'), pen_oj: v('pen_oj'),
-        // 14. Mig
-        mig_motivo: v('mig_motivo'), mig_fecha: v('mig_fecha'), mig_destino: v('mig_destino'),
-        mig_procedencia: v('mig_procedencia'), mig_transporte: v('mig_transporte'), mig_arraigo: v('mig_arraigo'),
-        // 15. Foto
-        foto_tatuajes: v('foto_tatuajes'), foto_grafitis: v('foto_grafitis'), foto: fotoBase64,
-        // 16. Fin
-        fin_banco: v('fin_banco'), fin_cuenta: v('fin_cuenta'), fin_monto: v('fin_monto'),
-        fin_actividad: v('fin_actividad'), fin_obs: v('fin_obs'),
-        // 17. Fue
-        fue_abiertas: v('fue_abiertas'), fue_cerradas: v('fue_cerradas'),
-        usuario: v('usuario')
+        nombres: c('nombres'), fichaNo: c('fichaNo'), fechaNac: c('fechaNac'), nacionalidad: c('nacionalidad'),
+        origen: c('origen'), dpi: c('dpi'), otrosDoc: c('otrosDoc'), padre: c('padre'), madre: c('madre'),
+        estadoCivil: c('estadoCivil'), alias: c('alias'), pandilla: c('pandilla'), clica: c('clica'),
+        rango: c('rango'), direccion: c('direccion'), colonia: c('colonia'), zona: c('zona'),
+        municipio: c('municipio'), depto: c('depto'), antecedentes: c('antecedentes'), tatuajes: c('tatuajes'),
+        profesion: c('profesion'), lugaresOp: c('lugaresOp'), observaciones: c('observaciones'),
+        estadoActual: c('estadoActual'), fechaCreacion: c('fechaCreacion'), fechaActualiza: c('fechaActualiza'),
+        usuario: c('usuario'), foto: fotoBase64
     };
 }
 
 function actualizarFicha() {
-    const d = obtenerDatosFormulario();
-
-    document.getElementById('v-id_operativo').textContent = d.id_operativo || 'N/A';
-    document.getElementById('v-id_fecha_hora').textContent = `${d.id_direccion} | ${d.id_fecha} ${d.id_hora}`;
-    document.getElementById('v-id_coordenadas').textContent = d.id_coordenadas;
-
-    const nombreComp = `${d.g_pnombre} ${d.g_snombre} ${d.g_onombres} ${d.g_papellido} ${d.g_sapellido} ${d.g_oapellidos}`.trim();
-    document.getElementById('v-g_nombre_completo').textContent = nombreComp || 'N/A';
-    document.getElementById('v-g_dpi').textContent = d.g_dpi;
-    document.getElementById('v-g_apodo').textContent = d.g_apodo;
-    document.getElementById('v-g_nac').textContent = `${d.g_fnac} - ${d.g_lnac}`;
-    document.getElementById('v-g_sexo').textContent = `${d.g_sexo} | LGTBIQ+: ${d.g_lgtbiq}`;
-    document.getElementById('v-g_civil_nit').textContent = `Civil: ${d.g_ecivil} | NIT: ${d.g_nit} | IGSS: ${d.g_igss}`;
-    document.getElementById('v-g_etnia_idioma').textContent = `Pueblo: ${d.g_pueblo} | Etnia: ${d.g_etnia} | Idioma: ${d.g_idioma}`;
-    document.getElementById('v-g_nac_sit').textContent = `Nacionalidad: ${d.g_nacionalidad} | Estado: ${d.g_situacion}`;
-    document.getElementById('v-g_licencia').textContent = `Tipo: ${d.g_tiplicencia} | Estatus: ${d.g_estlicencia}`;
-
-    document.getElementById('v-tel_info').textContent = `Línea: ${d.tel_linea} | IMEI: ${d.tel_imei} | Compañía: ${d.tel_compania}`;
-
-    document.getElementById('v-dir_exacta').textContent = d.dir_exacta;
-    document.getElementById('v-dir_ubicacion').textContent = `${d.dir_sector}, Zona ${d.dir_zona}, ${d.dir_muni}, ${d.dir_depto}, ${d.dir_pais}. Contador: ${d.dir_contador}`;
-
-    document.getElementById('v-fam_info').textContent = `${d.fam_nombre} (${d.fam_parentesco}) - DPI: ${d.fam_dpi}`;
-
-    document.getElementById('v-fis_rasgos').textContent = `Estatura: ${d.fis_estatura} | Complexión: ${d.fis_complexion} | Piel: ${d.fis_piel} | Ojos: ${d.fis_ojos} | Cabello: ${d.fis_colcabello} (${d.fis_estcabello})`;
-    document.getElementById('v-fis_otros').textContent = `Cicatrices: ${d.fis_cicatrices} | Discapacidad: ${d.fis_discapacidad} | Otros: ${d.fis_otros}`;
-
-    document.getElementById('v-red_info').textContent = `${d.red_tipo}: ${d.red_alias} (${d.red_url}) | Actividad: ${d.red_actividad}`;
-
-    document.getElementById('v-aca_info').textContent = `Nivel: ${d.aca_nivel} | Carrera: ${d.aca_carrera} | Profesión: ${d.aca_profesion} | Colegiado: ${d.aca_colegiado} (${d.aca_estcolegiado})`;
-
-    document.getElementById('v-lab_info').textContent = `Empresa: ${d.lab_empresa} | Jefe: ${d.lab_jefe} | Tel: ${d.lab_telefono} | Período: ${d.lab_finicio} a ${d.lab_ffin}`;
-
-    document.getElementById('v-pat_info').textContent = `Tipo: ${d.pat_tipo} | Caract: ${d.pat_caract} | Vehículo: ${d.pat_vehiculo}`;
-
-    document.getElementById('v-arm_info').textContent = `Tipo: ${d.arm_tipo} | Reg: ${d.arm_registro} | Licencia: ${d.arm_licencia} | Estatus: ${d.arm_estatus}`;
-
-    document.getElementById('v-crim_org').textContent = `Org: ${d.crim_org} | Act: ${d.crim_act} | Clica: ${d.crim_clica} | Rango: ${d.crim_rango} (${d.crim_estatus})`;
-    document.getElementById('v-crim_antecedentes').textContent = `Penales: ${d.crim_penales} | Policiales: ${d.crim_policiales} | Aprehensión: ${d.crim_aprehension} | Causa: ${d.crim_causa}`;
-
-    document.getElementById('v-pen_info').textContent = `Centro: ${d.pen_centro} | Delito: ${d.pen_delito} | Fechas: ${d.pen_fingreso} al ${d.pen_fsalida} | Exp: ${d.pen_expediente}`;
-
-    document.getElementById('v-mig_info').textContent = `Motivo: ${d.mig_motivo} | Fecha: ${d.mig_fecha} | Destino: ${d.mig_destino} | Origen: ${d.mig_procedencia} | Transp: ${d.mig_transporte}`;
-
-    document.getElementById('v-foto_info').textContent = `Tatuajes: ${d.foto_tatuajes} | Grafitis/Vehículos: ${d.foto_grafitis}`;
-
-    document.getElementById('v-fin_info').textContent = `Banco: ${d.fin_banco} | Cuenta: ${d.fin_cuenta} | Monto: ${d.fin_monto} | Obs: ${d.fin_obs}`;
-
-    document.getElementById('v-fue_info').textContent = `Abiertas: ${d.fue_abiertas} | Cerradas: ${d.fue_cerradas}`;
-
-    document.getElementById('v-usuario').textContent = d.usuario;
-    if (d.foto) document.getElementById('vistaFoto').innerHTML = `<img src="${d.foto}">`;
+    const datos = obtenerDatos();
+    document.getElementById('f-nombres').textContent = datos.nombres;
+    document.getElementById('f-fichaNo').textContent = datos.fichaNo;
+    document.getElementById('f-fechaNac').textContent = datos.fechaNac;
+    document.getElementById('f-nacionalidad').textContent = datos.nacionalidad;
+    document.getElementById('f-origen').textContent = datos.origen;
+    document.getElementById('f-dpi').textContent = datos.dpi;
+    document.getElementById('f-otrosDoc').textContent = datos.otrosDoc;
+    document.getElementById('f-padre').textContent = datos.padre;
+    document.getElementById('f-madre').textContent = datos.madre;
+    document.getElementById('f-estadoCivil').textContent = datos.estadoCivil;
+    document.getElementById('f-alias').textContent = datos.alias;
+    document.getElementById('f-pandilla').textContent = datos.pandilla;
+    document.getElementById('f-pandilla2').textContent = datos.pandilla;
+    document.getElementById('f-clica').textContent = datos.clica;
+    document.getElementById('f-rango').textContent = datos.rango;
+    document.getElementById('f-direccion').textContent = datos.direccion;
+    document.getElementById('f-coloniaZona').textContent = `${datos.colonia} ${datos.zona ? '/ Zona ' + datos.zona : ''}`;
+    document.getElementById('f-muniDepto').textContent = `${datos.municipio}${datos.depto ? ', ' + datos.depto : ''}`;
+    document.getElementById('f-antecedentes').textContent = datos.antecedentes;
+    document.getElementById('f-tatuajes').textContent = datos.tatuajes;
+    document.getElementById('f-tatuajesResumen').textContent = datos.tatuajes ? (datos.tatuajes.length > 40 ? datos.tatuajes.substring(0,40) + '...' : datos.tatuajes) : 'Sin registro';
+    document.getElementById('f-profesion').textContent = datos.profesion;
+    document.getElementById('f-lugaresOp').textContent = datos.lugaresOp;
+    document.getElementById('f-observaciones').textContent = datos.observaciones;
+    document.getElementById('f-estadoActual').textContent = datos.estadoActual;
+    document.getElementById('f-fechaCreacion').textContent = datos.fechaCreacion;
+    document.getElementById('f-fechaActualiza').textContent = datos.fechaActualiza;
+    document.getElementById('f-codigo').textContent = 'SAEMP-' + (datos.fichaNo || '0000');
+    document.getElementById('f-usuario').textContent = datos.usuario;
+    if (datos.foto) document.getElementById('vistaFoto').innerHTML = `<img src="${datos.foto}">`;
+    
+    const ahora = new Date();
+    document.getElementById('f-fechahora').textContent = ahora.toLocaleDateString('es-GT') + ' ' + ahora.toLocaleTimeString('es-GT');
 }
 
 function guardarFichaConsolidada() {
-    const d = obtenerDatosFormulario();
-    if (!d.g_pnombre && !d.g_dpi) {
-        alert('⚠️ Ingresa al menos el primer nombre o el DPI.');
+    const datosNuevos = obtenerDatos();
+    if (!datosNuevos.fichaNo && !datosNuevos.nombres) {
+        alert('⚠️ Ingresa al menos el número de ficha o el nombre.');
         return;
     }
     
-    db.ref('fichasSiper').push(d)
-        .then(() => alert(`✅ Ficha SIPER guardada con éxito.`))
-        .catch(err => alert("❌ Error en guardado: " + err.message));
+    db.ref('fichasPersonas').push(datosNuevos)
+        .then(() => {
+            alert(`✅ Ficha guardada exitosamente en la nube.`);
+        })
+        .catch(err => alert("❌ Error al guardar en Firebase: " + err.message));
 }
 
 function buscarPersona() {
@@ -1267,10 +1184,11 @@ function buscarPersona() {
     const contenedorLista = document.getElementById('lista-resultados');
     contenedorLista.innerHTML = '';
 
-    const filtrados = historial.filter(i => {
-        const nom = `${i.g_pnombre} ${i.g_papellido} ${i.g_apodo}`.toLowerCase();
-        return nom.includes(texto) || (i.g_dpi && i.g_dpi.includes(texto));
-    });
+    const filtrados = historial.filter(item => 
+        (item.nombres && item.nombres.toLowerCase().includes(texto)) ||
+        (item.fichaNo && item.fichaNo.toLowerCase().includes(texto)) ||
+        (item.dpi && item.dpi.includes(texto))
+    );
 
     if (filtrados.length === 0) {
         contenedorLista.innerHTML = '<div style="padding:15px; color:#777;">No se encontraron registros.</div>';
@@ -1283,8 +1201,8 @@ function buscarPersona() {
         div.className = 'item-persona';
         div.innerHTML = `
             <div>
-                <strong>${ficha.g_pnombre || ''} ${ficha.g_papellido || ''}</strong> 
-                <span style="color:#666; font-size:13px;">(DPI: ${ficha.g_dpi || 'S/DPI'}) - Apodo: ${ficha.g_apodo || 'N/A'}</span>
+                <strong>${ficha.nombres || 'Sin nombre'}</strong> 
+                <span style="color:#666; font-size:13px;">(Ficha No. ${ficha.fichaNo || 'S/N'})</span>
             </div>
             <button style="padding:4px 10px; font-size:12px; background:#00529b; color:white; border:none; border-radius:3px;">Ver Ficha</button>
         `;
@@ -1293,62 +1211,251 @@ function buscarPersona() {
     });
 }
 
-function mostrarFichaConsultada(d) {
-    const contenedor = document.getElementById('detalle-persona-consultada');
-    const nomComp = `${d.g_pnombre || ''} ${d.g_snombre || ''} ${d.g_papellido || ''} ${d.g_sapellido || ''}`.trim();
-
-    contenedor.innerHTML = `
-        ${d.foto ? `<div class="foto-ficha"><img src="${d.foto}"></div><br>` : ''}
-        <div class="fila"><div class="celda-etiqueta">1. Operativo / Tipo:</div><div class="celda-dato">${d.id_operativo || 'N/A'} (${d.id_fecha} ${d.id_hora})</div></div>
-        <div class="fila"><div class="celda-etiqueta">2. Nombre Completo:</div><div class="celda-dato"><b>${nomComp}</b> | DPI: ${d.g_dpi || ''} | Apodo: ${d.g_apodo || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">3. Teléfono / IMEI:</div><div class="celda-dato">${d.tel_linea || ''} | IMEI: ${d.tel_imei || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">4. Dirección Exacta:</div><div class="celda-dato">${d.dir_exacta || ''}, Zona ${d.dir_zona || ''}, ${d.dir_muni || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">5. Familiar:</div><div class="celda-dato">${d.fam_nombre || ''} (${d.fam_parentesco || ''})</div></div>
-        <div class="fila"><div class="celda-etiqueta">6. Características Físicas:</div><div class="celda-dato">Estatura: ${d.fis_estatura || ''} | Piel: ${d.fis_piel || ''} | Cicatrices: ${d.fis_cicatrices || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">7. Redes Sociales:</div><div class="celda-dato">${d.red_tipo || ''}: ${d.red_alias || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">8. Académicos / Oficio:</div><div class="celda-dato">${d.aca_nivel || ''} - ${d.aca_profesion || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">9. Historial Laboral:</div><div class="celda-dato">${d.lab_empresa || ''} (Jefe: ${d.lab_jefe || ''})</div></div>
-        <div class="fila"><div class="celda-etiqueta">10. Patrimonio:</div><div class="celda-dato">${d.pat_tipo || ''} - ${d.pat_caract || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">11. Arma de Fuego:</div><div class="celda-dato">${d.arm_tipo || ''} Reg: ${d.arm_registro || ''} (${d.arm_estatus || ''})</div></div>
-        <div class="fila"><div class="celda-etiqueta">12. Org. Criminal:</div><div class="celda-dato">${d.crim_org || ''} - Clica: ${d.crim_clica || ''} - Rango: ${d.crim_rango || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">13. Penitenciario:</div><div class="celda-dato">Centro: ${d.pen_centro || ''} | Delito: ${d.pen_delito || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">14. Migratorio:</div><div class="celda-dato">${d.mig_motivo || ''} (${d.mig_fecha || ''}) - Destino: ${d.mig_destino || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">15. Tatuajes:</div><div class="celda-dato">${d.foto_tatuajes || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">16. Financiero:</div><div class="celda-dato">Banco: ${d.fin_banco || ''} | Actividad: ${d.fin_actividad || ''}</div></div>
-        <div class="fila"><div class="celda-etiqueta">17. Fuentes:</div><div class="celda-dato">Abiertas: ${d.fue_abiertas || ''} | Cerradas: ${d.fue_cerradas || ''}</div></div>
-    `;
-
+function mostrarFichaConsultada(datos) {
+    document.getElementById('v-nombres').textContent = datos.nombres;
+    document.getElementById('v-fichaNo').textContent = datos.fichaNo;
+    document.getElementById('v-fechaNac').textContent = datos.fechaNac;
+    document.getElementById('v-nacionalidad').textContent = datos.nacionalidad;
+    document.getElementById('v-origen').textContent = datos.origen;
+    document.getElementById('v-dpi').textContent = datos.dpi;
+    document.getElementById('v-otrosDoc').textContent = datos.otrosDoc;
+    document.getElementById('v-padre').textContent = datos.padre;
+    document.getElementById('v-madre').textContent = datos.madre;
+    document.getElementById('v-estadoCivil').textContent = datos.estadoCivil;
+    document.getElementById('v-alias').textContent = datos.alias;
+    document.getElementById('v-pandilla').textContent = datos.pandilla;
+    document.getElementById('v-pandilla2').textContent = datos.pandilla;
+    document.getElementById('v-clica').textContent = datos.clica;
+    document.getElementById('v-rango').textContent = datos.rango;
+    document.getElementById('v-direccion').textContent = datos.direccion;
+    document.getElementById('v-coloniaZona').textContent = `${datos.colonia || ''} ${datos.zona ? '/ Zona ' + datos.zona : ''}`;
+    document.getElementById('v-muniDepto').textContent = `${datos.municipio || ''}${datos.depto ? ', ' + datos.depto : ''}`;
+    document.getElementById('v-antecedentes').textContent = datos.antecedentes;
+    document.getElementById('v-tatuajes').textContent = datos.tatuajes;
+    document.getElementById('v-tatuajesResumen').textContent = datos.tatuajes ? datos.tatuajes.substring(0,40) + '...' : 'Sin registro';
+    document.getElementById('v-profesion').textContent = datos.profesion;
+    document.getElementById('v-lugaresOp').textContent = datos.lugaresOp;
+    document.getElementById('v-observaciones').textContent = datos.observaciones;
+    document.getElementById('v-estadoActual').textContent = datos.estadoActual;
+    document.getElementById('v-fechaCreacion').textContent = datos.fechaCreacion;
+    document.getElementById('v-fechaActualiza').textContent = datos.fechaActualiza;
+    document.getElementById('v-codigo').textContent = 'SAEMP-' + (datos.fichaNo || '0000');
+    document.getElementById('v-usuario').textContent = datos.usuario;
+    document.getElementById('v-vistaFoto').innerHTML = datos.foto ? `<img src="${datos.foto}">` : '📷';
     document.getElementById('contenedor-ficha-consultada').classList.remove('oculto');
 }
 
 function limpiarFormulario() {
     const userActual = document.getElementById('usuario').value;
-    document.querySelectorAll('#modulo-crear .formulario input, #modulo-crear .formulario textarea, #modulo-crear .formulario select').forEach(el => el.value = '');
+    document.querySelectorAll('#modulo-crear .formulario input, #modulo-crear .formulario textarea').forEach(el => el.value = '');
     document.getElementById('usuario').value = userActual;
     document.getElementById('vistaFoto').innerHTML = '📷';
     fotoBase64 = "";
     actualizarFicha();
 }
 
-function exportarAExcel() {
-    const personas = obtenerHistorial();
-    if (personas.length === 0) {
-        alert("⚠️ No hay datos para exportar.");
+// EXPORTACIÓN A EXCEL PERSONAS
+function exportarPersonasAExcel() {
+    const datos = obtenerHistorial();
+    if (!datos || datos.length === 0) {
+        alert("⚠️ No hay datos de personas para exportar.");
+        return;
+    }
+    const datosFiltrados = datos.map(item => {
+        const copia = { ...item };
+        delete copia.foto;
+        delete copia._key;
+        return copia;
+    });
+    const hoja = XLSX.utils.json_to_sheet(datosFiltrados);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Personas");
+    XLSX.writeFile(libro, "fichas_personas.xlsx");
+}
+
+// LOGICA VEHÍCULOS
+let fotoVehiculoBase64 = "";
+let fotoPropBase64 = "";
+
+document.getElementById('v-fotoVehiculoInput').addEventListener('change', function(e) {
+    const archivo = e.target.files[0];
+    if (archivo) {
+        const lector = new FileReader();
+        lector.onload = function(e) {
+            fotoVehiculoBase64 = e.target.result;
+            document.getElementById('vh-vistaFotoVehiculo').innerHTML = `<img src="${fotoVehiculoBase64}">`;
+        };
+        lector.readAsDataURL(archivo);
+    }
+});
+
+document.getElementById('v-fotoPropInput').addEventListener('change', function(e) {
+    const archivo = e.target.files[0];
+    if (archivo) {
+        const lector = new FileReader();
+        lector.onload = function(e) {
+            fotoPropBase64 = e.target.result;
+            document.getElementById('vh-vistaFotoProp').innerHTML = `<img src="${fotoPropBase64}">`;
+        };
+        lector.readAsDataURL(archivo);
+    }
+});
+
+function obtenerDatosVehiculo() {
+    const c = id => document.getElementById(id)?.value || '';
+    return {
+        placa: c('v-placa'), tipo: c('v-tipo'), marca: c('v-marca'), linea: c('v-linea'),
+        modelo: c('v-modelo'), color: c('v-color'), vin: c('v-vin'), chasis: c('v-chasis'),
+        motor: c('v-motor'), serie: c('v-serie'), cc: c('v-cc'), estado: c('v-estado'),
+        codigoReg: c('v-codigoReg'), impuesto: c('v-impuesto'), propietario: c('v-propietario'),
+        dpiProp: c('v-dpiProp'), nitProp: c('v-nitProp'), edadProp: c('v-edadProp'),
+        fnacProp: c('v-fnacProp'), lnacProp: c('v-lnacProp'), dirProp: c('v-dirProp'),
+        padresProp: c('v-padresProp'), obsProp: c('v-obsProp'),
+        fotoVehiculo: fotoVehiculoBase64, fotoProp: fotoPropBase64
+    };
+}
+
+function actualizarVistaPreviaVehiculo() {
+    const datos = obtenerDatosVehiculo();
+    document.getElementById('vh-header-placa').textContent = `Ficha de Vehículo | ${datos.placa || ''}`;
+    document.getElementById('vh-placa').textContent = datos.placa;
+    document.getElementById('vh-tipo').textContent = datos.tipo;
+    document.getElementById('vh-marca').textContent = datos.marca;
+    document.getElementById('vh-linea').textContent = datos.linea;
+    document.getElementById('vh-modelo').textContent = datos.modelo;
+    document.getElementById('vh-color').textContent = datos.color;
+    document.getElementById('vh-vin').textContent = datos.vin;
+    document.getElementById('vh-chasis').textContent = datos.chasis;
+    document.getElementById('vh-motor').textContent = datos.motor;
+    document.getElementById('vh-serie').textContent = datos.serie;
+    document.getElementById('vh-cc').textContent = datos.cc;
+    document.getElementById('vh-estado').textContent = datos.estado;
+    document.getElementById('vh-codigo').textContent = datos.codigoReg;
+    document.getElementById('vh-impuesto').textContent = datos.impuesto;
+    document.getElementById('vh-propietario').textContent = datos.propietario;
+    document.getElementById('vh-dpiProp').textContent = datos.dpiProp;
+    document.getElementById('vh-nitProp').textContent = datos.nitProp;
+    document.getElementById('vh-edadProp').textContent = datos.edadProp;
+    document.getElementById('vh-fnacProp').textContent = datos.fnacProp;
+    document.getElementById('vh-lnacProp').textContent = datos.lnacProp;
+    document.getElementById('vh-dirProp').textContent = datos.dirProp;
+    document.getElementById('vh-padresProp').textContent = datos.padresProp;
+    document.getElementById('vh-obsProp').textContent = datos.obsProp;
+    if (datos.fotoVehiculo) document.getElementById('vh-vistaFotoVehiculo').innerHTML = `<img src="${datos.fotoVehiculo}">`;
+    if (datos.fotoProp) document.getElementById('vh-vistaFotoProp').innerHTML = `<img src="${datos.fotoProp}">`;
+}
+
+function guardarFichaVehiculo() {
+    const datos = obtenerDatosVehiculo();
+    if (!datos.placa && !datos.propietario) {
+        alert('⚠️ Ingresa al menos la placa o el propietario.');
+        return;
+    }
+    
+    db.ref('fichasVehiculos').push(datos)
+        .then(() => {
+            alert('✅ Ficha de vehículo guardada correctamente en la nube.');
+        })
+        .catch(err => alert("❌ Error al guardar en Firebase: " + err.message));
+}
+
+function buscarVehiculo() {
+    const texto = document.getElementById('input-buscar-vehiculo').value.toLowerCase();
+    const historial = obtenerHistorialVehiculos();
+    const contenedor = document.getElementById('lista-vehiculos-resultados');
+    contenedor.innerHTML = '';
+
+    const filtrados = historial.filter(v => 
+        (v.placa && v.placa.toLowerCase().includes(texto)) ||
+        (v.vin && v.vin.toLowerCase().includes(texto)) ||
+        (v.propietario && v.propietario.toLowerCase().includes(texto)) ||
+        (v.dpiProp && v.dpiProp.includes(texto))
+    );
+
+    if (filtrados.length === 0) {
+        contenedor.innerHTML = '<div style="padding:15px; color:#777;">No hay registro de vehículos coincidentes.</div>';
+        document.getElementById('contenedor-vehiculo-consultado').classList.add('oculto');
         return;
     }
 
-    const wb = XLSX.utils.book_new();
-    const personasLimpias = personas.map(p => {
-        const { foto, ...resto } = p;
-        return resto;
+    filtrados.forEach(v => {
+        const div = document.createElement('div');
+        div.className = 'item-persona';
+        div.innerHTML = `
+            <div>
+                <strong>Placa: ${v.placa || 'S/P'}</strong> - ${v.marca || ''} ${v.linea || ''} 
+                <span style="color:#666; font-size:12px;">(${v.propietario || 'Sin Propietario'})</span>
+            </div>
+            <button style="padding:4px 10px; font-size:12px; background:#00529b; color:white; border:none; border-radius:3px;">Ver Ficha</button>
+        `;
+        div.onclick = () => mostrarVehiculoConsultado(v);
+        contenedor.appendChild(div);
     });
-    const wsPersonas = XLSX.utils.json_to_sheet(personasLimpias);
-    XLSX.utils.book_append_sheet(wb, wsPersonas, "Fichas SIPER");
-
-    const fechaHora = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(wb, `Reporte_SIPER_${fechaHora}.xlsx`);
 }
 
+function mostrarVehiculoConsultado(datos) {
+    document.getElementById('vc-header-placa').textContent = `Ficha de Vehículo | ${datos.placa || ''}`;
+    document.getElementById('vc-placa').textContent = datos.placa;
+    document.getElementById('vc-tipo').textContent = datos.tipo;
+    document.getElementById('vc-marca').textContent = datos.marca;
+    document.getElementById('vc-linea').textContent = datos.linea;
+    document.getElementById('vc-modelo').textContent = datos.modelo;
+    document.getElementById('vc-color').textContent = datos.color;
+    document.getElementById('vc-vin').textContent = datos.vin;
+    document.getElementById('vc-chasis').textContent = datos.chasis;
+    document.getElementById('vc-motor').textContent = datos.motor;
+    document.getElementById('vc-serie').textContent = datos.serie;
+    document.getElementById('vc-cc').textContent = datos.cc;
+    document.getElementById('vc-estado').textContent = datos.estado;
+    document.getElementById('vc-codigo').textContent = datos.codigoReg;
+    document.getElementById('vc-impuesto').textContent = datos.impuesto;
+    document.getElementById('vc-propietario').textContent = datos.propietario;
+    document.getElementById('vc-dpiProp').textContent = datos.dpiProp;
+    document.getElementById('vc-nitProp').textContent = datos.nitProp;
+    document.getElementById('vc-edadProp').textContent = datos.edadProp;
+    document.getElementById('vc-fnacProp').textContent = datos.fnacProp;
+    document.getElementById('vc-lnacProp').textContent = datos.lnacProp;
+    document.getElementById('vc-dirProp').textContent = datos.dirProp;
+    document.getElementById('vc-padresProp').textContent = datos.padresProp;
+    document.getElementById('vc-obsProp').textContent = datos.obsProp;
+
+    document.getElementById('vc-vistaFotoVehiculo').innerHTML = datos.fotoVehiculo ? `<img src="${datos.fotoVehiculo}">` : '🚗 FOTOGRAFÍA DE REFERENCIA';
+    document.getElementById('vc-vistaFotoProp').innerHTML = datos.fotoProp ? `<img src="${datos.fotoProp}">` : '👤';
+
+    document.getElementById('contenedor-vehiculo-consultado').classList.remove('oculto');
+}
+
+function limpiarFormVehiculo() {
+    document.querySelectorAll('#modulo-crear-vehiculo .formulario input, #modulo-crear-vehiculo .formulario textarea').forEach(el => el.value = '');
+    fotoVehiculoBase64 = "";
+    fotoPropBase64 = "";
+    document.getElementById('vh-vistaFotoVehiculo').innerHTML = '🚗 FOTOGRAFÍA DE REFERENCIA';
+    document.getElementById('vh-vistaFotoProp').innerHTML = '👤';
+    actualizarVistaPreviaVehiculo();
+}
+
+// EXPORTACIÓN A EXCEL VEHÍCULOS
+function exportarVehiculosAExcel() {
+    const datos = obtenerHistorialVehiculos();
+    if (!datos || datos.length === 0) {
+        alert("⚠️ No hay datos de vehículos para exportar.");
+        return;
+    }
+    const datosFiltrados = datos.map(item => {
+        const copia = { ...item };
+        delete copia.fotoVehiculo;
+        delete copia.fotoProp;
+        delete copia._key;
+        return copia;
+    });
+    const hoja = XLSX.utils.json_to_sheet(datosFiltrados);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Vehiculos");
+    XLSX.writeFile(libro, "fichas_vehiculos.xlsx");
+}
+
+// EVENTOS DE ENTRADA
+document.querySelector('#modulo-crear-vehiculo .formulario').addEventListener('input', actualizarVistaPreviaVehiculo);
 document.querySelector('#modulo-crear .formulario').addEventListener('input', actualizarFicha);
 </script>
 </body>
