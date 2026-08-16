@@ -264,7 +264,7 @@
             margin-bottom: 20px;
         }
 
-        .lista-personas {
+        .lista-personas, .lista-vehiculos {
             max-height: 300px;
             overflow-y: auto;
             border: 1px solid #ddd;
@@ -285,7 +285,7 @@
             background-color: #eaf2f8;
         }
 
-        /* === ESTILOS DE FICHAS === */
+        /* === ESTILOS DE FICHAS PERSONAS === */
         .ficha {
             border: 2px solid #2980b9;
             border-radius: 6px;
@@ -381,6 +381,83 @@
             gap: 5px;
         }
 
+        /* === ESTILOS VEHÍCULOS === */
+        .ficha-vehiculo {
+            border: 2px solid #2980b9;
+            border-radius: 6px;
+            background: white;
+            padding: 15px;
+        }
+
+        .contenedor-fotos {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .box-foto {
+            flex: 1;
+            border: 1px dashed #00529b;
+            padding: 10px;
+            text-align: center;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+
+        .box-foto p {
+            font-size: 11px;
+            font-weight: bold;
+            color: #00529b;
+            margin-bottom: 8px;
+        }
+
+        .box-foto div {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .box-foto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tabla-vehiculo {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .tabla-vehiculo th, .tabla-vehiculo td {
+            border: 1px solid #bdd7ee;
+            padding: 6px 8px;
+        }
+
+        .encabezado-seccion {
+            background: #00529b;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .label-celda {
+            background: #eaf2f8;
+            font-weight: bold;
+            width: 20%;
+            color: #2c3e50;
+        }
+
+        .dato-celda {
+            width: 30%;
+            word-break: break-word;
+        }
+
         /* TABLAS Y USUARIOS */
         .tabla-datos {
             width: 100%;
@@ -407,10 +484,10 @@
 
         @media print {
             body { background: white; padding: 0; }
-            #login-screen, .header-app, .nav-bar, .formulario, .botones, .panel-busqueda, .lista-personas { display: none !important; }
+            #login-screen, .header-app, .nav-bar, .formulario, .botones, .panel-busqueda, .lista-personas, .lista-vehiculos { display: none !important; }
             #app-screen { padding: 0; }
             .vista-ficha { box-shadow: none; padding: 0; width: 100%; max-height: none; }
-            .ficha { border-color: #000; }
+            .ficha, .ficha-vehiculo { border-color: #000; }
         }
     </style>
 </head>
@@ -445,6 +522,8 @@
         <nav class="nav-bar">
             <button class="nav-btn activo" id="btn-tab-crear" onclick="cambiarModulo('crear')">➕ Crear / Editar Ficha</button>
             <button class="nav-btn" id="btn-tab-fichas" onclick="cambiarModulo('fichas')">🔍 FICHAS PERSONAS</button>
+            <button class="nav-btn" id="btn-tab-crear-vehiculo" onclick="cambiarModulo('crear-vehiculo')">🚗 Crear / Editar Vehículo</button>
+            <button class="nav-btn" id="btn-tab-fichas-vehiculos" onclick="cambiarModulo('fichas-vehiculos')">🚘 FICHAS VEHÍCULOS</button>
             <button class="nav-btn" id="btn-tab-telefonos" onclick="cambiarModulo('telefonos')">📞 NÚMEROS TELEFÓNICOS</button>
             <button class="nav-btn" id="btn-tab-usuarios" onclick="cambiarModulo('usuarios')">👤 USUARIOS</button>
             <button class="nav-btn" id="btn-tab-seccion" onclick="cambiarModulo('seccion')">🏢 SECCIÓN</button>
@@ -840,7 +919,161 @@
                 </div>
             </div>
 
-            <!-- ================= MÓDULO 3: TELEFONOS ================= -->
+            <!-- ================= MÓDULO 3: CREAR / EDITAR VEHÍCULO ================= -->
+            <div id="modulo-crear-vehiculo" class="oculto" style="display: flex; gap: 25px; width: 100%;">
+                <div class="card-modulo formulario">
+                    <h2>Captura de Datos del Vehículo</h2>
+
+                    <!-- DATOS VEHÍCULO -->
+                    <div class="seccion-form-titulo">1. Datos del Vehículo</div>
+                    <div class="grupo-form"><label>Placa</label><input type="text" id="v_placa" value="P-055JRY"></div>
+                    <div class="grupo-form"><label>Tipo</label><input type="text" id="v_tipo" value="Carro"></div>
+                    <div class="grupo-form"><label>Marca</label><input type="text" id="v_marca" value="Honda"></div>
+                    <div class="grupo-form"><label>Línea</label><input type="text" id="v_linea" value="FIT"></div>
+                    <div class="grupo-form"><label>Modelo (Año)</label><input type="text" id="v_modelo" value="2009"></div>
+                    <div class="grupo-form"><label>Color</label><input type="text" id="v_color" value="Negro Policromado"></div>
+                    <div class="grupo-form"><label>No. de VIN</label><input type="text" id="v_vin" value="Jhmge87239s004467"></div>
+                    <div class="grupo-form"><label>No. de Chásis</label><input type="text" id="v_chasis" value="Jhmge87239s004467"></div>
+                    <div class="grupo-form"><label>No. de Motor</label><input type="text" id="v_motor" value="L15o71106160"></div>
+                    <div class="grupo-form"><label>No. de Serie</label><input type="text" id="v_serie" value="Jhmge87239s004467"></div>
+                    <div class="grupo-form"><label>Cilindrada (CC)</label><input type="text" id="v_cc" value="1500"></div>
+                    <div class="grupo-form"><label>Estado</label><input type="text" id="v_estado" value="Activo"></div>
+                    <div class="grupo-form"><label>Código</label><input type="text" id="v_codigo" value="2019-279155-1"></div>
+                    <div class="grupo-form"><label>Año Impuesto</label><input type="text" id="v_aimpuesto" value="2022"></div>
+                    <div class="grupo-form"><label>Foto del Vehículo</label><input type="file" id="fotoVehiculoInput" accept="image/*"></div>
+
+                    <!-- DATOS PROPIETARIO -->
+                    <div class="seccion-form-titulo">2. Datos del Propietario</div>
+                    <div class="grupo-form"><label>Nombre del Propietario</label><input type="text" id="p_nombre" value="Douglas Amilcar Duran Figueroa"></div>
+                    <div class="grupo-form"><label>DPI</label><input type="text" id="p_dpi" value="2714092820101"></div>
+                    <div class="grupo-form"><label>NIT</label><input type="text" id="p_nit" value="85363995"></div>
+                    <div class="grupo-form"><label>Edad</label><input type="text" id="p_edad" value="27 años"></div>
+                    <div class="grupo-form"><label>Fecha de Nacimiento</label><input type="text" id="p_fnac" value="19-05-1995"></div>
+                    <div class="grupo-form"><label>Lugar de Nacimiento</label><input type="text" id="p_lnac" value="Villa Nueva, Guatemala"></div>
+                    <div class="grupo-form"><label>Dirección Domiciliar</label><textarea id="p_direccion">Kilometro 14 Carretera Al Pacifico 7-47 Residencial Terra Nova Zona 6</textarea></div>
+                    <div class="grupo-form"><label>Nombres de los Padres</label><textarea id="p_padres">Amilcar Florentin, Duran Franco Y Gloria Elizabeth, Figueroa Loyo</textarea></div>
+                    <div class="grupo-form"><label>Observaciones</label><textarea id="p_obs">Se encuentra solvente.</textarea></div>
+                    <div class="grupo-form"><label>Foto del Propietario</label><input type="file" id="fotoPropietarioInput" accept="image/*"></div>
+
+                    <div class="botones">
+                        <button class="btn-guardar" onclick="guardarVehiculo()">💾 Guardar Ficha</button>
+                        <button onclick="exportarVehiculosExcel()" class="btn-excel">📊 Exportar Excel</button>
+                        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ficha</button>
+                        <button class="btn-limpiar" onclick="limpiarFormularioVehiculo()">🗑️ Limpiar</button>
+                    </div>
+                </div>
+
+                <!-- VISTA PREVIA FICHA VEHÍCULO -->
+                <div class="card-modulo vista-ficha">
+                    <h2>Vista Previa de Ficha Vehicular</h2>
+                    <div class="ficha-vehiculo">
+                        <div class="contenedor-fotos">
+                            <div class="box-foto">
+                                <p>FOTOGRAFÍA DE REFERENCIA VEHÍCULO</p>
+                                <div id="vistaFotoVehiculo">🚗</div>
+                            </div>
+                            <div class="box-foto">
+                                <p>FOTOGRAFÍA DEL PROPIETARIO</p>
+                                <div id="vistaFotoPropietario">👤</div>
+                            </div>
+                        </div>
+
+                        <!-- TABLA DATOS VEHÍCULO -->
+                        <table class="tabla-vehiculo">
+                            <thead>
+                                <tr><th colspan="4" class="encabezado-seccion">DATOS DEL VEHÍCULO</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="label-celda">PLACA:</td><td class="dato-celda" id="lbl_v_placa">P-055JRY</td>
+                                    <td class="label-celda">TIPO:</td><td class="dato-celda" id="lbl_v_tipo">Carro</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">MARCA:</td><td class="dato-celda" id="lbl_v_marca">Honda</td>
+                                    <td class="label-celda">LÍNEA:</td><td class="dato-celda" id="lbl_v_linea">FIT</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">MODELO:</td><td class="dato-celda" id="lbl_v_modelo">2009</td>
+                                    <td class="label-celda">COLOR:</td><td class="dato-celda" id="lbl_v_color">Negro Policromado</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">NO. DE VIN:</td><td class="dato-celda" id="lbl_v_vin">Jhmge87239s004467</td>
+                                    <td class="label-celda">NO. DE CHÁSIS:</td><td class="dato-celda" id="lbl_v_chasis">Jhmge87239s004467</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">NO. DE MOTOR:</td><td class="dato-celda" id="lbl_v_motor">L15o71106160</td>
+                                    <td class="label-celda">NO. DE SERIE:</td><td class="dato-celda" id="lbl_v_serie">Jhmge87239s004467</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">CC:</td><td class="dato-celda" id="lbl_v_cc">1500</td>
+                                    <td class="label-celda">ESTADO:</td><td class="dato-celda" id="lbl_v_estado">Activo</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">CÓDIGO:</td><td class="dato-celda" id="lbl_v_codigo">2019-279155-1</td>
+                                    <td class="label-celda">AÑO IMPUESTO:</td><td class="dato-celda" id="lbl_v_aimpuesto">2022</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- TABLA DATOS PROPIETARIO -->
+                        <table class="tabla-vehiculo">
+                            <thead>
+                                <tr><th colspan="4" class="encabezado-seccion">DATOS DEL PROPIETARIO</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="label-celda">PROPIETARIO:</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_nombre">Douglas Amilcar Duran Figueroa</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">DPI:</td><td class="dato-celda" id="lbl_p_dpi">2714092820101</td>
+                                    <td class="label-celda">NIT:</td><td class="dato-celda" id="lbl_p_nit">85363995</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">EDAD:</td><td class="dato-celda" id="lbl_p_edad">27 años</td>
+                                    <td class="label-celda">F. NACIMIENTO:</td><td class="dato-celda" id="lbl_p_fnac">19-05-1995</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">LUGAR NAC.:</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_lnac">Villa Nueva, Guatemala</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">DIRECCIÓN:</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_direccion">Kilometro 14 Carretera Al Pacifico 7-47 Residencial Terra Nova Zona 6</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">PADRES:</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_padres">Amilcar Florentin, Duran Franco Y Gloria Elizabeth, Figueroa Loyo</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-celda">OBSERVACIONES:</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_obs">Se encuentra solvente.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= MÓDULO 4: BÚSQUEDA Y CONSULTA DE VEHÍCULOS ================= -->
+            <div id="modulo-fichas-vehiculos" class="card-modulo oculto">
+                <h2>🔍 Consulta de Vehículos</h2>
+                <div class="panel-busqueda">
+                    <input type="text" id="input-buscar-vehiculo" placeholder="Buscar por Placa, VIN, Propietario o DPI..." oninput="buscarVehiculo()">
+                    <button onclick="exportarVehiculosExcel()" class="btn-excel">📊 Exportar Reporte Excel</button>
+                </div>
+                <div class="lista-vehiculos" id="lista-vehiculos-resultados"></div>
+
+                <div id="contenedor-vehiculo-consultado" class="oculto">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3>Detalle del Vehículo Seleccionado</h3>
+                        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ficha</button>
+                    </div>
+                    <div id="detalle-vehiculo-consultado"></div>
+                </div>
+            </div>
+
+            <!-- ================= MÓDULO 5: TELEFONOS ================= -->
             <div id="modulo-telefonos" class="card-modulo oculto" style="width: 100%;">
                 <h2>📞 Directorio y Números Telefónicos</h2>
                 <div style="width: 100%; height: 80vh; min-height: 600px; margin-top: 15px;">
@@ -854,7 +1087,7 @@
                 </div>
             </div>
 
-            <!-- ================= MÓDULO 4: USUARIOS ================= -->
+            <!-- ================= MÓDULO 6: USUARIOS ================= -->
             <div id="modulo-usuarios" class="card-modulo oculto">
                 <h2>👤 Gestión de Usuarios</h2>
                 <div class="grid-usuarios">
@@ -888,7 +1121,7 @@
                 </div>
             </div>
 
-            <!-- ================= MÓDULO 5: SECCIÓN ================= -->
+            <!-- ================= MÓDULO 7: SECCIÓN ================= -->
             <div id="modulo-seccion" class="card-modulo oculto">
                 <h2>🏢 Información del Sistema SIPER</h2>
                 <div style="line-height: 1.8;">
@@ -931,6 +1164,7 @@ const USUARIOS_DEFECTO = [
 
 let usuariosGlobal = [];
 let historialPersonasGlobal = [];
+let historialVehiculosGlobal = [];
 
 db.ref('usuariosSistema').on('value', snapshot => {
     usuariosGlobal = [];
@@ -951,6 +1185,16 @@ db.ref('fichasSiper').on('value', snapshot => {
     if (snapshot.exists()) {
         snapshot.forEach(child => {
             historialPersonasGlobal.push(child.val());
+        });
+    }
+    actualizarContadores();
+});
+
+db.ref('fichasVehiculos').on('value', snapshot => {
+    historialVehiculosGlobal = [];
+    if (snapshot.exists()) {
+        snapshot.forEach(child => {
+            historialVehiculosGlobal.push(child.val());
         });
     }
     actualizarContadores();
@@ -982,6 +1226,7 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
         aplicarPermisosRol();
         actualizarContadores();
         actualizarFicha();
+        actualizarFichaVehiculo();
         renderizarTablaUsuarios();
     } else {
         errorMsg.classList.remove('oculto');
@@ -991,27 +1236,35 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
 function aplicarPermisosRol() {
     const btnCrear = document.getElementById('btn-tab-crear');
     const btnFichas = document.getElementById('btn-tab-fichas');
+    const btnCrearVehiculo = document.getElementById('btn-tab-crear-vehiculo');
+    const btnFichasVehiculos = document.getElementById('btn-tab-fichas-vehiculos');
     const btnTelefonos = document.getElementById('btn-tab-telefonos');
     const btnUsuarios = document.getElementById('btn-tab-usuarios');
     const btnSeccion = document.getElementById('btn-tab-seccion');
 
     if (usuarioSesionActual.rol === "Analista") {
         btnCrear.style.display = 'none';
+        btnCrearVehiculo.style.display = 'none';
         btnUsuarios.style.display = 'none';
         btnFichas.style.display = 'inline-block';
+        btnFichasVehiculos.style.display = 'inline-block';
         btnTelefonos.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
         cambiarModulo('fichas');
     } else if (usuarioSesionActual.rol === "Operador") {
         btnUsuarios.style.display = 'none';
         btnCrear.style.display = 'inline-block';
+        btnCrearVehiculo.style.display = 'inline-block';
         btnFichas.style.display = 'inline-block';
+        btnFichasVehiculos.style.display = 'inline-block';
         btnTelefonos.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
         cambiarModulo('crear');
     } else {
         btnCrear.style.display = 'inline-block';
+        btnCrearVehiculo.style.display = 'inline-block';
         btnFichas.style.display = 'inline-block';
+        btnFichasVehiculos.style.display = 'inline-block';
         btnTelefonos.style.display = 'inline-block';
         btnUsuarios.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
@@ -1030,7 +1283,7 @@ function cerrarSesion() {
 function cambiarModulo(modulo) {
     if (!usuarioSesionActual) return;
 
-    const modulos = ['crear', 'fichas', 'telefonos', 'usuarios', 'seccion'];
+    const modulos = ['crear', 'fichas', 'crear-vehiculo', 'fichas-vehiculos', 'telefonos', 'usuarios', 'seccion'];
     modulos.forEach(m => {
         const el = document.getElementById(`modulo-${m}`);
         if (el) el.classList.add('oculto');
@@ -1040,7 +1293,7 @@ function cambiarModulo(modulo) {
 
     const seleccionado = document.getElementById(`modulo-${modulo}`);
     if (seleccionado) {
-        if (modulo === 'crear') {
+        if (modulo === 'crear' || modulo === 'crear-vehiculo') {
             seleccionado.style.display = 'flex';
         } else {
             seleccionado.style.display = 'block';
@@ -1052,6 +1305,7 @@ function cambiarModulo(modulo) {
     if (btnNav) btnNav.classList.add('activo');
 
     if (modulo === 'fichas') buscarPersona();
+    if (modulo === 'fichas-vehiculos') buscarVehiculo();
     if (modulo === 'usuarios') renderizarTablaUsuarios();
 }
 
@@ -1114,7 +1368,7 @@ function eliminarUsuario(key) {
 
 function actualizarContadores() {
     const hFichas = obtenerHistorial();
-    document.getElementById('contador-fichas').textContent = `Fichas SIPER: ${hFichas.length}`;
+    document.getElementById('contador-fichas').textContent = `Fichas SIPER: ${hFichas.length} | Vehículos: ${historialVehiculosGlobal.length}`;
 }
 
 // LOGICA DE DATOS Y CAPTURA SIPER
@@ -1134,61 +1388,44 @@ document.getElementById('fotoInput').addEventListener('change', function(e) {
 function obtenerDatosFormulario() {
     const v = id => document.getElementById(id)?.value || '';
     return {
-        // 1. Tipo ID
         id_direccion: v('id_direccion'), id_fecha: v('id_fecha'), id_hora: v('id_hora'),
         id_coordenadas: v('id_coordenadas'), id_operativo: v('id_operativo'),
-        // 2. Datos Gral
         g_pnombre: v('g_pnombre'), g_snombre: v('g_snombre'), g_onombres: v('g_onombres'),
         g_papellido: v('g_papellido'), g_sapellido: v('g_sapellido'), g_oapellidos: v('g_oapellidos'),
         g_fnac: v('g_fnac'), g_dpi: v('g_dpi'), g_lnac: v('g_lnac'), g_apodo: v('g_apodo'),
         g_sexo: v('g_sexo'), g_lgtbiq: v('g_lgtbiq'), g_ecivil: v('g_ecivil'), g_nit: v('g_nit'),
         g_igss: v('g_igss'), g_pueblo: v('g_pueblo'), g_etnia: v('g_etnia'), g_nacionalidad: v('g_nacionalidad'),
         g_idioma: v('g_idioma'), g_situacion: v('g_situacion'), g_tiplicencia: v('g_tiplicencia'), g_estlicencia: v('g_estlicencia'),
-        // 3. Tel
         tel_linea: v('tel_linea'), tel_imei: v('tel_imei'), tel_compania: v('tel_compania'),
-        // 4. Dir
         dir_exacta: v('dir_exacta'), dir_pais: v('dir_pais'), dir_depto: v('dir_depto'),
         dir_muni: v('dir_muni'), dir_sector: v('dir_sector'), dir_zona: v('dir_zona'),
         dir_calle: v('dir_calle'), dir_numcasa: v('dir_numcasa'), dir_contador: v('dir_contador'),
-        // 5. Fam
         fam_nombre: v('fam_nombre'), fam_parentesco: v('fam_parentesco'), fam_dpi: v('fam_dpi'),
-        // 6. Fis
         fis_estatura: v('fis_estatura'), fis_complexion: v('fis_complexion'), fis_piel: v('fis_piel'),
         fis_colcabello: v('fis_colcabello'), fis_estcabello: v('fis_estcabello'), fis_ojos: v('fis_ojos'),
         fis_orejas: v('fis_orejas'), fis_labios: v('fis_labios'), fis_nariz: v('fis_nariz'),
         fis_cicatrices: v('fis_cicatrices'), fis_discapacidad: v('fis_discapacidad'),
         fis_capacidades: v('fis_capacidades'), fis_otros: v('fis_otros'),
-        // 7. Redes
         red_url: v('red_url'), red_alias: v('red_alias'), red_tipo: v('red_tipo'),
         red_fconsulta: v('red_fconsulta'), red_actividad: v('red_actividad'),
-        // 8. Aca
         aca_nivel: v('aca_nivel'), aca_carrera: v('aca_carrera'), aca_profesion: v('aca_profesion'),
         aca_estudia: v('aca_estudia'), aca_colegiado: v('aca_colegiado'), aca_estcolegiado: v('aca_estcolegiado'),
-        // 9. Lab
         lab_empresa: v('lab_empresa'), lab_direccion: v('lab_direccion'), lab_finicio: v('lab_finicio'),
         lab_ffin: v('lab_ffin'), lab_jefe: v('lab_jefe'), lab_telefono: v('lab_telefono'),
-        // 10. Pat
         pat_tipo: v('pat_tipo'), pat_caract: v('pat_caract'), pat_vehiculo: v('pat_vehiculo'),
-        // 11. Arm
         arm_tipo: v('arm_tipo'), arm_registro: v('arm_registro'), arm_licencia: v('arm_licencia'),
         arm_tenencia: v('arm_tenencia'), arm_estatus: v('arm_estatus'),
-        // 12. Crim
         crim_org: v('crim_org'), crim_act: v('crim_act'), crim_clica: v('crim_clica'),
         crim_rango: v('crim_rango'), crim_lugar: v('crim_lugar'), crim_estatus: v('crim_estatus'),
         crim_penales: v('crim_penales'), crim_policiales: v('crim_policiales'),
         crim_aprehension: v('crim_aprehension'), crim_causa: v('crim_causa'), crim_colaboradores: v('crim_colaboradores'),
-        // 13. Pen
         pen_centro: v('pen_centro'), pen_delito: v('pen_delito'), pen_fingreso: v('pen_fingreso'),
         pen_fsalida: v('pen_fsalida'), pen_expediente: v('pen_expediente'), pen_oj: v('pen_oj'),
-        // 14. Mig
         mig_motivo: v('mig_motivo'), mig_fecha: v('mig_fecha'), mig_destino: v('mig_destino'),
         mig_procedencia: v('mig_procedencia'), mig_transporte: v('mig_transporte'), mig_arraigo: v('mig_arraigo'),
-        // 15. Foto
         foto_tatuajes: v('foto_tatuajes'), foto_grafitis: v('foto_grafitis'), foto: fotoBase64,
-        // 16. Fin
         fin_banco: v('fin_banco'), fin_cuenta: v('fin_cuenta'), fin_monto: v('fin_monto'),
         fin_actividad: v('fin_actividad'), fin_obs: v('fin_obs'),
-        // 17. Fue
         fue_abiertas: v('fue_abiertas'), fue_cerradas: v('fue_cerradas'),
         usuario: v('usuario')
     };
@@ -1349,7 +1586,166 @@ function exportarAExcel() {
     XLSX.writeFile(wb, `Reporte_SIPER_${fechaHora}.xlsx`);
 }
 
+// LÓGICA MÓDULO VEHÍCULOS
+let fotoVehiculoBase64 = "";
+let fotoPropietarioBase64 = "";
+
+document.getElementById('fotoVehiculoInput').addEventListener('change', function(e) {
+    const archivo = e.target.files[0];
+    if (archivo) {
+        const lector = new FileReader();
+        lector.onload = function(e) {
+            fotoVehiculoBase64 = e.target.result;
+            document.getElementById('vistaFotoVehiculo').innerHTML = `<img src="${fotoVehiculoBase64}">`;
+        };
+        lector.readAsDataURL(archivo);
+    }
+});
+
+document.getElementById('fotoPropietarioInput').addEventListener('change', function(e) {
+    const archivo = e.target.files[0];
+    if (archivo) {
+        const lector = new FileReader();
+        lector.onload = function(e) {
+            fotoPropietarioBase64 = e.target.result;
+            document.getElementById('vistaFotoPropietario').innerHTML = `<img src="${fotoPropietarioBase64}">`;
+        };
+        lector.readAsDataURL(archivo);
+    }
+});
+
+function actualizarFichaVehiculo() {
+    const v = id => document.getElementById(id)?.value || '';
+    const campos = ['v_placa', 'v_tipo', 'v_marca', 'v_linea', 'v_modelo', 'v_color', 'v_vin', 'v_chasis', 'v_motor', 'v_serie', 'v_cc', 'v_estado', 'v_codigo', 'v_aimpuesto', 'p_nombre', 'p_dpi', 'p_nit', 'p_edad', 'p_fnac', 'p_lnac', 'p_direccion', 'p_padres', 'p_obs'];
+    
+    campos.forEach(campo => {
+        const elLbl = document.getElementById(`lbl_${campo}`);
+        if (elLbl) elLbl.textContent = v(campo) || 'N/A';
+    });
+}
+
+function guardarVehiculo() {
+    const v = id => document.getElementById(id)?.value || '';
+    const datos = {
+        v_placa: v('v_placa'), v_tipo: v('v_tipo'), v_marca: v('v_marca'),
+        v_linea: v('v_linea'), v_modelo: v('v_modelo'), v_color: v('v_color'),
+        v_vin: v('v_vin'), v_chasis: v('v_chasis'), v_motor: v('v_motor'),
+        v_serie: v('v_serie'), v_cc: v('v_cc'), v_estado: v('v_estado'),
+        v_codigo: v('v_codigo'), v_aimpuesto: v('v_aimpuesto'),
+        p_nombre: v('p_nombre'), p_dpi: v('p_dpi'), p_nit: v('p_nit'),
+        p_edad: v('p_edad'), p_fnac: v('p_fnac'), p_lnac: v('p_lnac'),
+        p_direccion: v('p_direccion'), p_padres: v('p_padres'), p_obs: v('p_obs'),
+        fotoVehiculo: fotoVehiculoBase64,
+        fotoPropietario: fotoPropietarioBase64,
+        usuario: document.getElementById('usuario').value || ''
+    };
+
+    if (!datos.v_placa && !datos.p_dpi) {
+        alert('⚠️ Ingresa al menos la placa o el DPI del propietario.');
+        return;
+    }
+
+    db.ref('fichasVehiculos').push(datos)
+        .then(() => alert(`✅ Ficha Vehicular guardada con éxito.`))
+        .catch(err => alert("❌ Error en guardado: " + err.message));
+}
+
+function limpiarFormularioVehiculo() {
+    document.querySelectorAll('#modulo-crear-vehiculo .formulario input, #modulo-crear-vehiculo .formulario textarea').forEach(el => el.value = '');
+    document.getElementById('vistaFotoVehiculo').innerHTML = '🚗';
+    document.getElementById('vistaFotoPropietario').innerHTML = '👤';
+    fotoVehiculoBase64 = "";
+    fotoPropietarioBase64 = "";
+    actualizarFichaVehiculo();
+}
+
+function buscarVehiculo() {
+    const texto = document.getElementById('input-buscar-vehiculo').value.toLowerCase();
+    const contenedorLista = document.getElementById('lista-vehiculos-resultados');
+    contenedorLista.innerHTML = '';
+
+    const filtrados = historialVehiculosGlobal.filter(i => {
+        const busca = `${i.v_placa} ${i.v_vin} ${i.p_nombre} ${i.p_dpi}`.toLowerCase();
+        return busca.includes(texto);
+    });
+
+    if (filtrados.length === 0) {
+        contenedorLista.innerHTML = '<div style="padding:15px; color:#777;">No se encontraron vehículos.</div>';
+        document.getElementById('contenedor-vehiculo-consultado').classList.add('oculto');
+        return;
+    }
+
+    filtrados.forEach(v => {
+        const div = document.createElement('div');
+        div.className = 'item-persona';
+        div.innerHTML = `
+            <div>
+                <strong>Placa: ${v.v_placa || 'N/A'}</strong> - ${v.v_marca || ''} ${v.v_linea || ''} (${v.v_modelo || ''})
+                <br><span style="color:#666; font-size:12px;">Propietario: ${v.p_nombre || 'N/A'} (DPI: ${v.p_dpi || 'S/DPI'})</span>
+            </div>
+            <button style="padding:4px 10px; font-size:12px; background:#00529b; color:white; border:none; border-radius:3px;">Ver Ficha</button>
+        `;
+        div.onclick = () => mostrarVehiculoConsultado(v);
+        contenedorLista.appendChild(div);
+    });
+}
+
+function mostrarVehiculoConsultado(v) {
+    const contenedor = document.getElementById('detalle-vehiculo-consultado');
+    contenedor.innerHTML = `
+        <div class="ficha-vehiculo">
+            <div class="contenedor-fotos">
+                <div class="box-foto">
+                    <p>FOTOGRAFÍA VEHÍCULO</p>
+                    <div>${v.fotoVehiculo ? `<img src="${v.fotoVehiculo}">` : '🚗'}</div>
+                </div>
+                <div class="box-foto">
+                    <p>FOTOGRAFÍA PROPIETARIO</p>
+                    <div>${v.fotoPropietario ? `<img src="${v.fotoPropietario}">` : '👤'}</div>
+                </div>
+            </div>
+            <table class="tabla-vehiculo">
+                <thead><tr><th colspan="4" class="encabezado-seccion">DATOS DEL VEHÍCULO</th></tr></thead>
+                <tbody>
+                    <tr><td class="label-celda">PLACA:</td><td class="dato-celda">${v.v_placa || ''}</td><td class="label-celda">TIPO:</td><td class="dato-celda">${v.v_tipo || ''}</td></tr>
+                    <tr><td class="label-celda">MARCA:</td><td class="dato-celda">${v.v_marca || ''}</td><td class="label-celda">LÍNEA:</td><td class="dato-celda">${v.v_linea || ''}</td></tr>
+                    <tr><td class="label-celda">MODELO:</td><td class="dato-celda">${v.v_modelo || ''}</td><td class="label-celda">COLOR:</td><td class="dato-celda">${v.v_color || ''}</td></tr>
+                    <tr><td class="label-celda">VIN:</td><td class="dato-celda">${v.v_vin || ''}</td><td class="label-celda">CHÁSIS:</td><td class="dato-celda">${v.v_chasis || ''}</td></tr>
+                    <tr><td class="label-celda">MOTOR:</td><td class="dato-celda">${v.v_motor || ''}</td><td class="label-celda">SERIE:</td><td class="dato-celda">${v.v_serie || ''}</td></tr>
+                    <tr><td class="label-celda">CC:</td><td class="dato-celda">${v.v_cc || ''}</td><td class="label-celda">ESTADO:</td><td class="dato-celda">${v.v_estado || ''}</td></tr>
+                </tbody>
+            </table>
+            <table class="tabla-vehiculo">
+                <thead><tr><th colspan="4" class="encabezado-seccion">DATOS DEL PROPIETARIO</th></tr></thead>
+                <tbody>
+                    <tr><td class="label-celda">PROPIETARIO:</td><td colspan="3" class="dato-celda">${v.p_nombre || ''}</td></tr>
+                    <tr><td class="label-celda">DPI:</td><td class="dato-celda">${v.p_dpi || ''}</td><td class="label-celda">NIT:</td><td class="dato-celda">${v.p_nit || ''}</td></tr>
+                    <tr><td class="label-celda">DIRECCIÓN:</td><td colspan="3" class="dato-celda">${v.p_direccion || ''}</td></tr>
+                    <tr><td class="label-celda">OBSERVACIONES:</td><td colspan="3" class="dato-celda">${v.p_obs || ''}</td></tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+    document.getElementById('contenedor-vehiculo-consultado').classList.remove('oculto');
+}
+
+function exportarVehiculosExcel() {
+    if (historialVehiculosGlobal.length === 0) {
+        alert("⚠️ No hay vehículos registrados para exportar.");
+        return;
+    }
+    const wb = XLSX.utils.book_new();
+    const limpios = historialVehiculosGlobal.map(v => {
+        const { fotoVehiculo, fotoPropietario, ...resto } = v;
+        return resto;
+    });
+    const ws = XLSX.utils.json_to_sheet(limpios);
+    XLSX.utils.book_append_sheet(wb, ws, "Vehiculos");
+    XLSX.writeFile(wb, `Reporte_Vehiculos_${new Date().toISOString().slice(0, 10)}.xlsx`);
+}
+
 document.querySelector('#modulo-crear .formulario').addEventListener('input', actualizarFicha);
+document.querySelector('#modulo-crear-vehiculo .formulario').addEventListener('input', actualizarFichaVehiculo);
 </script>
 </body>
 </html>
