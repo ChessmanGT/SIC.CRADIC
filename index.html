@@ -505,6 +505,7 @@
             <button class="nav-btn" id="btn-tab-telefonos" onclick="cambiarModulo('telefonos')">📞 NÚMEROS TELEFÓNICOS</button>
             <button class="nav-btn" id="btn-tab-usuarios" onclick="cambiarModulo('usuarios')">👤 USUARIOS</button>
             <button class="nav-btn" id="btn-tab-seccion" onclick="cambiarModulo('seccion')">🏢 SECCIÓN</button>
+            <button class="nav-btn" id="btn-tab-biblioteca" onclick="cambiarModulo('biblioteca')">📚 BIBLIOTECA PDF</button>
         </nav>
 
         <div class="contenedor-principal">
@@ -1166,6 +1167,45 @@
         </div>
     </div>
 
+    <!-- ================= MÓDULO 8: BIBLIOTECA PDF ================= -->
+<div id="modulo-biblioteca" class="card-modulo oculto">
+    <h2>📚 Biblioteca de Documentos PDF</h2>
+
+    <!-- Formulario para subir PDF (Solo para Administrador General) -->
+    <div id="seccion-subir-pdf" style="background: #f8fbfe; padding: 15px; border-radius: 6px; border: 1px solid #bdd7ee; margin-bottom: 20px;">
+        <h3 style="margin-bottom: 12px; color: #00529b;">📤 Subir Nuevo Documento PDF</h3>
+        <form id="form-subir-pdf">
+            <div class="grupo-form">
+                <label>Título / Nombre del Documento</label>
+                <input type="text" id="pdf-titulo" placeholder="Ej. Reporte Trimestral 2026" required>
+            </div>
+            <div class="grupo-form">
+                <label>Descripción del Documento</label>
+                <textarea id="pdf-descripcion" placeholder="Breve descripción del archivo..."></textarea>
+            </div>
+            <div class="grupo-form">
+                <label>Seleccionar archivo PDF</label>
+                <input type="file" id="pdf-file-input" accept="application/pdf" required>
+            </div>
+            <button type="submit" class="btn-guardar" style="width: 100%; margin-top: 10px;">💾 Subir PDF a Biblioteca</button>
+        </form>
+    </div>
+
+    <!-- Lista y Visor de PDFs subidos (Disponible para todos) -->
+    <h3 style="margin-bottom: 12px; color: #00529b;">Documentos Disponibles</h3>
+    <table class="tabla-datos" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #00529b; color: white;">
+                <th style="padding: 8px;">Título</th>
+                <th style="padding: 8px;">Descripción</th>
+                <th style="padding: 8px;">Subido por</th>
+                <th style="padding: 8px;">Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-pdf-body"></tbody>
+    </table>
+</div>
+
 <!-- SDKs de Firebase Compatibles para la Web -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -1313,6 +1353,32 @@ function cerrarSesion() {
     document.getElementById('login-screen').classList.remove('oculto');
     document.getElementById('login-username').value = '';
     document.getElementById('login-password').value = '';
+}
+
+// Actualizar lista de módulos dentro de cambiarModulo()
+function cambiarModulo(modulo) {
+    if (!usuarioSesionActual) return;
+
+    const modulos = ['crear', 'fichas', 'crear-vehiculo', 'fichas-vehiculos', 'telefonos', 'usuarios', 'seccion', 'biblioteca'];
+    modulos.forEach(m => {
+        const el = document.getElementById(`modulo-${m}`);
+        if (el) el.classList.add('oculto');
+    });
+
+    // ... (Mantén el resto de la función igual)
+}
+
+// Ocultar o Mostrar la sección de subida según el Rol
+function aplicarPermisosRol() {
+    const btnBiblioteca = document.getElementById('btn-tab-biblioteca');
+    const seccionSubirPdf = document.getElementById('seccion-subir-pdf');
+
+    // Muestra la sección de subida ÚNICAMENTE si es Administrador General
+    if (seccionSubirPdf) {
+        seccionSubirPdf.style.display = (usuarioSesionActual.rol === "Administrador General") ? 'block' : 'none';
+    }
+
+    // ... (Mantén la lógica previa para los otros botones según tus roles)
 }
 
 function cambiarModulo(modulo) {
@@ -2011,6 +2077,91 @@ function mostrarVehiculoConsultado(v) {
         </div>
     `;
     document.getElementById('contenedor-vehiculo-consultado').classList.remove('oculto');
+}
+
+let pdfsGlobal = [];
+
+// Escuchar cambios de la colección 'bibliotecaPDF' en Firebase Realtime Database
+db.ref('bibliotecaPDF').on('value', snapshot => {
+    pdfsGlobal = [];
+    if (snapshot.exists()) {
+        snapshot.forEach(child => {
+            let item = child.val();
+            item._key = child.key;
+            pdfsGlobal.push(item);
+        });
+    }
+    renderizarTablaPDFs();
+});
+
+// Evento para subir el PDF (Restringido solo al Administrador General)
+document.getElementById('form-subir-pdf').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (!usuarioSesionActual || usuarioSesionActual.rol !== "Administrador General") {
+        alert("❌ Permiso denegado. Solo el Administrador General puede subir documentos.");
+        return;
+    }
+
+    const titulo = document.getElementById('pdf-titulo').value.trim();
+    const descripcion = document.getElementById('pdf-descripcion').value.trim();
+    const fileInput = document.getElementById('pdf-file-input');
+    const archivo = fileInput.files[0];
+
+    if (!archivo || archivo.type !== "application/pdf") {
+        alert("⚠️ Por favor selecciona un archivo en formato PDF válido.");
+        return;
+    }
+
+    // Convertir el archivo PDF a Base64 para almacenarlo
+    const lector = new FileReader();
+    lector.onload = function(evt) {
+        const pdfBase64 = evt.target.result;
+        
+        const nuevoPDF = {
+            titulo: titulo,
+            descripcion: descripcion,
+            subidoPor: usuarioSesionActual.usuario,
+            fecha: new Date().toLocaleDateString(),
+            archivoData: pdfBase64
+        };
+
+        db.ref('bibliotecaPDF').push(nuevoPDF)
+            .then(() => {
+                alert("✅ Documento PDF subido exitosamente.");
+                document.getElementById('form-subir-pdf').reset();
+            })
+            .catch(err => alert("❌ Error al subir: " + err.message));
+    };
+
+    lector.readAsDataURL(archivo);
+});
+
+// Renderizado de tabla para ver/descargar los PDF (Acceso para todos)
+function renderizarTablaPDFs() {
+    const tbody = document.getElementById('tabla-pdf-body');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+
+    if (pdfsGlobal.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:12px;">No hay documentos disponibles.</td></tr>';
+        return;
+    }
+
+    pdfsGlobal.forEach(pdf => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = "1px solid #eee";
+        tr.innerHTML = `
+            <td style="padding:10px;"><b>${pdf.titulo}</b></td>
+            <td style="padding:10px;">${pdf.descripcion || 'Sin descripción'}</td>
+            <td style="padding:10px;">${pdf.subidoPor} (${pdf.fecha})</td>
+            <td style="padding:10px; text-align:center;">
+                <a href="${pdf.archivoData}" download="${pdf.titulo}.pdf" style="background:#3498db; color:white; padding:6px 12px; border-radius:4px; text-decoration:none; font-weight:bold; font-size:12px; display:inline-block;">📥 Descargar</a>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
 function exportarVehiculosExcel() {
