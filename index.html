@@ -458,6 +458,194 @@
             margin-bottom: 5px;
         }
 
+        /* === ESTILOS BIBLIOTECA === */
+        .biblioteca-upload-area {
+            background: #f0f7ff;
+            border: 2px dashed #00529b;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .biblioteca-upload-area:hover {
+            background: #e0efff;
+            border-color: #003d73;
+        }
+
+        .biblioteca-upload-area .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .biblioteca-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .biblioteca-upload-area .upload-label {
+            display: inline-block;
+            padding: 10px 25px;
+            background: #00529b;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .biblioteca-upload-area .upload-label:hover {
+            background: #003d73;
+        }
+
+        .biblioteca-lista {
+            margin-top: 15px;
+        }
+
+        .biblioteca-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border: 1px solid #dde6ef;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .biblioteca-item:hover {
+            background: #f7fafd;
+            box-shadow: 0 2px 8px rgba(0,82,155,0.08);
+        }
+
+        .biblioteca-item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .biblioteca-item-icon {
+            font-size: 32px;
+            color: #e74c3c;
+        }
+
+        .biblioteca-item-detalles h4 {
+            color: #2c3e50;
+            margin: 0 0 4px 0;
+            font-size: 14px;
+        }
+
+        .biblioteca-item-detalles span {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .biblioteca-item-acciones {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-ver-pdf {
+            padding: 7px 14px;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #2980b9;
+            color: white;
+            transition: background 0.25s;
+        }
+
+        .btn-ver-pdf:hover {
+            background: #1f6da0;
+        }
+
+        .btn-descargar-pdf {
+            padding: 7px 14px;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #27ae60;
+            color: white;
+            transition: background 0.25s;
+        }
+
+        .btn-descargar-pdf:hover {
+            background: #219653;
+        }
+
+        .btn-eliminar-pdf {
+            padding: 7px 14px;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #e74c3c;
+            color: white;
+            transition: background 0.25s;
+        }
+
+        .btn-eliminar-pdf:hover {
+            background: #c0392b;
+        }
+
+        .biblioteca-busqueda {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .biblioteca-busqueda input {
+            flex: 1;
+        }
+
+        .biblioteca-progreso {
+            margin-top: 12px;
+            display: none;
+        }
+
+        .biblioteca-progreso .barra-progreso {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .biblioteca-progreso .barra-progreso-fill {
+            height: 100%;
+            background: linear-gradient(to right, #00529b, #2980b9);
+            border-radius: 4px;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        .biblioteca-progreso .progreso-texto {
+            font-size: 12px;
+            color: #555;
+            margin-top: 4px;
+        }
+
+        .biblioteca-vacio {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+        }
+
+        .biblioteca-vacio .icono-vacio {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
         @media print {
             body { background: white; padding: 0; }
             #login-screen, .header-app, .nav-bar, .formulario, .botones, .panel-busqueda, .lista-vehiculos { display: none !important; }
@@ -505,6 +693,7 @@
             <button class="nav-btn" id="btn-tab-telefonos" onclick="cambiarModulo('telefonos')">📞 NÚMEROS TELEFÓNICOS</button>
             <button class="nav-btn" id="btn-tab-usuarios" onclick="cambiarModulo('usuarios')">👤 USUARIOS</button>
             <button class="nav-btn" id="btn-tab-seccion" onclick="cambiarModulo('seccion')">🏢 SECCIÓN</button>
+            <button class="nav-btn" id="btn-tab-biblioteca" onclick="cambiarModulo('biblioteca')">📚 BIBLIOTECA</button>
         </nav>
 
         <div class="contenedor-principal">
@@ -1163,12 +1352,49 @@
                 </div>
             </div>
 
+            <!-- ================= MÓDULO 8: BIBLIOTECA ================= -->
+            <div id="modulo-biblioteca" class="card-modulo oculto" style="width: 100%;">
+                <h2>📚 Biblioteca de Documentos</h2>
+
+                <!-- Zona de subida (solo visible para Administrador General) -->
+                <div id="biblioteca-upload-section" class="oculto">
+                    <div class="biblioteca-upload-area" id="drop-zone">
+                        <div class="upload-icon">📄</div>
+                        <p style="color: #00529b; font-weight: bold; margin-bottom: 8px;">Arrastra archivos PDF aquí o haz clic para seleccionar</p>
+                        <p style="color: #666; font-size: 12px; margin-bottom: 8px;">Límite máximo: 5 MB por archivo</p>
+                        <label class="upload-label" for="biblioteca-file-input">📁 Seleccionar PDF</label>
+                        <input type="file" id="biblioteca-file-input" accept="application/pdf" multiple>
+                    </div>
+
+                    <div class="biblioteca-progreso" id="biblioteca-progreso">
+                        <div class="barra-progreso">
+                            <div class="barra-progreso-fill" id="biblioteca-barra-fill"></div>
+                        </div>
+                        <div class="progreso-texto" id="biblioteca-progreso-texto">Subiendo...</div>
+                    </div>
+                </div>
+
+                <!-- Barra de búsqueda -->
+                <div class="biblioteca-busqueda">
+                    <input type="text" id="biblioteca-busqueda-input" placeholder="Buscar documento por nombre..." oninput="filtrarBiblioteca()">
+                </div>
+
+                <!-- Lista de documentos -->
+                <div class="biblioteca-lista" id="biblioteca-lista-documentos">
+                    <div class="biblioteca-vacio" id="biblioteca-vacio-msg">
+                        <div class="icono-vacio">📂</div>
+                        <p>No hay documentos en la biblioteca</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
 <!-- SDKs de Firebase Compatibles para la Web -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
 
 <script>
 // CONFIGURACIÓN DE FIREBASE
@@ -1186,6 +1412,7 @@ const firebaseConfig = {
 // INICIALIZACIÓN DE FIREBASE
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+// Storage no requerido - PDFs se guardan como Base64 en RTDB
 
 const USUARIOS_DEFECTO = [
     { nombre: "Administrador Sistema", usuario: "admin", pass: "1234", rol: "Administrador General", estado: "Activo" },
@@ -1276,6 +1503,10 @@ function aplicarPermisosRol() {
     const btnTelefonos = document.getElementById('btn-tab-telefonos');
     const btnUsuarios = document.getElementById('btn-tab-usuarios');
     const btnSeccion = document.getElementById('btn-tab-seccion');
+    const btnBiblioteca = document.getElementById('btn-tab-biblioteca');
+
+    // Biblioteca visible para todos los roles
+    btnBiblioteca.style.display = 'inline-block';
 
     if (usuarioSesionActual.rol === "Analista") {
         btnCrear.style.display = 'none';
@@ -1294,6 +1525,9 @@ function aplicarPermisosRol() {
         btnFichasVehiculos.style.display = 'inline-block';
         btnTelefonos.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
+        // Upload oculto para Operador
+        const uploadSection = document.getElementById('biblioteca-upload-section');
+        if (uploadSection) uploadSection.classList.add('oculto');
         cambiarModulo('crear');
     } else {
         btnCrear.style.display = 'inline-block';
@@ -1303,6 +1537,9 @@ function aplicarPermisosRol() {
         btnTelefonos.style.display = 'inline-block';
         btnUsuarios.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
+        // Upload visible solo para Administrador General
+        const uploadSection = document.getElementById('biblioteca-upload-section');
+        if (uploadSection) uploadSection.classList.remove('oculto');
         cambiarModulo('crear');
     }
 }
@@ -1318,7 +1555,7 @@ function cerrarSesion() {
 function cambiarModulo(modulo) {
     if (!usuarioSesionActual) return;
 
-    const modulos = ['crear', 'fichas', 'crear-vehiculo', 'fichas-vehiculos', 'telefonos', 'usuarios', 'seccion'];
+    const modulos = ['crear', 'fichas', 'crear-vehiculo', 'fichas-vehiculos', 'telefonos', 'usuarios', 'seccion', 'biblioteca'];
     modulos.forEach(m => {
         const el = document.getElementById(`modulo-${m}`);
         if (el) el.classList.add('oculto');
@@ -1342,6 +1579,7 @@ function cambiarModulo(modulo) {
     if (modulo === 'fichas') buscarPersona();
     if (modulo === 'fichas-vehiculos') buscarVehiculo();
     if (modulo === 'usuarios') renderizarTablaUsuarios();
+    if (modulo === 'biblioteca') cargarDocumentosBiblioteca();
 }
 
 // USUARIOS
@@ -2030,6 +2268,280 @@ function exportarVehiculosExcel() {
     const fechaHora = new Date().toISOString().slice(0, 10);
     XLSX.writeFile(wb, `Reporte_Vehiculos_${fechaHora}.xlsx`);
 }
+
+// ============================================================
+// ================= MÓDULO BIBLIOTECA =================
+// ============================================================
+// Guarda PDFs como Base64 directamente en Realtime Database
+// No requiere Firebase Storage ni plan Blaze
+
+let bibliotecaListener = null;
+let documentosBibliotecaGlobal = [];
+
+// Convertir archivo a Base64
+function archivoABase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
+// Subir PDF como Base64 a Realtime Database
+async function subirPDFBiblioteca(file) {
+    if (!file || file.type !== 'application/pdf') {
+        alert('Solo se permiten archivos PDF.');
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        alert('El archivo excede el límite de 5 MB para almacenamiento en base de datos.');
+        return;
+    }
+
+    const barraFill = document.getElementById('biblioteca-barra-fill');
+    const progresoDiv = document.getElementById('biblioteca-progreso');
+    const progresoTexto = document.getElementById('biblioteca-progreso-texto');
+
+    progresoDiv.style.display = 'block';
+    barraFill.style.width = '10%';
+    progresoTexto.textContent = 'Leyendo archivo...';
+
+    try {
+        // Convertir PDF a Base64
+        const base64Data = await archivoABase64(file);
+        barraFill.style.width = '50%';
+        progresoTexto.textContent = 'Guardando en base de datos...';
+
+        // Guardar en Realtime Database
+        const docData = {
+            nombre: file.name,
+            tipo: 'application/pdf',
+            tamaño: file.size,
+            base64: base64Data,
+            fechaSubida: new Date().toISOString(),
+            subidoPor: usuarioSesionActual ? usuarioSesionActual.nombre : 'Desconocido'
+        };
+
+        await db.ref('bibliotecaDocumentos').push(docData);
+
+        barraFill.style.width = '100%';
+        progresoTexto.textContent = '✅ ¡Documento subido con éxito!';
+        setTimeout(() => { progresoDiv.style.display = 'none'; }, 2500);
+
+    } catch (error) {
+        console.error('Error al subir documento:', error);
+        progresoTexto.textContent = '❌ Error al subir el documento.';
+        setTimeout(() => { progresoDiv.style.display = 'none'; }, 3000);
+    }
+}
+
+// Cargar documentos desde RTDB (listener en tiempo real)
+function cargarDocumentosBiblioteca() {
+    if (bibliotecaListener) {
+        db.ref('bibliotecaDocumentos').off('value', bibliotecaListener);
+    }
+    bibliotecaListener = db.ref('bibliotecaDocumentos').on('value', function(snapshot) {
+        documentosBibliotecaGlobal = [];
+        snapshot.forEach(child => {
+            documentosBibliotecaGlobal.push({
+                id: child.key,
+                ...child.val()
+            });
+        });
+        // Ordenar por fecha descendente
+        documentosBibliotecaGlobal.sort((a, b) => (b.fechaSubida || '').localeCompare(a.fechaSubida || ''));
+        renderizarListaDocumentos(documentosBibliotecaGlobal);
+    });
+}
+
+// Filtrar documentos por nombre
+function filtrarBiblioteca() {
+    const termino = document.getElementById('biblioteca-busqueda-input').value.toLowerCase().trim();
+    if (!termino) {
+        renderizarListaDocumentos(documentosBibliotecaGlobal);
+        return;
+    }
+    const filtrados = documentosBibliotecaGlobal.filter(d =>
+        (d.nombre || '').toLowerCase().includes(termino)
+    );
+    renderizarListaDocumentos(filtrados);
+}
+
+// Renderizar la lista de documentos
+function renderizarListaDocumentos(documentos) {
+    const contenedor = document.getElementById('biblioteca-lista-documentos');
+
+    // Limpiar contenido previo
+    contenedor.innerHTML = '';
+
+    if (documentos.length === 0) {
+        const vacioDiv = document.createElement('div');
+        vacioDiv.className = 'biblioteca-vacio';
+        vacioDiv.innerHTML = '<div class="icono-vacio">📂</div><p>No hay documentos en la biblioteca</p>';
+        contenedor.appendChild(vacioDiv);
+        return;
+    }
+
+    documentos.forEach(doc => {
+        const item = document.createElement('div');
+        item.className = 'biblioteca-item';
+
+        const info = document.createElement('div');
+        info.className = 'biblioteca-item-info';
+
+        const icono = document.createElement('div');
+        icono.className = 'biblioteca-item-icono';
+        icono.textContent = '📄';
+
+        const detalles = document.createElement('div');
+        detalles.className = 'biblioteca-item-detalles';
+
+        const nombreSpan = document.createElement('div');
+        nombreSpan.className = 'biblioteca-item-nombre';
+        nombreSpan.textContent = doc.nombre || 'Sin nombre';
+
+        const metaSpan = document.createElement('div');
+        metaSpan.className = 'biblioteca-item-meta';
+        const fecha = doc.fechaSubida ? new Date(doc.fechaSubida).toLocaleDateString('es-GT') : 'Fecha desconocida';
+        const tamMB = doc.tamaño ? (doc.tamaño / (1024 * 1024)).toFixed(2) + ' MB' : '';
+        const subido = doc.subidoPor || '';
+        metaSpan.textContent = `${fecha}${tamMB ? ' • ' + tamMB : ''}${subido ? ' • Subido por: ' + subido : ''}`;
+
+        detalles.appendChild(nombreSpan);
+        detalles.appendChild(metaSpan);
+
+        info.appendChild(icono);
+        info.appendChild(detalles);
+
+        const acciones = document.createElement('div');
+        acciones.className = 'biblioteca-item-acciones';
+
+        // Botón ver
+        const btnVer = document.createElement('button');
+        btnVer.className = 'biblioteca-btn biblioteca-btn-ver';
+        btnVer.textContent = '👁 Ver';
+        btnVer.onclick = function() { verDocumentoBiblioteca(doc.base64, doc.nombre); };
+
+        // Botón descargar
+        const btnDescargar = document.createElement('button');
+        btnDescargar.className = 'biblioteca-btn biblioteca-btn-descargar';
+        btnDescargar.textContent = '⬇ Descargar';
+        btnDescargar.onclick = function() { descargarDocumentoBiblioteca(doc.base64, doc.nombre); };
+
+        // Botón eliminar (solo Administrador General)
+        if (usuarioSesionActual && usuarioSesionActual.rol === 'Administrador General') {
+            const btnEliminar = document.createElement('button');
+            btnEliminar.className = 'biblioteca-btn biblioteca-btn-eliminar';
+            btnEliminar.textContent = '🗑 Eliminar';
+            btnEliminar.onclick = function() { eliminarDocumentoBiblioteca(doc.id); };
+            acciones.appendChild(btnEliminar);
+        }
+
+        acciones.appendChild(btnVer);
+        acciones.appendChild(btnDescargar);
+
+        item.appendChild(info);
+        item.appendChild(acciones);
+        contenedor.appendChild(item);
+    });
+}
+
+// Ver documento en nueva pestaña (desde Base64)
+function verDocumentoBiblioteca(base64, nombre) {
+    if (!base64) {
+        alert('Documento no disponible.');
+        return;
+    }
+    // Abrir el PDF en una nueva pestaña usando el data URL
+    const ventana = window.open('');
+    if (ventana) {
+        ventana.document.write(`
+            <html>
+            <head><title>${nombre || 'Documento'}</title></head>
+            <body style="margin:0;padding:0;">
+            <iframe src="${base64}" style="width:100%;height:100vh;border:none;"></iframe>
+            </body>
+            </html>
+        `);
+        ventana.document.close();
+    } else {
+        alert('Permite ventanas emergentes para ver el documento.');
+    }
+}
+
+// Descargar documento (desde Base64)
+function descargarDocumentoBiblioteca(base64, nombre) {
+    if (!base64) {
+        alert('Documento no disponible.');
+        return;
+    }
+    // Convertir Base64 a blob y crear enlace de descarga
+    const enlace = document.createElement('a');
+    enlace.href = base64;
+    enlace.download = nombre || 'documento.pdf';
+    document.body.appendChild(enlace);
+    enlace.click();
+    document.body.removeChild(enlace);
+}
+
+// Eliminar documento de RTDB (solo Administrador General)
+function eliminarDocumentoBiblioteca(id) {
+    if (!confirm('¿Está seguro de que desea eliminar este documento? Esta acción no se puede deshacer.')) return;
+
+    db.ref('bibliotecaDocumentos/' + id).remove().then(() => {
+        // Se actualiza automáticamente vía el listener on('value')
+    }).catch(err => {
+        console.error('Error al eliminar documento:', err);
+        alert('Error al eliminar el documento.');
+    });
+}
+
+// Eventos del área de subida
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('biblioteca-file-input');
+    const dropZone = document.getElementById('drop-zone');
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            for (let i = 0; i < files.length; i++) {
+                subirPDFBiblioteca(files[i]);
+            }
+            fileInput.value = '';
+        });
+    }
+
+    if (dropZone) {
+        dropZone.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+                fileInput.click();
+            }
+        });
+
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            dropZone.style.borderColor = '#002855';
+            dropZone.style.background = 'rgba(0, 82, 155, 0.08)';
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            dropZone.style.borderColor = '#00529b';
+            dropZone.style.background = 'rgba(0, 82, 155, 0.03)';
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            dropZone.style.borderColor = '#00529b';
+            dropZone.style.background = 'rgba(0, 82, 155, 0.03)';
+            const files = e.dataTransfer.files;
+            for (let i = 0; i < files.length; i++) {
+                subirPDFBiblioteca(files[i]);
+            }
+        });
+    }
+});
 </script>
 </body>
 </html>
