@@ -795,7 +795,7 @@
 
                 <!-- VISTA PREVIA PERSONA -->
                 <div class="card-modulo vista-ficha">
-                    <h2>Vista Previa Ficha -SIC-</h2>
+                    <h2>Vista Previa Del Perfil -CRADIC-</h2>
                     <div class="ficha">
                         <div class="ficha-cabecera">FICHA DE IDENTIFICACIÓN DE PERSONAS </div>
                         <div class="ficha-auditoria">REGISTRO C.R.A.D.I.C CONFIDENCIAL</div>
@@ -879,7 +879,7 @@
 
             <!-- ================= MÓDULO 2: BÚSQUEDA FICHAS PERSONAS ================= -->
             <div id="modulo-fichas" class="card-modulo oculto">
-                <h2>🔍 Consulta de Fichas -SIC-</h2>
+                <h2>🔍 Consulta de Fichas -CRADIC-</h2>
                 <div class="panel-busqueda">
                     <input type="text" id="input-buscar-persona" placeholder="Escribe Nombre, DPI o Apodo..." oninput="buscarPersona()">
                     <button onclick="exportarAExcel()" class="btn-excel">📊 Exportar Todos a Excel</button>
@@ -888,11 +888,35 @@
 
                 <div id="contenedor-ficha-consultada" class="oculto">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3>Ficha -SIC- del Individuo</h3>
-                        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ficha</button>
+                        <h3>Perfil de la Persona Identificada</h3>
+                        <button onclick="window.print()" class="btn-imprimir no-print">🖨️Imprimir Ficha</button>
+
+<style>
+    /* Tu estilo normal del botón (mantiene el color azul) */
+  .btn-imprimir {
+    background-color: #3182ce; /* El azul de tu diseño */
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Solo oculta elementos con la clase .no-print al imprimir */
+  @media print {
+    .no-print,
+    .panel-busqueda,
+    .lista-personas,
+    #lista-resultados,
+    #modulo-fichas > h2  {
+      display: none !important;
+    }
+  }
+</style>
                     </div>
                     <div class="ficha">
-                        <div class="ficha-cabecera">Detalle General -SIC-</div>
+                        <div class="ficha-cabecera">Detalle General -CRADIC-</div>
                         <div class="ficha-contenido" id="detalle-persona-consultada"></div>
                     </div>
                 </div>
@@ -906,33 +930,33 @@
 
                     <!-- DATOS VEHÍCULO -->
                     <div class="seccion-form-titulo">1. Datos del Vehículo</div>
-                    <div class="grupo-form"><label>Placa</label><input type="text" id="v_placa" value="P-055JRY"></div>
-                    <div class="grupo-form"><label>Tipo</label><input type="text" id="v_tipo" value="Carro"></div>
-                    <div class="grupo-form"><label>Marca</label><input type="text" id="v_marca" value="Honda"></div>
-                    <div class="grupo-form"><label>Línea</label><input type="text" id="v_linea" value="FIT"></div>
-                    <div class="grupo-form"><label>Modelo (Año)</label><input type="text" id="v_modelo" value="2009"></div>
-                    <div class="grupo-form"><label>Color</label><input type="text" id="v_color" value="Negro Policromado"></div>
-                    <div class="grupo-form"><label>No. de VIN</label><input type="text" id="v_vin" value="Jhmge87239s004467"></div>
-                    <div class="grupo-form"><label>No. de Chásis</label><input type="text" id="v_chasis" value="Jhmge87239s004467"></div>
-                    <div class="grupo-form"><label>No. de Motor</label><input type="text" id="v_motor" value="L15o71106160"></div>
-                    <div class="grupo-form"><label>No. de Serie</label><input type="text" id="v_serie" value="Jhmge87239s004467"></div>
-                    <div class="grupo-form"><label>Cilindrada (CC)</label><input type="text" id="v_cc" value="1500"></div>
-                    <div class="grupo-form"><label>Estado</label><input type="text" id="v_estado" value="Activo"></div>
-                    <div class="grupo-form"><label>Código</label><input type="text" id="v_codigo" value="2019-279155-1"></div>
-                    <div class="grupo-form"><label>Año Impuesto</label><input type="text" id="v_aimpuesto" value="2022"></div>
+                    <div class="grupo-form"><label>Placa</label><input type="text" id="v_placa"></div>
+                    <div class="grupo-form"><label>Tipo</label><input type="text" id="v_tipo"></div>
+                    <div class="grupo-form"><label>Marca</label><input type="text" id="v_marca"></div>
+                    <div class="grupo-form"><label>Línea</label><input type="text" id="v_linea"></div>
+                    <div class="grupo-form"><label>Modelo (Año)</label><input type="text" id="v_modelo"></div>
+                    <div class="grupo-form"><label>Color</label><input type="text" id="v_color"></div>
+                    <div class="grupo-form"><label>No. de VIN</label><input type="text" id="v_vin"></div>
+                    <div class="grupo-form"><label>No. de Chásis</label><input type="text" id="v_chasis"></div>
+                    <div class="grupo-form"><label>No. de Motor</label><input type="text" id="v_motor"></div>
+                    <div class="grupo-form"><label>No. de Serie</label><input type="text" id="v_serie"></div>
+                    <div class="grupo-form"><label>Cilindrada (CC)</label><input type="text" id="v_cc"></div>
+                    <div class="grupo-form"><label>Estado</label><input type="text" id="v_estado"></div>
+                    <div class="grupo-form"><label>Código</label><input type="text" id="v_codigo"></div>
+                    <div class="grupo-form"><label>Año Impuesto</label><input type="text" id="v_aimpuesto"></div>
                     <div class="grupo-form"><label>Foto del Vehículo</label><input type="file" id="fotoVehiculoInput" accept="image/*"></div>
 
                     <!-- DATOS PROPIETARIO -->
                     <div class="seccion-form-titulo">2. Datos del Propietario</div>
-                    <div class="grupo-form"><label>Nombre del Propietario</label><input type="text" id="p_nombre" value="Douglas Amilcar Duran Figueroa"></div>
-                    <div class="grupo-form"><label>DPI</label><input type="text" id="p_dpi" value="2714092820101"></div>
-                    <div class="grupo-form"><label>NIT</label><input type="text" id="p_nit" value="85363995"></div>
-                    <div class="grupo-form"><label>Edad</label><input type="text" id="p_edad" value="27 años"></div>
-                    <div class="grupo-form"><label>Fecha de Nacimiento</label><input type="text" id="p_fnac" value="19-05-1995"></div>
-                    <div class="grupo-form"><label>Lugar de Nacimiento</label><input type="text" id="p_lnac" value="Villa Nueva, Guatemala"></div>
-                    <div class="grupo-form"><label>Dirección Domiciliar</label><textarea id="p_direccion">Kilometro 14 Carretera Al Pacifico 7-47 Residencial Terra Nova Zona 6</textarea></div>
-                    <div class="grupo-form"><label>Nombres de los Padres</label><textarea id="p_padres">Amilcar Florentin, Duran Franco Y Gloria Elizabeth, Figueroa Loyo</textarea></div>
-                    <div class="grupo-form"><label>Observaciones</label><textarea id="p_obs">Se encuentra solvente.</textarea></div>
+                    <div class="grupo-form"><label>Nombre del Propietario</label><input type="text" id="p_nombre"></div>
+                    <div class="grupo-form"><label>DPI</label><input type="text" id="p_dpi"></div>
+                    <div class="grupo-form"><label>NIT</label><input type="text" id="p_nit"></div>
+                    <div class="grupo-form"><label>Edad</label><input type="text" id="p_edad"></div>
+                    <div class="grupo-form"><label>Fecha de Nacimiento</label><input type="date" id="p_fnac"></div>
+                    <div class="grupo-form"><label>Lugar de Nacimiento</label><input type="text" id="p_lnac"></div>
+                    <div class="grupo-form"><label>Dirección Domiciliar</label><textarea id="p_direccion"></textarea></div>
+                    <div class="grupo-form"><label>Nombres de los Padres</label><textarea id="p_padres"></textarea></div>
+                    <div class="grupo-form"><label>Observaciones</label><textarea id="p_obs"></textarea></div>
                     <div class="grupo-form"><label>Foto del Propietario</label><input type="file" id="fotoPropietarioInput" accept="image/*"></div>
 
                     <div class="botones">
@@ -965,32 +989,32 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="label-celda">PLACA:</td><td class="dato-celda" id="lbl_v_placa">P-055JRY</td>
-                                    <td class="label-celda">TIPO:</td><td class="dato-celda" id="lbl_v_tipo">Carro</td>
+                                    <td class="label-celda">PLACA:</td><td class="dato-celda" id="lbl_v_placa"></td>
+                                    <td class="label-celda">TIPO:</td><td class="dato-celda" id="lbl_v_tipo"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">MARCA:</td><td class="dato-celda" id="lbl_v_marca">Honda</td>
-                                    <td class="label-celda">LÍNEA:</td><td class="dato-celda" id="lbl_v_linea">FIT</td>
+                                    <td class="label-celda">MARCA:</td><td class="dato-celda" id="lbl_v_marca"></td>
+                                    <td class="label-celda">LÍNEA:</td><td class="dato-celda" id="lbl_v_linea"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">MODELO:</td><td class="dato-celda" id="lbl_v_modelo">2009</td>
-                                    <td class="label-celda">COLOR:</td><td class="dato-celda" id="lbl_v_color">Negro Policromado</td>
+                                    <td class="label-celda">MODELO:</td><td class="dato-celda" id="lbl_v_modelo"></td>
+                                    <td class="label-celda">COLOR:</td><td class="dato-celda" id="lbl_v_color"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">NO. DE VIN:</td><td class="dato-celda" id="lbl_v_vin">Jhmge87239s004467</td>
-                                    <td class="label-celda">NO. DE CHÁSIS:</td><td class="dato-celda" id="lbl_v_chasis">Jhmge87239s004467</td>
+                                    <td class="label-celda">NO. DE VIN:</td><td class="dato-celda" id="lbl_v_vin"></td>
+                                    <td class="label-celda">NO. DE CHÁSIS:</td><td class="dato-celda" id="lbl_v_chasis"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">NO. DE MOTOR:</td><td class="dato-celda" id="lbl_v_motor">L15o71106160</td>
-                                    <td class="label-celda">NO. DE SERIE:</td><td class="dato-celda" id="lbl_v_serie">Jhmge87239s004467</td>
+                                    <td class="label-celda">NO. DE MOTOR:</td><td class="dato-celda" id="lbl_v_motor"></td>
+                                    <td class="label-celda">NO. DE SERIE:</td><td class="dato-celda" id="lbl_v_serie"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">CC:</td><td class="dato-celda" id="lbl_v_cc">1500</td>
-                                    <td class="label-celda">ESTADO:</td><td class="dato-celda" id="lbl_v_estado">Activo</td>
+                                    <td class="label-celda">CC:</td><td class="dato-celda" id="lbl_v_cc"></td>
+                                    <td class="label-celda">ESTADO:</td><td class="dato-celda" id="lbl_v_estado"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">CÓDIGO:</td><td class="dato-celda" id="lbl_v_codigo">2019-279155-1</td>
-                                    <td class="label-celda">AÑO IMPUESTO:</td><td class="dato-celda" id="lbl_v_aimpuesto">2022</td>
+                                    <td class="label-celda">CÓDIGO:</td><td class="dato-celda" id="lbl_v_codigo"></td>
+                                    <td class="label-celda">AÑO IMPUESTO:</td><td class="dato-celda" id="lbl_v_aimpuesto"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1003,31 +1027,31 @@
                             <tbody>
                                 <tr>
                                     <td class="label-celda">PROPIETARIO:</td>
-                                    <td colspan="3" class="dato-celda" id="lbl_p_nombre">Douglas Amilcar Duran Figueroa</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_nombre"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">DPI:</td><td class="dato-celda" id="lbl_p_dpi">2714092820101</td>
-                                    <td class="label-celda">NIT:</td><td class="dato-celda" id="lbl_p_nit">85363995</td>
+                                    <td class="label-celda">DPI:</td><td class="dato-celda" id="lbl_p_dpi"></td>
+                                    <td class="label-celda">NIT:</td><td class="dato-celda" id="lbl_p_nit"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">EDAD:</td><td class="dato-celda" id="lbl_p_edad">27 años</td>
-                                    <td class="label-celda">F. NACIMIENTO:</td><td class="dato-celda" id="lbl_p_fnac">19-05-1995</td>
+                                    <td class="label-celda">EDAD:</td><td class="dato-celda" id="lbl_p_edad"></td>
+                                    <td class="label-celda">F. NACIMIENTO:</td><td class="dato-celda" id="lbl_p_fnac"></td>
                                 </tr>
                                 <tr>
-                                    <td class="label-celda">LUGAR NAC.:</td>
-                                    <td colspan="3" class="dato-celda" id="lbl_p_lnac">Villa Nueva, Guatemala</td>
+                                    <td class="label-celda">LUGAR DE NACIMIENTO:</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_lnac"></td>
                                 </tr>
                                 <tr>
                                     <td class="label-celda">DIRECCIÓN:</td>
-                                    <td colspan="3" class="dato-celda" id="lbl_p_direccion">Kilometro 14 Carretera Al Pacifico 7-47 Residencial Terra Nova Zona 6</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_direccion"></td>
                                 </tr>
                                 <tr>
                                     <td class="label-celda">PADRES:</td>
-                                    <td colspan="3" class="dato-celda" id="lbl_p_padres">Amilcar Florentin, Duran Franco Y Gloria Elizabeth, Figueroa Loyo</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_padres"></td>
                                 </tr>
                                 <tr>
                                     <td class="label-celda">OBSERVACIONES:</td>
-                                    <td colspan="3" class="dato-celda" id="lbl_p_obs">Se encuentra solvente.</td>
+                                    <td colspan="3" class="dato-celda" id="lbl_p_obs"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1052,10 +1076,30 @@
                 <div class="lista-vehiculos" id="lista-vehiculos-resultados"></div>
 
                 <div id="contenedor-vehiculo-consultado" class="oculto">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h3>Detalle del Vehículo Seleccionado</h3>
-                        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Ficha</button>
-                    </div>
+                       <button onclick="window.print()" class="btn-imprimir no-print">🖨️Imprimir Ficha</button>
+
+<style>
+    /* Tu estilo normal del botón (mantiene el color azul) */
+  .btn-imprimir {
+    background-color: #3182ce; /* El azul de tu diseño */
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Solo oculta elementos con la clase .no-print al imprimir */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+</style>
+                      </div>
                     <div id="detalle-vehiculo-consultado"></div>
                 </div>
             </div>
