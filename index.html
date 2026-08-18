@@ -646,12 +646,340 @@
             margin-bottom: 10px;
         }
 
+        /* === MÓDULO NÚMEROS EXTORSIVOS === */
+        .extorsivos-header {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .extorsivos-stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .extorsivos-stat-card {
+            background: linear-gradient(135deg, #00529b 0%, #2980b9 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            min-width: 140px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,82,155,0.2);
+        }
+
+        .extorsivos-stat-card .stat-num {
+            font-size: 28px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .extorsivos-stat-card .stat-label {
+            font-size: 11px;
+            opacity: 0.9;
+            text-transform: uppercase;
+        }
+
+        .extorsivos-stat-card.stat-tigo { background: linear-gradient(135deg, #003DA5 0%, #0066CC 100%); }
+        .extorsivos-stat-card.stat-claro { background: linear-gradient(135deg, #E4002B 0%, #FF1A1A 100%); }
+        .extorsivos-stat-card.stat-movistar { background: linear-gradient(135deg, #00A0DF 0%, #33C1FF 100%); }
+
+        .extorsivos-panel-busqueda {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+            align-items: center;
+        }
+
+        .extorsivos-panel-busqueda input {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 14px;
+            border: 2px solid #00529b;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .extorsivos-panel-busqueda input:focus {
+            border-color: #2980b9;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,82,155,0.15);
+        }
+
+        
+
+        .extorsivos-tabla-wrap {
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border: 1px solid #dde6ef;
+            border-radius: 6px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .extorsivos-tabla {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 900px;
+        }
+
+        .extorsivos-tabla thead th {
+            background: #00529b;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            font-size: 11px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .extorsivos-tabla tbody tr {
+            border-bottom: 1px solid #e8e8e8;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .extorsivos-tabla tbody tr:hover {
+            background: #eaf2f8;
+        }
+
+        .extorsivos-tabla tbody td {
+            padding: 8px;
+            font-size: 12px;
+            vertical-align: top;
+        }
+
+        .extorsivos-tabla .badge-telefonia {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .badge-tigo { background: #003DA5; }
+        .badge-claro { background: #E4002B; }
+        .badge-movistar { background: #00A0DF; }
+        .badge-otro { background: #7f8c8d; }
+
+        .extorsivos-paginacion {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .extorsivos-paginacion button {
+            padding: 6px 12px;
+            border: 1px solid #00529b;
+            background: white;
+            color: #00529b;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .extorsivos-paginacion button:hover { background: #eaf2f8; }
+        .extorsivos-paginacion button.pag-activa { background: #00529b; color: white; }
+        .extorsivos-paginacion button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .extorsivos-pag-info {
+            font-size: 12px;
+            color: #555;
+            margin-left: 10px;
+        }
+
+        /* Detalle / Ficha Extorsiva */
+        .extorsivos-detalle-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 15px;
+            overflow-y: auto;
+        }
+
+        .extorsivos-detalle-card {
+            background: white;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 800px;
+            padding: 0;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideDown 0.25s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .extorsivos-detalle-header {
+            background: linear-gradient(to right, #00529b, #2980b9);
+            color: white;
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .extorsivos-detalle-header h3 { margin: 0; font-size: 18px; }
+
+        .extorsivos-detalle-cerrar {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .extorsivos-detalle-cerrar:hover { background: rgba(255,255,255,0.35); }
+
+        .extorsivos-detalle-body {
+            padding: 22px;
+        }
+
+        .extorsivos-detalle-campo {
+            display: flex;
+            border-bottom: 1px solid #e8e8e8;
+            padding: 8px 0;
+        }
+
+        .extorsivos-detalle-campo .campo-label {
+            width: 35%;
+            font-weight: bold;
+            color: #34495e;
+            font-size: 13px;
+            padding-right: 10px;
+        }
+
+        .extorsivos-detalle-campo .campo-valor {
+            flex: 1;
+            color: #2c3e50;
+            font-size: 13px;
+            word-break: break-word;
+        }
+
+        .extorsivos-detalle-footer {
+            padding: 15px 22px;
+            background: #f9f9f9;
+            border-top: 1px solid #e8e8e8;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Formulario admin agregar/editar */
+        .extorsivos-form-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1001;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 15px;
+            overflow-y: auto;
+        }
+
+        .extorsivos-form-card {
+            background: white;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 700px;
+            padding: 0;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideDown 0.25s ease;
+        }
+
+        .extorsivos-form-header {
+            background: linear-gradient(to right, #00529b, #2980b9);
+            color: white;
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .extorsivos-form-header h3 { margin: 0; font-size: 18px; }
+
+        .extorsivos-form-body {
+            padding: 22px;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .extorsivos-form-body .grupo-form { margin-bottom: 12px; }
+        .extorsivos-form-body label { font-size: 13px; }
+        .extorsivos-form-body input, .extorsivos-form-body select, .extorsivos-form-body textarea { font-size: 13px; }
+
+        .extorsivos-form-footer {
+            padding: 15px 22px;
+            background: #f9f9f9;
+            border-top: 1px solid #e8e8e8;
+            display: flex;
+            gap: 10px;
+        }
+
+        .extorsivos-no-result {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+        }
+
+        .extorsivos-no-result .icono-no-result {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .extorsivos-highlight {
+            background: #fff3cd;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
         @media print {
-            body { background: white; padding: 0; }
+            body { background: white; padding: 0; margin: 10px; font-size: 11px; }
             #login-screen, .header-app, .nav-bar, .formulario, .botones, .panel-busqueda, .lista-vehiculos { display: none !important; }
-            #app-screen { padding: 0; }
+            #app-screen { padding: 0; display: block !important; }
             .vista-ficha { box-shadow: none; padding: 0; width: 100%; max-height: none; }
             .ficha-vehiculo { border-color: #000; }
+            .extorsivos-panel-busqueda, .extorsivos-filtros, .extorsivos-paginacion { display: none !important; }
+            .extorsivos-tabla-wrap { max-height: none; overflow: visible; border: 1px solid #000; }
+            .extorsivos-tabla { font-size: 10px; min-width: auto; }
+            .extorsivos-tabla thead th { background: #333 !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .extorsivos-stat-cards { display: none !important; }
+            .extorsivos-detalle-overlay { position: static !important; background: white !important; }
+            .extorsivos-detalle-card { box-shadow: none !important; max-width: 100% !important; page-break-inside: avoid; }
+            .extorsivos-form-overlay { display: none !important; }
+            .extorsivos-highlight { background: #fff3cd !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            button { display: none !important; }
+            .seccion { display: block !important; page-break-after: always; }
+            .seccion.activa { display: block !important; }
+            .seccion:not(.activa) { display: none !important; }
         }
     </style>
 </head>
@@ -661,7 +989,7 @@
     <div id="login-screen">
         <div class="card-login">
             <img src="sic.png" alt="descripción de imagen" class="logo-login">
-            <h1>-CRADIC-</h1>
+            <h1>-GRADIC-</h1>
             <h2>SECCION DE INFORMACION CRIMINAL</h2>
             <form id="login-form">
                 <input type="text" id="login-username" class="input-login" placeholder="Usuario" required>
@@ -690,7 +1018,7 @@
             <button class="nav-btn" id="btn-tab-fichas" onclick="cambiarModulo('fichas')">🔍 FICHAS PERSONAS</button>
             <button class="nav-btn" id="btn-tab-crear-vehiculo" onclick="cambiarModulo('crear-vehiculo')">🚗 Crear / Editar Vehículo</button>
             <button class="nav-btn" id="btn-tab-fichas-vehiculos" onclick="cambiarModulo('fichas-vehiculos')">🚘 FICHAS VEHÍCULOS</button>
-            <button class="nav-btn" id="btn-tab-telefonos" onclick="cambiarModulo('telefonos')">📞 NÚMEROS TELEFÓNICOS</button>
+            <button class="nav-btn" id="btn-tab-extorsivos" onclick="cambiarModulo('extorsivos')">🚨 NÚMEROS EXTORSIVOS</button>
             <button class="nav-btn" id="btn-tab-usuarios" onclick="cambiarModulo('usuarios')">👤 USUARIOS</button>
             <button class="nav-btn" id="btn-tab-seccion" onclick="cambiarModulo('seccion')">🏢 SECCIÓN</button>
             <button class="nav-btn" id="btn-tab-biblioteca" onclick="cambiarModulo('biblioteca')">📚 BIBLIOTECA</button>
@@ -1294,20 +1622,87 @@
             </div>
 
             <!-- ================= MÓDULO 5: TELEFONOS ================= -->
-            <div id="modulo-telefonos" class="card-modulo oculto" style="width: 100%;">
-                <h2>📞 Directorio y Números Telefónicos</h2>
-                <div style="width: 100%; height: 80vh; min-height: 600px; margin-top: 15px;">
-                    <iframe 
-                        src="https://lookerstudio.google.com/embed/reporting/bec9346a-e4c9-4250-aec0-2d804c0499c5" 
-                        frameborder="0" 
-                        style="border:0; width:100%; height:100%; border-radius: 8px;" 
-                        allowfullscreen 
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                    </iframe>
+            <!-- ================= MÓDULO 6: NÚMEROS EXTORSIVOS ================= -->
+            <div id="modulo-extorsivos" class="card-modulo oculto" style="width: 100%;">
+                <h2>🚨 Búsqueda de Números Extorsivos</h2>
+
+                <!-- Estadísticas -->
+                <div class="extorsivos-stats" id="extorsivos-stats">
+                    <div class="extorsivos-stat-card">
+                        <span class="stat-num" id="stat-total">0</span>
+                        <span class="stat-label">Total Casos</span>
+                    </div>
+                    <div class="extorsivos-stat-card stat-tigo">
+                        <span class="stat-num" id="stat-tigo">0</span>
+                        <span class="stat-label">Tigo</span>
+                    </div>
+                    <div class="extorsivos-stat-card stat-claro">
+                        <span class="stat-num" id="stat-claro">0</span>
+                        <span class="stat-label">Claro</span>
+                    </div>
+                    <div class="extorsivos-stat-card stat-movistar">
+                        <span class="stat-num" id="stat-movistar">0</span>
+                        <span class="stat-label">Movistar</span>
+                    </div>
+                    <div class="extorsivos-stat-card" style="background:linear-gradient(135deg,#6B3FA0 0%,#9B59B6 100%);">
+                        <span class="stat-num" id="stat-imitadores">0</span>
+                        <span class="stat-label">Imitadores</span>
+                    </div>
+                    <div class="extorsivos-stat-card" style="background:linear-gradient(135deg,#C0392B 0%,#E74C3C 100%);">
+                        <span class="stat-num" id="stat-barrio18">0</span>
+                        <span class="stat-label">Barrio 18</span>
+                    </div>
+                    <div class="extorsivos-stat-card" style="background:linear-gradient(135deg,#1A5276 0%,#2980B9 100%);">
+                        <span class="stat-num" id="stat-ms13">0</span>
+                        <span class="stat-label">MS-13</span>
+                    </div>
                 </div>
+
+                <!-- Barra de búsqueda -->
+                <div class="extorsivos-panel-busqueda">
+                    <input type="text" id="extorsivos-busqueda" placeholder="Buscar por teléfono, caso, clase delito, departamento, municipio, organización..." oninput="buscarNumeroExtorsivo()">
+                    <button class="btn-accion" onclick="buscarNumeroExtorsivo()" style="background:#00529b;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">🔍 Buscar</button>
+                    <button class="btn-accion" id="btn-agregar-extorsivo" onclick="mostrarFormularioExtorsivo()" style="background:#27ae60;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;display:none;">➕ Agregar Caso</button>
+                    <button class="btn-accion" id="btn-importar-extorsivos" onclick="importarExcelExtorsivos()" style="background:#e67e22;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;display:none;">📥 Importar Excel</button>
+                    <input type="file" id="importar-extorsivos-file" accept=".xlsx,.xls" style="display:none" onchange="procesarImportarExcelExtorsivos(event)">
+                    <button class="btn-accion" onclick="window.print()" style="background:#8e44ad;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">🖨️ Imprimir</button>
+                </div>
+
+                <!-- Resultados -->
+                <div class="extorsivos-tabla-wrap">
+                    <table class="extorsivos-tabla">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Teléfono</th>
+                                <th>Empresa</th>
+                                <th>Tipo Delito</th>
+                                <th>Departamento</th>
+                                <th>Municipio</th>
+                                <th>Fecha 2026</th>
+                                <th>Estado</th>
+                                <th>Sector</th>
+                                <th>Monto Pagado</th>
+                                <th>Monto Req.</th>
+                                <th>Org. Criminal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="extorsivos-resultados"></tbody>
+                    </table>
+                </div>
+
+                <div id="extorsivos-no-result" class="extorsivos-no-result" style="display:none;">
+                    <div class="icono-no-result">🔍</div>
+                    <p>No se encontraron resultados</p>
+                </div>
+
+                <!-- Paginación -->
+                <div class="extorsivos-paginacion" id="extorsivos-paginacion"></div>
+
+                <p style="font-size:11px;color:#95a5a6;margin-top:12px;" id="extorsivos-contador">0 casos cargados</p>
             </div>
 
-            <!-- ================= MÓDULO 6: USUARIOS ================= -->
+            <!-- ================= MÓDULO 7: USUARIOS ================= -->
             <div id="modulo-usuarios" class="card-modulo oculto">
                 <h2>👤 Gestión de Usuarios</h2>
                 <div class="grid-usuarios">
@@ -1423,6 +1818,8 @@ const USUARIOS_DEFECTO = [
 let usuariosGlobal = [];
 let historialPersonasGlobal = [];
 let historialVehiculosGlobal = [];
+let numerosExtorsivosGlobal = [];
+let extorsivosCargados = false;
 
 db.ref('usuariosSistema').on('value', snapshot => {
     usuariosGlobal = [];
@@ -1465,6 +1862,25 @@ db.ref('fichasVehiculos').on('value', snapshot => {
 function obtenerUsuarios() { return usuariosGlobal; }
 function obtenerHistorial() { return historialPersonasGlobal; }
 
+// === LISTENER NÚMEROS EXTORSIVOS ===
+db.ref('numerosExtorsivos').on('value', snapshot => {
+    numerosExtorsivosGlobal = [];
+    if (snapshot.exists()) {
+        snapshot.forEach(child => {
+            let caso = child.val();
+            caso._key = child.key;
+            numerosExtorsivosGlobal.push(caso);
+        });
+    }
+    extorsivosCargados = true;
+    actualizarEstadisticasExtorsivos();
+    // Si el módulo extorsivos está activo, refrescar tabla
+    const modExt = document.getElementById('modulo-extorsivos');
+    if (modExt && !modExt.classList.contains('oculto')) {
+        buscarNumeroExtorsivo();
+    }
+});
+
 let usuarioSesionActual = null;
 
 // AUTENTICACIÓN
@@ -1500,13 +1916,18 @@ function aplicarPermisosRol() {
     const btnFichas = document.getElementById('btn-tab-fichas');
     const btnCrearVehiculo = document.getElementById('btn-tab-crear-vehiculo');
     const btnFichasVehiculos = document.getElementById('btn-tab-fichas-vehiculos');
-    const btnTelefonos = document.getElementById('btn-tab-telefonos');
+    const btnExtorsivos = document.getElementById('btn-tab-extorsivos');
     const btnUsuarios = document.getElementById('btn-tab-usuarios');
     const btnSeccion = document.getElementById('btn-tab-seccion');
     const btnBiblioteca = document.getElementById('btn-tab-biblioteca');
 
-    // Biblioteca visible para todos los roles
+    // Biblioteca y Extorsivos visibles para todos los roles
     btnBiblioteca.style.display = 'inline-block';
+    btnExtorsivos.style.display = 'inline-block';
+
+    // Botón agregar caso extorsivo solo para Admin General
+    const btnAgregarExt = document.getElementById('btn-agregar-extorsivo');
+    const btnImportarExt = document.getElementById('btn-importar-extorsivos');
 
     if (usuarioSesionActual.rol === "Analista") {
         btnCrear.style.display = 'none';
@@ -1514,8 +1935,9 @@ function aplicarPermisosRol() {
         btnUsuarios.style.display = 'none';
         btnFichas.style.display = 'inline-block';
         btnFichasVehiculos.style.display = 'inline-block';
-        btnTelefonos.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
+        if (btnAgregarExt) btnAgregarExt.style.display = 'none';
+        if (btnImportarExt) btnImportarExt.style.display = 'none';
         cambiarModulo('fichas');
     } else if (usuarioSesionActual.rol === "Operador") {
         btnUsuarios.style.display = 'none';
@@ -1523,8 +1945,9 @@ function aplicarPermisosRol() {
         btnCrearVehiculo.style.display = 'inline-block';
         btnFichas.style.display = 'inline-block';
         btnFichasVehiculos.style.display = 'inline-block';
-        btnTelefonos.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
+        if (btnAgregarExt) btnAgregarExt.style.display = 'none';
+        if (btnImportarExt) btnImportarExt.style.display = 'none';
         // Upload oculto para Operador
         const uploadSection = document.getElementById('biblioteca-upload-section');
         if (uploadSection) uploadSection.classList.add('oculto');
@@ -1534,9 +1957,10 @@ function aplicarPermisosRol() {
         btnCrearVehiculo.style.display = 'inline-block';
         btnFichas.style.display = 'inline-block';
         btnFichasVehiculos.style.display = 'inline-block';
-        btnTelefonos.style.display = 'inline-block';
         btnUsuarios.style.display = 'inline-block';
         btnSeccion.style.display = 'inline-block';
+        if (btnAgregarExt) btnAgregarExt.style.display = 'inline-block';
+        if (btnImportarExt) btnImportarExt.style.display = 'inline-block';
         // Upload visible solo para Administrador General
         const uploadSection = document.getElementById('biblioteca-upload-section');
         if (uploadSection) uploadSection.classList.remove('oculto');
@@ -1555,7 +1979,7 @@ function cerrarSesion() {
 function cambiarModulo(modulo) {
     if (!usuarioSesionActual) return;
 
-    const modulos = ['crear', 'fichas', 'crear-vehiculo', 'fichas-vehiculos', 'telefonos', 'usuarios', 'seccion', 'biblioteca'];
+    const modulos = ['crear', 'fichas', 'crear-vehiculo', 'fichas-vehiculos', 'extorsivos', 'usuarios', 'seccion', 'biblioteca'];
     modulos.forEach(m => {
         const el = document.getElementById(`modulo-${m}`);
         if (el) el.classList.add('oculto');
@@ -1578,6 +2002,7 @@ function cambiarModulo(modulo) {
 
     if (modulo === 'fichas') buscarPersona();
     if (modulo === 'fichas-vehiculos') buscarVehiculo();
+    if (modulo === 'extorsivos') { cargarNumerosExtorsivos(); }
     if (modulo === 'usuarios') renderizarTablaUsuarios();
     if (modulo === 'biblioteca') cargarDocumentosBiblioteca();
 }
@@ -2495,6 +2920,701 @@ function eliminarDocumentoBiblioteca(id) {
         console.error('Error al eliminar documento:', err);
         alert('Error al eliminar el documento.');
     });
+}
+
+// ================================================================
+// MÓDULO NÚMEROS EXTORSIVOS
+// ================================================================
+
+function detectarTelefonia(numero) {
+    const limpio = (numero || '').toString().replace(/[\s\-()]/g, '');
+    if (!limpio) return 'Desconocido';
+    const n = limpio.replace(/^\+?502/, '');
+    if (!n) return 'Desconocido';
+    const p = n[0];
+    if (p === '4' || p === '5' || p === '2') return 'Tigo';
+    if (p === '3' || p === '6' || p === '7' || p === '8') return 'Claro';
+    if (p === '1') return 'Movistar';
+    return 'Desconocido';
+}
+
+const EXTORSIVOS_POR_PAGINA = 50;
+let extorsivosPaginaActual = 1;
+let extorsivosResultadosFiltrados = [];
+
+// --- Cargar datos (fuerza refresh) ---
+function actualizarEstadisticasExtorsivos() {
+    const total = numerosExtorsivosGlobal.length;
+    let tigo = 0, claro = 0, movistar = 0;
+    let imitadores = 0, barrio18 = 0, ms13 = 0;
+    numerosExtorsivosGlobal.forEach(c => {
+        const emp = c.empresaTelefonia || detectarTelefonia(c.telefonoExtorsionista);
+        if (emp === 'Tigo') tigo++;
+        else if (emp === 'Claro') claro++;
+        else if (emp === 'Movistar') movistar++;
+        const org = (c.orgCriminalAtribuye || '').toUpperCase().trim();
+        if (org === 'IMITADORES') imitadores++;
+        else if (org === 'BARRIO 18') barrio18++;
+        else if (org === 'MARA SALVATRUCHA' || org === 'MS-13') ms13++;
+    });
+    const el = id => document.getElementById(id);
+    if (el('stat-total')) el('stat-total').textContent = total;
+    if (el('stat-tigo')) el('stat-tigo').textContent = tigo;
+    if (el('stat-claro')) el('stat-claro').textContent = claro;
+    if (el('stat-movistar')) el('stat-movistar').textContent = movistar;
+    if (el('stat-imitadores')) el('stat-imitadores').textContent = imitadores;
+    if (el('stat-barrio18')) el('stat-barrio18').textContent = barrio18;
+    if (el('stat-ms13')) el('stat-ms13').textContent = ms13;
+}
+
+function cargarNumerosExtorsivos() {
+    if (numerosExtorsivosGlobal.length > 0) {
+        actualizarEstadisticasExtorsivos();
+        buscarNumeroExtorsivo();
+    } else {
+        // Los datos se cargan vía el RTDB listener; si está vacío, mostrar mensaje
+        buscarNumeroExtorsivo();
+    }
+}
+
+// --- Búsqueda y filtrado ---
+function buscarNumeroExtorsivo() {
+    const texto = (document.getElementById('extorsivos-busqueda').value || '').toLowerCase().trim();
+
+    extorsivosResultadosFiltrados = numerosExtorsivosGlobal.filter(c => {
+        if (texto) {
+            const campos = [
+                c.telefonoExtorsionista, c.claseDelito, c.departamentoHecho,
+                c.municipioHecho, c.estadoCaso, c.nombreDenunciante,
+                c.medioUtilizado, c.montoRequerido, c.casoNo,
+                c.sectorAfectado, c.origenDenuncia, c.sexo,
+                c.areaUrbanaRural, c.departamentoVictima, c.municipioVictima,
+                c.montoPagado, c.depositoBanco, c.investigador,
+                c.delegacionInvestiga, c.orgCriminalAtribuye,
+                c.organizacionDelictiva, c.modoOperar, c.resenaHecho,
+                c.tipoSector, c.nombreComercio, c.empresaTelefonia,
+                c.fecha2026, c.horaHecho, c.division
+            ].map(v => (v || '').toString().toLowerCase());
+            if (!campos.some(campo => campo.includes(texto))) return false;
+        }
+        return true;
+    });
+
+    // Ordenar por fecha2026 descendente
+    extorsivosResultadosFiltrados.sort((a, b) => {
+        const fa = a.fecha2026 || a.fechaHecho || '';
+        const fb = b.fecha2026 || b.fechaHecho || '';
+        return fb.localeCompare(fa);
+    });
+
+    extorsivosPaginaActual = 1;
+    renderizarTablaExtorsivos();
+}
+
+// --- Renderizar tabla con paginación ---
+function renderizarTablaExtorsivos() {
+    const tbody = document.getElementById('extorsivos-resultados');
+    const noResult = document.getElementById('extorsivos-no-result');
+    const pagDiv = document.getElementById('extorsivos-paginacion');
+    const contador = document.getElementById('extorsivos-contador');
+
+    const total = extorsivosResultadosFiltrados.length;
+    const inicio = (extorsivosPaginaActual - 1) * EXTORSIVOS_POR_PAGINA;
+    const fin = Math.min(inicio + EXTORSIVOS_POR_PAGINA, total);
+    const pagina = extorsivosResultadosFiltrados.slice(inicio, fin);
+
+    if (contador) contador.textContent = total + ' casos encontrados de ' + numerosExtorsivosGlobal.length + ' totales';
+
+    if (total === 0) {
+        tbody.innerHTML = '';
+        noResult.style.display = 'block';
+        pagDiv.innerHTML = '';
+        return;
+    }
+
+    noResult.style.display = 'none';
+
+    const textoBusqueda = (document.getElementById('extorsivos-busqueda').value || '').trim();
+
+    let html = '';
+    pagina.forEach((c, i) => {
+        const idx = inicio + i + 1;
+        const tel = c.telefonoExtorsionista || '—';
+        const emp = c.empresaTelefonia || detectarTelefonia(c.telefonoExtorsionista);
+        const delito = c.claseDelito || '—';
+        const dept = c.departamentoHecho || '—';
+        const muni = c.municipioHecho || '—';
+        const fecha = c.fecha2026 || c.fechaHecho || '—';
+        const monto = c.montoRequerido || '—';
+        const estado = c.estadoCaso || '—';
+
+        html += '<tr onclick="verDetalleExtorsivo(\'' + c._key + '\')" title="Clic para ver detalle">';
+        html += '<td>' + idx + '</td>';
+        html += '<td><strong>' + highlightTexto(tel, textoBusqueda) + '</strong></td>';
+        html += '<td>' + badgeTelefonia(emp) + '</td>';
+        html += '<td>' + highlightTexto(delito, textoBusqueda) + '</td>';
+        html += '<td>' + highlightTexto(dept, textoBusqueda) + '</td>';
+        html += '<td>' + highlightTexto(muni, textoBusqueda) + '</td>';
+        html += '<td>' + fecha + '</td>';
+        html += '<td>' + highlightTexto(estado, textoBusqueda) + '</td>';
+        html += '<td>' + highlightTexto(c.sectorAfectado || '—', textoBusqueda) + '</td>';
+        html += '<td>' + (c.montoPagado || '—') + '</td>';
+        html += '<td>' + highlightTexto(monto, textoBusqueda) + '</td>';
+        html += '<td>' + highlightTexto(c.orgCriminalAtribuye || '—', textoBusqueda) + '</td>';
+        html += '</tr>';
+    });
+    tbody.innerHTML = html;
+
+    // Paginación
+    const totalPag = Math.ceil(total / EXTORSIVOS_POR_PAGINA);
+    let pagHtml = '';
+    if (totalPag > 1) {
+        pagHtml += '<button onclick="extorsivosPagina(1)" ' + (extorsivosPaginaActual===1?'disabled':'') + '>⏮</button>';
+        pagHtml += '<button onclick="extorsivosPagina(' + (extorsivosPaginaActual-1) + ')" ' + (extorsivosPaginaActual===1?'disabled':'') + '>◀</button>';
+        
+        let startP = Math.max(1, extorsivosPaginaActual - 3);
+        let endP = Math.min(totalPag, extorsivosPaginaActual + 3);
+        for (let p = startP; p <= endP; p++) {
+            pagHtml += '<button onclick="extorsivosPagina(' + p + ')" class="' + (p===extorsivosPaginaActual?'pag-activa':'') + '">' + p + '</button>';
+        }
+        
+        pagHtml += '<button onclick="extorsivosPagina(' + (extorsivosPaginaActual+1) + ')" ' + (extorsivosPaginaActual===totalPag?'disabled':'') + '>▶</button>';
+        pagHtml += '<button onclick="extorsivosPagina(' + totalPag + ')" ' + (extorsivosPaginaActual===totalPag?'disabled':'') + '>⏭</button>';
+        pagHtml += '<span class="extorsivos-pag-info">Pág. ' + extorsivosPaginaActual + ' de ' + totalPag + '</span>';
+    }
+    pagDiv.innerHTML = pagHtml;
+}
+
+function extorsivosPagina(p) {
+    extorsivosPaginaActual = p;
+    renderizarTablaExtorsivos();
+    document.getElementById('extorsivos-tabla-wrap')?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function badgeTelefonia(emp) {
+    const colores = { 'Tigo': '#003DA5', 'Claro': '#E4002B', 'Movistar': '#66B98E', 'Desconocido': '#888' };
+    const color = colores[emp] || '#888';
+    return '<span style="background:' + color + ';color:white;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:bold;">' + (emp || '—') + '</span>';
+}
+
+function highlightTexto(texto, busqueda) {
+    if (!busqueda || !texto) return texto || '';
+    const escaped = busqueda.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp('(' + escaped + ')', 'gi');
+    return texto.replace(regex, '<span class="extorsivos-highlight">$1</span>');
+}
+
+// --- Ver detalle ---
+function verDetalleExtorsivo(key) {
+    const caso = numerosExtorsivosGlobal.find(c => c._key === key);
+    if (!caso) return;
+
+    const campos = [
+        ['No. Caso', 'casoNo'],
+        ['RPI / Oficio Requerimiento', 'rpiOficioRequerimiento'],
+        ['Teléfono Extorsionista', 'telefonoExtorsionista'],
+        ['Empresa de Telefonía', 'empresaTelefonia'],
+        ['Clase de Delito', 'claseDelito'],
+        ['Estado del Caso', 'estadoCaso'],
+        ['── Fecha y Lugar ──', ''],
+        ['Fecha 2026', 'fecha2026'],
+        ['Fecha Hecho', 'fechaHecho'],
+        ['Hora del Hecho', 'horaHecho'],
+        ['Departamento del Hecho', 'departamentoHecho'],
+        ['Municipio del Hecho', 'municipioHecho'],
+        ['── Denunciante ──', ''],
+        ['Nombre Denunciante', 'nombreDenunciante'],
+        ['Origen Denuncia', 'origenDenuncia'],
+        ['Medio Utilizado', 'medioUtilizado'],
+        ['── Sector / Comercio ──', ''],
+        ['Tipo Sector', 'tipoSector'],
+        ['Nombre Comercio', 'nombreComercio'],
+        ['Sector Afectado', 'sectorAfectado'],
+        ['── Víctima ──', ''],
+        ['Sexo', 'sexo'],
+        ['Rango de Edad', 'rangoEdad'],
+        ['Ocupación', 'ocupacion'],
+        ['Área Urbana/Rural', 'areaUrbanaRural'],
+        ['Depto. Víctima', 'departamentoVictima'],
+        ['Municipio Víctima', 'municipioVictima'],
+        ['Grupo Vulnerable', 'grupoVulnerable'],
+        ['── Monto ──', ''],
+        ['Monto Requerido', 'montoRequerido'],
+        ['Monto Pagado', 'montoPagado'],
+        ['Depósito a Banco', 'depositoBanco'],
+        ['No. Cuenta Bancaria', 'noCuentaBancaria'],
+        ['Nombre de Cuenta', 'nombreCuenta'],
+        ['── Organización ──', ''],
+        ['Org. Criminal Atribuye', 'orgCriminalAtribuye'],
+        ['Organización Delictiva', 'organizacionDelictiva'],
+        ['Nombre Clica', 'nombreClica'],
+        ['Llamada Cárcel', 'llamadaCarcel'],
+        ['── Investigación ──', ''],
+        ['Investigador', 'investigador'],
+        ['Delegación Investiga', 'delegacionInvestiga'],
+        ['División', 'division'],
+        ['Modo de Operar', 'modoOperar'],
+        ['Reseña del Hecho', 'resenaHecho'],
+        ['Pendientes Captura', 'pendientesCaptura']
+    ];
+
+    let bodyHtml = '';
+    campos.forEach(([label, campo]) => {
+        if (!campo) {
+            // Section header
+            bodyHtml += '<div style="grid-column:1/-1;padding:6px 0 2px;font-weight:bold;color:#00529b;border-top:1px solid #cce;font-size:13px;">' + label + '</div>';
+            return;
+        }
+        let val = caso[campo] || '—';
+        // Auto-detectar telefonia si no existe
+        if (campo === 'empresaTelefonia' && (!val || val === '—')) {
+            val = detectarTelefonia(caso.telefonoExtorsionista);
+        }
+        if (campo === 'empresaTelefonia') {
+            val = badgeTelefonia(val);
+        }
+        bodyHtml += '<div class="extorsivos-detalle-campo">';
+        bodyHtml += '<div class="campo-label">' + label + '</div>';
+        bodyHtml += '<div class="campo-valor">' + val + '</div>';
+        bodyHtml += '</div>';
+    });
+
+    const isAdmin = usuarioSesionActual && usuarioSesionActual.rol === 'Administrador General';
+    let footerHtml = '';
+    if (isAdmin) {
+        footerHtml += '<button onclick="editarCasoExtorsivo(\'' + caso._key + '\')" style="background:#2980b9;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">✏️ Editar</button>';
+        footerHtml += '<button onclick="eliminarCasoExtorsivo(\'' + caso._key + '\')" style="background:#e74c3c;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">🗑️ Eliminar</button>';
+    }
+    footerHtml += '<button onclick="cerrarDetalleExtorsivo()" style="background:#95a5a6;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">Cerrar</button>';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'extorsivos-detalle-overlay';
+    overlay.id = 'extorsivos-detalle-overlay';
+    overlay.innerHTML =
+        '<div class="extorsivos-detalle-card">' +
+        '  <div class="extorsivos-detalle-header"><h3>🚨 Detalle del Caso Extorsivo</h3><button class="extorsivos-detalle-cerrar" onclick="cerrarDetalleExtorsivo()">✕</button></div>' +
+        '  <div class="extorsivos-detalle-body">' + bodyHtml + '</div>' +
+        '  <div class="extorsivos-detalle-footer">' + footerHtml + '</div>' +
+        '</div>';
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) cerrarDetalleExtorsivo(); });
+    document.body.appendChild(overlay);
+}
+
+function cerrarDetalleExtorsivo() {
+    const ov = document.getElementById('extorsivos-detalle-overlay');
+    if (ov) ov.remove();
+}
+
+// --- Formulario Agregar / Editar ---
+let editandoExtorsivoKey = null;
+
+function mostrarFormularioExtorsivo(key) {
+    if (usuarioSesionActual.rol !== 'Administrador General') {
+        alert('Solo el Administrador General puede agregar o editar casos extorsivos.');
+        return;
+    }
+    editandoExtorsivoKey = key || null;
+    const caso = key ? numerosExtorsivosGlobal.find(c => c._key === key) : null;
+    const titulo = key ? '✏️ Editar Caso Extorsivo' : '➕ Agregar Nuevo Caso Extorsivo';
+
+    const formHtml =
+        '<div class="extorsivos-form-card">' +
+        '  <div class="extorsivos-form-header"><h3>' + titulo + '</h3><button class="extorsivos-detalle-cerrar" onclick="cerrarFormularioExtorsivo()">✕</button></div>' +
+        '  <div class="extorsivos-form-body">' +
+        '    <form id="form-extorsivo" onsubmit="guardarCasoExtorsivo(event)">' +
+        '      <div class="grupo-form"><label>No. Caso</label><input type="text" id="ext-casoNo" value="' + (caso?.casoNo||'') + '"></div>' +
+        '      <div class="grupo-form"><label>RPI / Oficio Requerimiento</label><input type="text" id="ext-rpiOficioRequerimiento" value="' + (caso?.rpiOficioRequerimiento||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Teléfono Extorsionista</label><input type="text" id="ext-telefonoExtorsionista" value="' + (caso?.telefonoExtorsionista||'') + '" required oninput="actualizarTelefoniaPreview()"><span id="ext-telefonia-preview" style="margin-left:10px;font-size:12px;"></span></div>' +
+        '      <div class="grupo-form"><label>Clase de Delito</label><input type="text" id="ext-claseDelito" value="' + (caso?.claseDelito||'') + '" list="dl-clasesDelito"><datalist id="dl-clasesDelito"></datalist></div>' +
+        '      <div class="grupo-form"><label>Fecha 2026</label><input type="date" id="ext-fecha2026" value="' + (caso?.fecha2026||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Fecha Hecho</label><input type="date" id="ext-fechaHecho" value="' + (caso?.fechaHecho||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Hora del Hecho</label><input type="time" id="ext-horaHecho" value="' + (caso?.horaHecho||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Departamento Hecho</label><input type="text" id="ext-departamentoHecho" value="' + (caso?.departamentoHecho||'') + '" list="dl-departamentos"><datalist id="dl-departamentos"></datalist></div>' +
+        '      <div class="grupo-form"><label>Municipio Hecho</label><input type="text" id="ext-municipioHecho" value="' + (caso?.municipioHecho||'') + '" list="dl-municipios"><datalist id="dl-municipios"></datalist></div>' +
+        '      <div class="grupo-form"><label>Nombre Denunciante</label><input type="text" id="ext-nombreDenunciante" value="' + (caso?.nombreDenunciante||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Origen Denuncia</label><input type="text" id="ext-origenDenuncia" value="' + (caso?.origenDenuncia||'') + '" list="dl-origenes"><datalist id="dl-origenes"></datalist></div>' +
+        '      <div class="grupo-form"><label>Medio Utilizado</label><input type="text" id="ext-medioUtilizado" value="' + (caso?.medioUtilizado||'') + '" list="dl-mediosUtilizados"><datalist id="dl-mediosUtilizados"></datalist></div>' +
+        '      <div class="grupo-form"><label>Tipo Sector</label><input type="text" id="ext-tipoSector" value="' + (caso?.tipoSector||'') + '" list="dl-tiposSector"><datalist id="dl-tiposSector"></datalist></div>' +
+        '      <div class="grupo-form"><label>Nombre Comercio</label><input type="text" id="ext-nombreComercio" value="' + (caso?.nombreComercio||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Sector Afectado</label><input type="text" id="ext-sectorAfectado" value="' + (caso?.sectorAfectado||'') + '" list="dl-sectores"><datalist id="dl-sectores"></datalist></div>' +
+        '      <div class="grupo-form"><label>Sexo</label><input type="text" id="ext-sexo" value="' + (caso?.sexo||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Rango de Edad</label><input type="text" id="ext-rangoEdad" value="' + (caso?.rangoEdad||'') + '" list="dl-rangosEdad"><datalist id="dl-rangosEdad"></datalist></div>' +
+        '      <div class="grupo-form"><label>Ocupación</label><input type="text" id="ext-ocupacion" value="' + (caso?.ocupacion||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Área Urbana/Rural</label><input type="text" id="ext-areaUrbanaRural" value="' + (caso?.areaUrbanaRural||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Depto. Víctima</label><input type="text" id="ext-departamentoVictima" value="' + (caso?.departamentoVictima||'') + '" list="dl-deptosVictima"><datalist id="dl-deptosVictima"></datalist></div>' +
+        '      <div class="grupo-form"><label>Municipio Víctima</label><input type="text" id="ext-municipioVictima" value="' + (caso?.municipioVictima||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Grupo Vulnerable</label><input type="text" id="ext-grupoVulnerable" value="' + (caso?.grupoVulnerable||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Monto Requerido</label><input type="text" id="ext-montoRequerido" value="' + (caso?.montoRequerido||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Monto Pagado</label><input type="text" id="ext-montoPagado" value="' + (caso?.montoPagado||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Depósito a Banco</label><input type="text" id="ext-depositoBanco" value="' + (caso?.depositoBanco||'') + '" list="dl-bancos"><datalist id="dl-bancos"></datalist></div>' +
+        '      <div class="grupo-form"><label>No. Cuenta Bancaria</label><input type="text" id="ext-noCuentaBancaria" value="' + (caso?.noCuentaBancaria||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Nombre de Cuenta</label><input type="text" id="ext-nombreCuenta" value="' + (caso?.nombreCuenta||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Org. Criminal Atribuye</label><input type="text" id="ext-orgCriminalAtribuye" value="' + (caso?.orgCriminalAtribuye||'') + '" list="dl-orgCriminales"><datalist id="dl-orgCriminales"></datalist></div>' +
+        '      <div class="grupo-form"><label>Organización Delictiva</label><input type="text" id="ext-organizacionDelictiva" value="' + (caso?.organizacionDelictiva||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Nombre Clica</label><input type="text" id="ext-nombreClica" value="' + (caso?.nombreClica||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Llamada Cárcel</label><input type="text" id="ext-llamadaCarcel" value="' + (caso?.llamadaCarcel||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Investigador</label><input type="text" id="ext-investigador" value="' + (caso?.investigador||'') + '" list="dl-investigadores"><datalist id="dl-investigadores"></datalist></div>' +
+        '      <div class="grupo-form"><label>Delegación Investiga</label><input type="text" id="ext-delegacionInvestiga" value="' + (caso?.delegacionInvestiga||'') + '" list="dl-delegaciones"><datalist id="dl-delegaciones"></datalist></div>' +
+        '      <div class="grupo-form"><label>División</label><input type="text" id="ext-division" value="' + (caso?.division||'') + '" list="dl-divisiones"><datalist id="dl-divisiones"></datalist></div>' +
+        '      <div class="grupo-form"><label>Modo de Operar</label><input type="text" id="ext-modoOperar" value="' + (caso?.modoOperar||'') + '" list="dl-modosOperar"><datalist id="dl-modosOperar"></datalist></div>' +
+        '      <div class="grupo-form"><label>Reseña del Hecho</label><textarea id="ext-resenaHecho" rows="3">' + (caso?.resenaHecho||'') + '</textarea></div>' +
+        '      <div class="grupo-form"><label>Pendientes Captura</label><input type="text" id="ext-pendientesCaptura" value="' + (caso?.pendientesCaptura||'') + '"></div>' +
+        '      <div class="grupo-form"><label>Estado del Caso</label>' +
+        '        <select id="ext-estadoCaso">' +
+        '          <option value="">— Seleccione —</option>' +
+        '          <option value="ACTIVO"' + ((caso?.estadoCaso||'')==='ACTIVO'?' selected':'') + '>ACTIVO</option>' +
+        '          <option value="FASE DE INVESTIGACION"' + ((caso?.estadoCaso||'')==='FASE DE INVESTIGACION'?' selected':'') + '>FASE DE INVESTIGACION</option>' +
+        '          <option value="ARCHIVADO"' + ((caso?.estadoCaso||'')==='ARCHIVADO'?' selected':'') + '>ARCHIVADO</option>' +
+        '          <option value="INFORMADO"' + ((caso?.estadoCaso||'')==='INFORMADO'?' selected':'') + '>INFORMADO</option>' +
+        '          <option value="POR ESTABLECER"' + ((caso?.estadoCaso||'')==='POR ESTABLECER'?' selected':'') + '>POR ESTABLECER</option>' +
+        '        </select>' +
+        '      </div>' +
+        '    </form>' +
+        '  </div>' +
+        '  <div class="extorsivos-form-footer">' +
+        '    <button onclick="guardarCasoExtorsivo(event)" style="background:#27ae60;color:white;border:none;padding:10px 22px;border-radius:6px;cursor:pointer;font-weight:bold;">💾 Guardar</button>' +
+        '    <button onclick="cerrarFormularioExtorsivo()" style="background:#95a5a6;color:white;border:none;padding:10px 22px;border-radius:6px;cursor:pointer;">Cancelar</button>' +
+        '  </div>' +
+        '</div>';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'extorsivos-form-overlay';
+    overlay.id = 'extorsivos-form-overlay';
+    overlay.innerHTML = formHtml;
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) cerrarFormularioExtorsivo(); });
+    document.body.appendChild(overlay);
+
+    // Llenar datalists con valores existentes
+    llenarDatalistsExtorsivos();
+    actualizarTelefoniaPreview();
+}
+
+function cerrarFormularioExtorsivo() {
+    const ov = document.getElementById('extorsivos-form-overlay');
+    if (ov) ov.remove();
+    editandoExtorsivoKey = null;
+}
+
+function actualizarTelefoniaPreview() {
+    const tel = document.getElementById('ext-telefonoExtorsionista')?.value || '';
+    const prev = document.getElementById('ext-telefonia-preview');
+    if (prev) {
+        const emp = detectarTelefonia(tel);
+        prev.innerHTML = badgeTelefonia(emp);
+    }
+}
+
+function llenarDatalistsExtorsivos() {
+    const clases = new Set(), deps = new Set(), munic = new Set(), origenes = new Set(),
+          medios = new Set(), sectores = new Set(), bancos = new Set(), investigadores = new Set(),
+          delegaciones = new Set(), orgs = new Set(), deptosV = new Set(), divs = new Set(),
+          rangos = new Set(), modos = new Set(), tiposSec = new Set();
+    numerosExtorsivosGlobal.forEach(c => {
+        if (c.claseDelito) clases.add(c.claseDelito);
+        if (c.departamentoHecho) deps.add(c.departamentoHecho);
+        if (c.municipioHecho) munic.add(c.municipioHecho);
+        if (c.origenDenuncia) origenes.add(c.origenDenuncia);
+        if (c.medioUtilizado) medios.add(c.medioUtilizado);
+        if (c.sectorAfectado) sectores.add(c.sectorAfectado);
+        if (c.depositoBanco) bancos.add(c.depositoBanco);
+        if (c.investigador) investigadores.add(c.investigador);
+        if (c.delegacionInvestiga) delegaciones.add(c.delegacionInvestiga);
+        if (c.orgCriminalAtribuye) orgs.add(c.orgCriminalAtribuye);
+        if (c.departamentoVictima) deptosV.add(c.departamentoVictima);
+        if (c.division) divs.add(c.division);
+        if (c.rangoEdad) rangos.add(c.rangoEdad);
+        if (c.modoOperar) modos.add(c.modoOperar);
+        if (c.tipoSector) tiposSec.add(c.tipoSector);
+    });
+    const fillDl = (id, set) => {
+        const dl = document.getElementById(id);
+        if (dl) dl.innerHTML = [...set].sort().map(v => '<option value="' + v + '">').join('');
+    };
+    fillDl('dl-clasesDelito', clases);
+    fillDl('dl-departamentos', deps);
+    fillDl('dl-municipios', munic);
+    fillDl('dl-origenes', origenes);
+    fillDl('dl-mediosUtilizados', medios);
+    fillDl('dl-sectores', sectores);
+    fillDl('dl-bancos', bancos);
+    fillDl('dl-investigadores', investigadores);
+    fillDl('dl-delegaciones', delegaciones);
+    fillDl('dl-orgCriminales', orgs);
+    fillDl('dl-deptosVictima', deptosV);
+    fillDl('dl-divisiones', divs);
+    fillDl('dl-rangosEdad', rangos);
+    fillDl('dl-modosOperar', modos);
+    fillDl('dl-tiposSector', tiposSec);
+}
+
+function guardarCasoExtorsivo(e) {
+    if (e) e.preventDefault();
+    if (usuarioSesionActual.rol !== 'Administrador General') {
+        alert('Solo el Administrador General puede guardar casos extorsivos.');
+        return;
+    }
+
+    const telefono = document.getElementById('ext-telefonoExtorsionista').value.trim();
+    if (!telefono) {
+        alert('El campo Teléfono Extorsionista es obligatorio.');
+        return;
+    }
+
+    const datos = {
+        casoNo: document.getElementById('ext-casoNo').value.trim(),
+        rpiOficioRequerimiento: document.getElementById('ext-rpiOficioRequerimiento').value.trim(),
+        telefonoExtorsionista: telefono,
+        empresaTelefonia: detectarTelefonia(telefono),
+        claseDelito: document.getElementById('ext-claseDelito').value.trim(),
+        estadoCaso: document.getElementById('ext-estadoCaso').value,
+        fecha2026: document.getElementById('ext-fecha2026').value,
+        fechaHecho: document.getElementById('ext-fechaHecho').value,
+        horaHecho: document.getElementById('ext-horaHecho').value,
+        departamentoHecho: document.getElementById('ext-departamentoHecho').value.trim(),
+        municipioHecho: document.getElementById('ext-municipioHecho').value.trim(),
+        nombreDenunciante: document.getElementById('ext-nombreDenunciante').value.trim(),
+        origenDenuncia: document.getElementById('ext-origenDenuncia').value.trim(),
+        medioUtilizado: document.getElementById('ext-medioUtilizado').value.trim(),
+        tipoSector: document.getElementById('ext-tipoSector').value.trim(),
+        nombreComercio: document.getElementById('ext-nombreComercio').value.trim(),
+        sectorAfectado: document.getElementById('ext-sectorAfectado').value.trim(),
+        sexo: document.getElementById('ext-sexo').value.trim(),
+        rangoEdad: document.getElementById('ext-rangoEdad').value.trim(),
+        ocupacion: document.getElementById('ext-ocupacion').value.trim(),
+        areaUrbanaRural: document.getElementById('ext-areaUrbanaRural').value.trim(),
+        departamentoVictima: document.getElementById('ext-departamentoVictima').value.trim(),
+        municipioVictima: document.getElementById('ext-municipioVictima').value.trim(),
+        grupoVulnerable: document.getElementById('ext-grupoVulnerable').value.trim(),
+        montoRequerido: document.getElementById('ext-montoRequerido').value.trim(),
+        montoPagado: document.getElementById('ext-montoPagado').value.trim(),
+        depositoBanco: document.getElementById('ext-depositoBanco').value.trim(),
+        noCuentaBancaria: document.getElementById('ext-noCuentaBancaria').value.trim(),
+        nombreCuenta: document.getElementById('ext-nombreCuenta').value.trim(),
+        orgCriminalAtribuye: document.getElementById('ext-orgCriminalAtribuye').value.trim(),
+        organizacionDelictiva: document.getElementById('ext-organizacionDelictiva').value.trim(),
+        nombreClica: document.getElementById('ext-nombreClica').value.trim(),
+        llamadaCarcel: document.getElementById('ext-llamadaCarcel').value.trim(),
+        investigador: document.getElementById('ext-investigador').value.trim(),
+        delegacionInvestiga: document.getElementById('ext-delegacionInvestiga').value.trim(),
+        division: document.getElementById('ext-division').value.trim(),
+        modoOperar: document.getElementById('ext-modoOperar').value.trim(),
+        resenaHecho: document.getElementById('ext-resenaHecho').value.trim(),
+        pendientesCaptura: document.getElementById('ext-pendientesCaptura').value.trim()
+    };
+
+    if (editandoExtorsivoKey) {
+        db.ref('numerosExtorsivos/' + editandoExtorsivoKey).update(datos)
+            .then(() => {
+                alert('Caso extorsivo actualizado correctamente.');
+                cerrarFormularioExtorsivo();
+                cerrarDetalleExtorsivo();
+            })
+            .catch(err => {
+                console.error('Error al actualizar:', err);
+                alert('Error al actualizar el caso extorsivo.');
+            });
+    } else {
+        db.ref('numerosExtorsivos').push(datos)
+            .then(() => {
+                alert('Caso extorsivo agregado correctamente.');
+                cerrarFormularioExtorsivo();
+            })
+            .catch(err => {
+                console.error('Error al guardar:', err);
+                alert('Error al guardar el caso extorsivo.');
+            });
+    }
+}
+
+function editarCasoExtorsivo(key) {
+    cerrarDetalleExtorsivo();
+    mostrarFormularioExtorsivo(key);
+}
+
+function eliminarCasoExtorsivo(key) {
+    if (usuarioSesionActual.rol !== 'Administrador General') return;
+    if (!confirm('¿Está seguro de eliminar este caso extorsivo? Esta acción no se puede deshacer.')) return;
+    db.ref('numerosExtorsivos/' + key).remove()
+        .then(() => {
+            alert('Caso extorsivo eliminado.');
+            cerrarDetalleExtorsivo();
+        })
+        .catch(err => {
+            console.error('Error al eliminar:', err);
+            alert('Error al eliminar el caso extorsivo.');
+        });
+}
+
+// --- Importar Excel ---
+function importarExcelExtorsivos() {
+    if (usuarioSesionActual.rol !== 'Administrador General') {
+        alert('Solo el Administrador General puede importar datos.');
+        return;
+    }
+    document.getElementById('importar-extorsivos-file').click();
+}
+
+function procesarImportarExcelExtorsivos(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (usuarioSesionActual.rol !== 'Administrador General') {
+        alert('Solo el Administrador General puede importar datos.');
+        event.target.value = '';
+        return;
+    }
+    if (!confirm('⚠️ IMPORTAR EXCEL: Esto AGREGARÁ registros a la base de datos.\n¿Los registros existentes se DUPLICARÁN si ya existen.\n\n¿Desea continuar?')) {
+        event.target.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+            if (rows.length === 0) {
+                alert('El archivo Excel está vacío.');
+                event.target.value = '';
+                return;
+            }
+
+            // COL_MAP: column header in Excel → Firebase field name
+            const COL_MAP = {
+                'NO. ORDEN': 'noOrden',
+                'CASO NO.': 'casoNo',
+                'HORA RECEPCION': 'horaRecepcion',
+                'FECHA 2026': 'fecha2026',
+                'RPI/OFICIO/REQUERIMIENTO': 'rpiOficioRequerimiento',
+                'ORIGEN DE LA DENUNCIA': 'origenDenuncia',
+                'EXTORSION A (SECTOR AFECTADO)': 'sectorAfectado',
+                'TIPO DE SECTOR (TRANSPORTE URBANO, EXTRAURBANO, TAXI, MOTOTAXI)': 'tipoSector',
+                'NOMBRE DEL COMERCIO, EMPRESA DE TRANSPORTE (ENTIDAD)': 'nombreComercio',
+                'NOMBRE DEL DENUNCIANTE': 'nombreDenunciante',
+                'EDAD': 'edad',
+                'SEXO': 'sexo',
+                'OCUPACION / OFICIO': 'ocupacion',
+                'NACIONALIDAD': 'nacionalidad',
+                'TELEFONO(S)  DE LA VICTIMA': 'telefonoVictima',
+                'DIRECCION DE LA VICTIMA': 'direccionVictima',
+                'COLONIA, ALDEA O CANTON': 'coloniaAldeaCanton',
+                'ZONA': 'zona',
+                'AREA URBANA/RURAL': 'areaUrbanaRural',
+                'DEPARTAMENTO DE LA VICTIMA': 'departamentoVictima',
+                'MUNICIPIO DE LA VICTIMA': 'municipioVictima',
+                'FECHA DEL HECHO': 'fechaHecho',
+                'HORA DEL HECHO': 'horaHecho',
+                'MEDIO UTILIZADO P/COMUNICACION DE LA EXTORSION': 'medioUtilizado',
+                'TELEFONO(S)  EXTORSIONISTA': 'telefonoExtorsionista',
+                'EMPRESA DE TELEFONIA (TIGO, CLARO)': 'empresaTelefonia',
+                'TELEFONOS ENTREGADOS POR LOS VICTIMARIOS': 'telefonosVictimarios',
+                'CANTIDAD DE LLAMADAS RECIBIDAS (NÚMERICAS)': 'cantLlamadasRecibidas',
+                'DIRECCION DEL HECHO': 'direccionHecho',
+                'DEPARTAMENTO': 'departamentoHecho',
+                'MUNICIPIO': 'municipioHecho',
+                'CLASE DELITO': 'claseDelito',
+                'CANTIDAD DE ATENTADOS': 'cantAtentados',
+                'No. VICTIMARIOS': 'noVictimarios',
+                'MONTO REQUERIDO\nINICIAL O UNICO': 'montoRequerido',
+                'REALIZO PAGOS ANTES DE PONER LA DENUNCIA': 'pagosAntesDenuncia',
+                'MONTO PAGADO': 'montoPagado',
+                'CANTIDAD DE PAGOS REALIZADOS': 'cantPagosRealizados',
+                'NO SE PAGO': 'noSePago',
+                'DESCRIPCION DE PAGOS': 'descripcionPagos',
+                'DEPOSITO A BANCO': 'depositoBanco',
+                'NUMERO DE CUENTA BANCARIA': 'noCuentaBancaria',
+                'NOMBRE DE LA CUENTA': 'nombreCuenta',
+                'INVESTIGADOR': 'investigador',
+                'DELEGACION O UNIDAD QUE INVESTIGA': 'delegacionInvestiga',
+                'CANTIDAD DETENIDOS': 'cantDetenidos',
+                'APREHENDIDO/SINDICADO': 'aprehendidoSindicado',
+                'NOMBRES Y APELLIDOS': 'nombresApellidos',
+                'ALIAS': 'alias',
+                'ORGANIZACIÓN DELICTIVA': 'organizacionDelictiva',
+                'NOMBRE DE LA CLICA': 'nombreClica',
+                'MODO DE OPERAR': 'modoOperar',
+                'PENDIENTES   DE CAPTURA': 'pendientesCaptura',
+                'FECHA DE ARCHIVO': 'fechaArchivo',
+                'MOTIVO DE ARCHIVO': 'motivoArchivo',
+                'CASO EN PODER DE:': 'casoEnPoderDe',
+                'INFORMADO A:': 'informadoA',
+                'ORGANIZACIÓN CRIMINAL QUE SE ATRIBUYE LA EXTORSIÓN': 'orgCriminalAtribuye',
+                'LLAMADA PROVENIENTE DE LA CARCEL': 'llamadaCarcel',
+                'ESTADO DEL CASO2': 'estadoCaso',
+                'RESEÑA DEL HECHO': 'resenaHecho',
+                'GRUPO VULNERABLE\n(PERSONAS CON DISCAPACIDAD)': 'grupoVulnerable',
+                'DIVISIÓN': 'division',
+                'RANGO DE EDAD': 'rangoEdad'
+            };
+
+            const records = [];
+            rows.forEach(row => {
+                const obj = {};
+                Object.keys(COL_MAP).forEach(colName => {
+                    const firebaseKey = COL_MAP[colName];
+                    const val = row[colName];
+                    if (val !== undefined && val !== null && val !== '') {
+                        obj[firebaseKey] = String(val).trim();
+                    }
+                });
+                // Auto-detect phone company if not provided
+                if (obj.telefonoExtorsionista) {
+                    obj.empresaTelefonia = detectarTelefonia(obj.telefonoExtorsionista);
+                }
+                if (Object.keys(obj).length > 0) {
+                    records.push(obj);
+                }
+            });
+
+            if (records.length === 0) {
+                alert('No se encontraron registros válidos en el Excel.');
+                event.target.value = '';
+                return;
+            }
+
+            // Progress UI
+            const btnImportar = document.getElementById('btn-importar-extorsivos');
+            const origText = btnImportar ? btnImportar.textContent : '';
+            if (btnImportar) btnImportar.textContent = '⏳ Importando...';
+
+            // Batch push to Firebase (chunks of 25)
+            const CHUNK = 25;
+            let imported = 0;
+            let errors = 0;
+
+            function pushChunk(idx) {
+                if (idx >= records.length) {
+                    if (btnImportar) btnImportar.textContent = origText;
+                    alert(`✅ Importación completada:\n• Registros procesados: ${records.length}\n• Exitosos: ${imported}\n• Errores: ${errors}`);
+                    event.target.value = '';
+                    return;
+                }
+                const batch = records.slice(idx, idx + CHUNK);
+                const promises = batch.map(rec =>
+                    db.ref('numerosExtorsivos').push(rec)
+                        .then(() => { imported++; })
+                        .catch(err => { errors++; console.error('Error importando registro:', err); })
+                );
+                Promise.all(promises).then(() => {
+                    if (btnImportar) btnImportar.textContent = `⏳ ${Math.min(idx + CHUNK, records.length)}/${records.length}`;
+                    pushChunk(idx + CHUNK);
+                });
+            }
+
+            pushChunk(0);
+
+        } catch (err) {
+            console.error('Error procesando Excel:', err);
+            alert('Error al procesar el archivo Excel: ' + err.message);
+            const btnImportar = document.getElementById('btn-importar-extorsivos');
+            if (btnImportar) btnImportar.textContent = '📥 Importar Excel';
+            event.target.value = '';
+        }
+    };
+    reader.readAsArrayBuffer(file);
 }
 
 // Eventos del área de subida
